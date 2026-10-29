@@ -1,0 +1,568 @@
+{
+ "model": "muse-spark-1.3",
+ "steps": 12,
+ "seconds": 178,
+ "final": "Claim submitted and page shows 'Claim received'.\n\nDetails submitted:\n- Patient: Juan Dela Cruz (sample)\n- PIN: 12-345678901-2\n- Provider: Sample Konsulta Clinic\n- Date: 2026-10-29\n- Visit: 2nd visit\n- Benefit code: OPH02A\n- Services: Oral exam, Prophylaxis, Fluoride varnish, Pit and fissure sealant\n- Teeth: 16\n- Dentist PRC: 0123456\n\nConfirmation page shows:\nClaim received\nReference DEMO-755675",
+ "submitted": {
+  "patient": "Juan Dela Cruz (sample)",
+  "pin": "12-345678901-2",
+  "kpp": "Sample Konsulta Clinic",
+  "date": "2026-10-29",
+  "visit": "2",
+  "code": "OPH02A",
+  "services": [
+   "fluoride_varnish",
+   "oral_exam",
+   "prophylaxis",
+   "sealant"
+  ],
+  "teeth": "16",
+  "dentist": "0123456"
+ },
+ "wrong_fields": [],
+ "acknowledged": [
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwG4UAwEPQTkEbpQWZjmKZ7dLL-EhpTp3Z3pAsfVRBonTXCPdHWPcSq_P8jCR2ODZCJMmlERjYZAFF5Aj8kDBRd39GmNWoJXPDiwxYhIt-k9KNxKg6KLvSUZhS5pOSWOJos966PtbS-fFzHNs3shbEapZwoZwQ_WfrWPi0jpA0uuhVzPFjinnPATp3zsxdT3jlKyGaZWDdJ2DAR5aViwIwB0Wb-PT2Z7dJV1GEnZnqUhdMFvTYeATOVrQP_JOdZ8vF_aYZGyjFFRPABNBaqZsQcvY-RaVC3Lh8vJ32EYZoDSh_MjQmBY9axJ0PEqc15mDeAf8cpAajb9EaT6aP-tcxAsspTMZwo5Zbsg70kjhsEVu-u6wPWvAIYkQAB-Z-3wSK5ZiIphC5ShmtQL5a-2qLH4OQZKj0YkJYNKSb83hLSVVMo_yrR3qdMqglxboCaZP9YUAgJ38wZ6p6Xl09O8mBllogxE3DIC5_HHVZCI8v5IBkW_i8XQIL-ACTwLlNK78ju-aFeCttgKAXr2X_G87ot6OCO10s88_OuzuTxu5mwnoOoqX5s",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 412,
+     "y": 178
+    },
+    {
+     "text": "Juan Dela Cruz (sample)",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 178
+    },
+    {
+     "text": "12-345678901-2",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 413,
+     "y": 255
+    },
+    {
+     "text": "Sample Konsulta Clinic",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 255
+    },
+    {
+     "text": "2026-10-29",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 412,
+     "y": 516
+    },
+    {
+     "text": "16",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 516
+    },
+    {
+     "text": "0123456",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwFt0Uf7mxFNDJu-4hl3r6z8mKrzZ1ncIzfzKYaxMlRsrKdBRX-9Au3W4BPjykl1N6HbhK_TCAxh9BoWbf_Pgdv6LZtcJgBFASxCF_WnqQlCNna84M92n8UECWJ6OcbYX6Ay8blnlLhgGCbbHA5PjG7hBe4X3bYbH-U-4iWyI2EMG-17y4crVXuZvnVEB3wDmo8HXvvWPAtyZoqUauYN0Pg0yOsUncUQquYAgH9P_THiEcIOil0tnfJemMjYXJ1IZ2dKFrJXpKOgKYuMc4l5Pas4AV4nw43s-OhLGAr3NigsxX2Y8rstaKJtLdvbJQXBzFi-UdLmahoFjesEHvdeA9gVDXX1OxSI7hTf1XxZKbjNuiBqNIRG0o4xrtmSADKwFt5-noYJpeXAA5s0wsamjt3jJUiq1dD_puXdTCB7MiCmhXbN6cd6-VdRkCQvBP4Vuj4YsMHG6JhwMyJsjL6lslotipt9Vhr0NLj4mwY6yv1OW9nhdi26JXoUVDaNEIn35cNngLtGM2dFB_a1PZ7ksa-kJBe0cvwzft3b70g5uF9Eqbgiw_A",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 396,
+     "y": 515
+    },
+    {
+     "text": "16",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 853,
+     "y": 517
+    },
+    {
+     "text": "0123456",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEgoVX4BSourErOq1ey2aqPBIQA5ktF0XS2Ix7mfqpeo2T-ASge0Ap80tHIPVSElJDI9kBrjDg39WSzzf2k1RMfGMjsI2lj_gr34SOpAH6qlQ_YUaYlu0Ztla3sMTBrGXAIv_5iCh1kRgiIQcEAKJ7XPNabXxVAZkt702jQGttSDjrYQw5NW5mMsy9xH1bjOE8AcQ9s9QfcWUlQuzZaSqAJ4KJPBRHthUNazaJGen2UDebSgPMjQTGUJ4HftuAAf-r0a4uZ-c11ns3qQCrtHYopxKFwIVHWA8y4LfjzvoCsD_0VAPkOERJ1p6y9ATbnSc3zKUHb_O6zE5mHTjicAxftT4Cfv02g2q2O67o2mpT9gdV02jYCTS4qaj4hVGDIX_NaFBe-7_n-TvcEYU2sDsWQRmxY8kw9S_cuHVM5A5-kYf9u2kFd0eMJgaoeAiQgexzLpyZG8GmT6LXNPukO_GN4xmMNhVvojPN3jxEhF7qqrzf5JRQ8DBbftHhotYHYfzfHXbkItEEFvXR7UGNs--pwjxxsaj5DP8vb64EXvQsSoME7DHE",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 409,
+     "y": 330
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwF4w_E2UQPpVW2cu_qKgh3xJn7HoXlLs8xRFVgTDhZ2XXU-1lS2K39MATePtmUosJ-D0X2L7RTAMYOY5fSBkcHo5b1P5NL1pZGFoMAuVBKpQEljvtduaqQ_7hvUcaMfOJpHB45gP366GcndisaGsjOiGVUtltfFiyCgeUuxPyEDGPpXv5qSj7DF94fmBTK5JsKBKFto0mabCjLgsZQ8X5ktbVAF96r-jruh5WprMJtCgsxJaLA9huHPfcwZylqG0NaSNAVC2RmUw_HBoXE0axw0WuA0TZackTQNJOrhiNNyfKGwDYr1O2UFp85hFQoc-OdVM7mM1Tx9t_TKlnHxfgvik9CLMy_vfpgl0BKhzdImfp42EbwhO4VFYt5koqiQRpm6Y-njwTpZEm2m3rha5zX6qeNNGBCW3dTyVov0xRdHh7Q150is4PPqWsPIYq8q8l5iKF0ED7xta0AxA4CyPM-cdmQB5McXJESUrkGmUkdAT4du1NxIk_TtD0pII-pWvSSIhVwb2PfziBQFIo9bW-ItQkDVw0-3C2ntAdHU2DulBp2BeJw",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 618,
+     "y": 330
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGNrje0x47YylVbmpEaoJJP1vla7GaV0wXhHenobbJSrEwK5cnsm3qyTxKIKJGhXpJ4gJC250oXNcfMYdheuBOFn7PIr3UjeFSqKfWBnRxPGvp_Snhtb0ERmJ4teWqt9yBL0zy_R-rB1mD5FufBItu0_FRU-F4VTZWZ7hEyPYAvjP_Rwuu1Y0AoYrN_OOizML3ab7qzFPMgkr4Db7QqK6vzZ00em0m4oPSWC-UjHAoCNlGWUPXYmo9Xx1SwGlm7ijRIJELZStMHgkbUmibAvHnQaZmOXZhWpzFwyN2CJbsfUhdQk3HalQbRKOct3M5CuK9TS5jmVADM9cFLWb9Q2yxMEVAsiIm7LDuetWnMq1mGQbfzEy8lFsMLxZdo0tj_66uT30nITnQNWMXUe3ryrZ50dC-pf1Lc-fBjekpggZs5edNT9DHwQMpV2vxCl6xm7zDGNNP4qj0Hc8k6nEgau074yn1Ey8z1ExEKG00VPyp8ZVAUAsedQXL58au-jyGY8LTkIJLM3IlmRuSNNfxKAzc7goGc8vJum95ZjMuTjgUHHHwwPMo",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 254
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwELvgFNGMnj2wonEcfDBV_kVuvpp1Kq2_9jPrbbjhOEnOaA3BZA6eLzsFN35-jI5DTVcFZPJPA-vhwdJQwSAeMZ37F_saZIchjXLhVKS0pZJD0hVuiZkzTQquMJqtMKamg2shKLjxNnSymhRyqjqAnQ02gNJmA3n9aCKTgonnX6cCMvjkEyeyYquEl0H8A_qm3lxaHWr5mOL_k0Dzryqo6Pb2D5cSx226qyoa04bD1ykDMRrJf1WFYQAcIFya0pxG33DHudp2jgx1nCCuRLwCptHKqB9l-m3IZnRSdH3uHfrgRKMTky1gxSAw_qWnWySHlXdfs1rgdbq9VLPe-qBqC0xPC3Yxk8OGeOr0p7Q2LKGq_bHmY9ZdikCHQ3VDwLGm6QrMbCxLU-fe21uOnvBx36PEuAxQwGqC-mAdvBTb-7e2Jnx2-kn6tq_HAPXo--pWzeVXzj6kpBqDVIuI1TahxexiNCJcHy5ediDSkVMPE2VNWm4aiIoruH-k9cvDDnvmLKjNqeq5GDUBN4U7auIow4mXOJJm-4LPaVDrfoOnzbgD_rub0",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "text": "2nd visit",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGonaAoYSxVQMl-s0ngz1yXWo-ReTCEvKKGWoUEaReI0h7nDidWWokhoffocsjJ7e7SfsqWtP_zVNoYMx8fnT9Ms05gdBn4ZmPa2P9Ys7sRjBOe4Fkl9cZqWJGi7UHI2SouXI8uIi7VCo19DTJjMTKPRAqQvswiXGNuL5MLAYD2HhnZg6XhVHc7z1WODg3mo50fth7Z1aI1tXLR_-TXIGntEbCjGVVdZlri39IFHOwHQeg6x5bD37Qfd4BWelOVwBexQy4gdkOBL6gpq5cfnh3s1gVWvfrS-RFM7I_XK23hbRSnojFJ-_W2VbHt4rk2vmXWnY0ki4BgMpgCDouFEO74kTKXLs79kkhzc-jGYgpKbtDW1KZUDdQTaVOrjxeI2cR_koi4lD2KhWtFj9LuDrpB7lxO58UgeQf9_qCWRkSaNfJ6oe3K8lREOxvOFnd53UdegvUCnPSqFlCecQ5bqMy4PZqUVpCEsEUaVaNgQP1bqWFCN244vwq0P6rHOmoWRwKnPb6VATqt3g64OdbSaYLnbTPaZkA_Gl28mwB5XMl1WEYRjsw",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "text": "OPH02A",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHwfHQFwrRs_bYzKSR0UAChE3B_tFZga8FL6q5f0lEMV21uQojA8a_L7tSzHm_YDdUXMHUO2Bfx4rZMkpJFKCoCZX55mutatjwZ0untk4q_hWaVUKIi5oVp_CXQoq4U049p2h5Ljobjdtre6hymMhYkE9Rntj89dvrRpmCBnrExXTtqfb5unOZ6Z2Wpu9k_2Xh8bfC0wayfAaxmScu0jGkyXJrsenV-p9VO7FEAuQGbmL5ZdAfP0VbstAl32tZKQkKriguwpW18BNH55H5B0HUrn5hXd7uYI1y0yxfQtCrzbctPIXvcOFrVa0oIpfVLANv_Cd6NpBa-K-bZDdIxD_30P9TQ7OaTKQ4CF0U8R6uhqt61au9S8_KBYT2RVwk2Ulx3t29QY314HPAT4Etl9CQbkHw7qouxdBUesJntCGtXwmtFpJzZOtu8rp8yYJB03qKeq_J6A0XIlm_PfLJ2Io08cuV_mLlogpTGBkWhafPUhBM4IW9sIEQpVEiuj2RfzonTAO5fexgTdS2Rf8TeyREr1cmGAlTvmNugqSmzrwChaxSuEqw",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwF3BfezRsVXj_WlAub7grkjdppV6vCV-5SuMzMn1gvthybI_ad1FUv_vWqnqoVu6dP7QcVG6uduNZu7ieS80_OCTjw9adUeAk5nOHlqtRrMJdbdHiMjJZuao_PX5X2hfa071f8tUKxMmQzvd4BrJLPiCD6LZ0JgL6xNZ-T8GeTlkHvXpPkLjj0et5LvtH7ky79LWnzdaHoXL5KEhv169aD9pUZl0qrmvaHEOAAGUrKepYNyGrZiM3yJYrIeihu5JMMAdyxqfSgIAykCmMMTs4bYoS3cPUMBxR32hif_i790J73zdHRX3Ogt06K8e2J4jpGQh4PpDdOsXYbcCf9ECjYbrEQhojQJt99JC2C0kN19dWsOl2fs07b91_6YwSiKj5b0-KTCV9ojtUu4eiJ9Llb5Ih1-k558HM4YFP0oDqpChjRNp9TzE2BoKg95QoV6YEAqhbAyKx62QfbtETd45CPFEjky5PvJYjdyUZVuh8ofipg0_jzZP0bq5nVPng4NH7Mbzfb0p80Txqh0XIkzoKnBqRaraneoMq1LOkWyAQS3_TnxPq8",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHtWc2_q1kEhZomyfncBrII5szpuWl8Hh9epecvusNBF7uj_OMaAt87Udz54ScSX95OJQpNjBYu9QBit1LRwvKrFK8Tt_nrdog-RUQURJm9q4ZZwXdTIN_fv_S43xqPP_mkxxaxuIZnvuo1BIOWYk5ljHYALvXFxi7qVTR8xR8QMLvS5LbZZpzqqNmdrgZNZc2Ec50ok-XQYWMd7nyXtjbMpKpn2QMYvvm9GntyqzpG8YJ0xuhLbg6dq2Tx0aILtnwDsNFUxSbwAHvP6nRO0cw0eObwmkXrgAkmgjUAeuCUgVdE2rs6mEwjIowoHfzVLeTpUsviprHjDn6FHeogcAIwT8ETgGD63GKL73il4Ae36lMUTTlX-PhB7mrNKAUREO5yRswFwbmr3IHQhkSyrZvXVCAXijL1WUCB2H4FjyWz9iHkjlFiWX4JB0jlYrYf2tKYNg5UAHxFzUlF2OftV-dU5UC1jZAeu_mG5bwZS2y0IFGzA9rp1uzc0dQZHnC9vMYtNQi1C0WWigbjV6GkiAIoZjYGqXKaFZ74qo0E8rIS-blThUI",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "text": "16",
+     "type": "type"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "text": "0123456",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGP-12jiIUI9s_UDFZue4R4JwG2t0kBxOvBv3PAeEr3mDyDGZs2VRW03inCP39y-5P34AUIPqf6G9kGiPh8iKSIL3C3Y6ifdFVSK8d5P4oqXUzWlm8IynEplXtjsNodUH-2SNCpbGp-1DwLeSOgvONoedc0LMQuwJSvSplit3CdQpp0oZv9oaV1TV3dZc2PPcsNsmr3e4zQkl8AUJ0NASnmjxjzavDRxkZn7dLWnWh6DPAMa_946H-6HaYkgHDcZ3fRiEAbpxatq8UO9fPpuS83CEtuspPvqPGGBoAIFonxcsx5xzydSDukOQlXfGvCXkd0LHnOsbcpJ8MOIGQ-kXtPPGy7zSMhrjIRkVGbNY2s7riNgPtGZXsL3S7O5pSEnC46n8upwspwt8yKZplwez0h6aLjZsW7fItQVy0MxbsEaBujDcJ1Tzqlu7YyTxBJYG6hmTSXh9mu_gsEd49kVsrK3kc_Jf2bDYZGWNYbySMXWZGm3cJ9mXOILhMvAM8ys9Od88pEuFJ5aBJW8e5M1YjepwdmOMUbH0nsPjBUXh_NjK582k4",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Enter"
+     ],
+     "type": "keypress"
+    }
+   ]
+  }
+ ],
+ "actions": [
+  {
+   "button": "left",
+   "type": "click",
+   "x": 412,
+   "y": 178
+  },
+  {
+   "text": "Juan Dela Cruz (sample)",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 178
+  },
+  {
+   "text": "12-345678901-2",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 413,
+   "y": 255
+  },
+  {
+   "text": "Sample Konsulta Clinic",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 255
+  },
+  {
+   "text": "2026-10-29",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 412,
+   "y": 516
+  },
+  {
+   "text": "16",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 516
+  },
+  {
+   "text": "0123456",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 396,
+   "y": 515
+  },
+  {
+   "text": "16",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 853,
+   "y": 517
+  },
+  {
+   "text": "0123456",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 409,
+   "y": 330
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 618,
+   "y": 330
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 254
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "text": "2nd visit",
+   "type": "type"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "text": "OPH02A",
+   "type": "type"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "text": "16",
+   "type": "type"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "text": "0123456",
+   "type": "type"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Enter"
+   ],
+   "type": "keypress"
+  }
+ ]
+}

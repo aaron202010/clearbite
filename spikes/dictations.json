@@ -1,0 +1,12 @@
+[
+ {"id": "d1", "text": "Okay, tapos na ang oral exam. Nag-prophylaxis tayo, then fluoride varnish. Wala nang iba.",
+  "expect": {"services": ["oral_exam", "prophylaxis", "fluoride_varnish"], "teeth": {}, "emergency_pain": false}},
+ {"id": "d2", "text": "Exam, cleaning, at fluoride varnish. Lagyan natin ng sealant ang sixteen. Tapos Class V restoration sa thirty-one.",
+  "expect": {"services": ["oral_exam", "prophylaxis", "fluoride_varnish", "sealant", "class_v"], "teeth": {"sealant": [16], "class_v": [31]}, "emergency_pain": false}},
+ {"id": "d3", "text": "Nag-oral exam tayo at cleaning. Hindi na nag-fluoride kasi nagmamadali si patient.",
+  "expect": {"services": ["oral_exam", "prophylaxis"], "teeth": {}, "emergency_pain": false}},
+ {"id": "d4", "text": "Exam, prophy, fluoride varnish. Sealant sa sixteen, twenty-six, at thirty-six.",
+  "expect": {"services": ["oral_exam", "prophylaxis", "fluoride_varnish", "sealant"], "teeth": {"sealant": [16, 26, 36]}, "emergency_pain": false}},
+ {"id": "d5", "text": "Emergency ito, sobrang sakit daw ng ngipin niya. Extraction ng forty-six. Ginawa rin natin ang exam, cleaning, at fluoride.",
+  "expect": {"services": ["oral_exam", "prophylaxis", "fluoride_varnish", "extraction"], "teeth": {"extraction": [46]}, "emergency_pain": true}}
+]

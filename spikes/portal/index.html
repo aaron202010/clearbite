@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Claims Portal (demo)</title>
+<style>
+:root{--ink:#1d2433;--muted:#5b6475;--line:#d5d9e0;--bg:#f4f5f7;--card:#fff;--accent:#2f5d8a}
+*{box-sizing:border-box}body{margin:0;font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.demo{background:#fff4d6;border-bottom:1px solid #e8d49a;padding:8px 24px;font-size:13px}
+header{padding:14px 24px;border-bottom:1px solid var(--line);background:var(--card)}header b{font-size:17px}
+main{max-width:980px;margin:18px auto;padding:0 24px}
+form{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 22px;display:grid;grid-template-columns:1fr 1fr;gap:12px 22px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+input[type=text],select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff}
+fieldset{grid-column:1/-1;border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin:0}
+fieldset label{display:inline-flex;align-items:center;gap:6px;margin:4px 18px 4px 0;color:var(--ink);font-size:14px}
+.full{grid-column:1/-1}button{grid-column:1/-1;justify-self:start;padding:9px 22px;border:0;border-radius:6px;background:var(--accent);color:#fff;font:inherit;cursor:pointer}
+#done{display:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:22px}
+#done dl{display:grid;grid-template-columns:200px 1fr;gap:6px 12px}#done dt{color:var(--muted)}
+</style></head><body>
+<div class="demo">Sample portal built for this demo. It is not PhilHealth's website and is not connected to PhilHealth. Nothing here is sent anywhere.</div>
+<header><b>Sample Claims Portal</b> &nbsp;·&nbsp; New preventive dental claim</header>
+<main>
+<form id="claim" autocomplete="off" onsubmit="return submitClaim(event)">
+  <div><label for="patient">Patient name</label><input type="text" id="patient" name="patient"></div>
+  <div><label for="pin">Member PIN</label><input type="text" id="pin" name="pin" placeholder="00-000000000-0"></div>
+  <div><label for="kpp">Konsulta provider</label><input type="text" id="kpp" name="kpp"></div>
+  <div><label for="date">Date of service</label><input type="text" id="date" name="date" placeholder="YYYY-MM-DD"></div>
+  <div><label for="visit">Visit this year</label><select id="visit" name="visit"><option value="">Choose</option><option value="1">1st visit</option><option value="2">2nd visit</option></select></div>
+  <div><label for="code">Benefit code</label><select id="code" name="code"><option value="">Choose</option>
+    <option>OPH01</option><option>OPH01A</option><option>OPH01B</option><option>OPH02</option><option>OPH02A</option><option>OPH02B</option></select></div>
+  <fieldset><legend style="font-size:13px;color:var(--muted)">Services done</legend>
+    <label><input type="checkbox" name="svc" value="oral_exam">Oral exam</label>
+    <label><input type="checkbox" name="svc" value="prophylaxis">Prophylaxis</label>
+    <label><input type="checkbox" name="svc" value="fluoride_varnish">Fluoride varnish</label>
+    <label><input type="checkbox" name="svc" value="sealant">Pit and fissure sealant</label>
+    <label><input type="checkbox" name="svc" value="class_v">Class V</label>
+    <label><input type="checkbox" name="svc" value="extraction">Emergency extraction</label></fieldset>
+  <div><label for="teeth">Teeth (FDI, comma separated)</label><input type="text" id="teeth" name="teeth"></div>
+  <div><label for="dentist">Dentist PRC license no.</label><input type="text" id="dentist" name="dentist"></div>
+  <button type="submit">Submit claim</button>
+</form>
+<div id="done"><h2 style="margin-top:0">Claim received</h2><p>Reference <b id="ref"></b></p><dl id="summary"></dl></div>
+</main>
+<script>
+function submitClaim(e){e.preventDefault();const f=new FormData(document.getElementById('claim'));
+const c={patient:f.get('patient'),pin:f.get('pin'),kpp:f.get('kpp'),date:f.get('date'),visit:f.get('visit'),code:f.get('code'),
+services:f.getAll('svc'),teeth:f.get('teeth'),dentist:f.get('dentist')};window.lastClaim=c;
+document.getElementById('ref').textContent='DEMO-'+String(Date.now()).slice(-6);
+const dl=document.getElementById('summary');for(const [k,v] of Object.entries(c)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=Array.isArray(v)?v.join(', '):v;dl.append(dt,dd)}
+document.getElementById('claim').style.display='none';document.getElementById('done').style.display='block';return false}
+</script></body></html>

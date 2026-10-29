@@ -1,0 +1,127 @@
+[
+ {
+  "id": "d1",
+  "voice": "fil-PH-AngeloNeural",
+  "said": "Okay, tapos na ang oral exam. Nag-prophylaxis tayo, then fluoride varnish. Wala nang iba.",
+  "heard": "Okay, tapos na ang oral exam nag prophylaxis tayo then fluoride varnish. varnish. Wala ng iba. iba.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": []
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "d2",
+  "voice": "fil-PH-AngeloNeural",
+  "said": "Exam, cleaning, at fluoride varnish. Lagyan natin ng sealant ang sixteen. Tapos Class V restoration sa thirty-one.",
+  "heard": "exam cleaning at fluoride varnish lagyan natin ng sealant ang sixteen tapos Class restoration sa thirty one",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": true,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": true
+   },
+   "teeth": {
+    "class_v": [
+     31
+    ],
+    "extraction": [],
+    "sealant": [
+     16
+    ]
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "d3",
+  "voice": "fil-PH-AngeloNeural",
+  "said": "Nag-oral exam tayo at cleaning. Hindi na nag-fluoride kasi nagmamadali si patient.",
+  "heard": "nag oral exam tayo at cleaning. Hindi na nag fluoride kasi nagmamadali si patient.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": false,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": []
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "d4",
+  "voice": "fil-PH-AngeloNeural",
+  "said": "Exam, prophy, fluoride varnish. Sealant sa sixteen, twenty-six, at thirty-six.",
+  "heard": "exam, prophy, fluoride varnish. Sealant sa 16, 26, at 36.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": true
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": [
+     16,
+     26,
+     36
+    ]
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "d5",
+  "voice": "fil-PH-AngeloNeural",
+  "said": "Emergency ito, sobrang sakit daw ng ngipin niya. Extraction ng forty-six. Ginawa rin natin ang exam, cleaning, at fluoride.",
+  "heard": "emergency ito, sobrang sakit daw ng ngipin ngipin niya. Extraction ang forty six. Ginawa rin natin ng exam, cleaning, at at fluoride.",
+  "chart": {
+   "emergency_pain": true,
+   "services": {
+    "class_v": false,
+    "extraction": true,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [
+     46
+    ],
+    "sealant": []
+   }
+  },
+  "misses": []
+ }
+]

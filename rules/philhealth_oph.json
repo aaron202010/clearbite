@@ -1,0 +1,31 @@
+{
+  "payer": "PhilHealth",
+  "benefit": "Preventive Oral Health Services in Primary Care",
+  "source": "PhilHealth Tamang Sagot, Circular No. 2024-0034 (philhealth.gov.ph, fetched 2026-10-29)",
+  "year": "calendar",
+  "year_note": "inferred: the circular says 'sa loob ng isang taon' and does not say calendar or rolling",
+  "eligibility": [
+    {"field": "kpp_registered", "reason": "The patient must first register with a PhilHealth-accredited Konsulta Package Provider."}
+  ],
+  "mandatory_services": ["oral_exam", "prophylaxis", "fluoride_varnish"],
+  "tooth_caps": [
+    {"services": ["sealant", "class_v"], "max_teeth_per_year": 2,
+     "reason": "Pit and fissure sealant or root surface protection: no more than two teeth in one year."}
+  ],
+  "conditional_services": [
+    {"service": "extraction", "requires": "emergency_pain",
+     "reason": "Tooth extraction is covered only when the patient has severe tooth pain treated as an emergency."}
+  ],
+  "filing_deadline_days": 60,
+  "codes": [
+    {"visit": 1, "teeth_min": 0, "teeth_max": 0, "code": "OPH01"},
+    {"visit": 1, "teeth_min": 1, "teeth_max": 1, "code": "OPH01A"},
+    {"visit": 1, "teeth_min": 2, "teeth_max": 99, "code": "OPH01B"},
+    {"visit": 2, "teeth_min": 0, "teeth_max": 0, "code": "OPH02"},
+    {"visit": 2, "teeth_min": 1, "teeth_max": 1, "code": "OPH02A"},
+    {"visit": 2, "teeth_min": 2, "teeth_max": 99, "code": "OPH02B"}
+  ],
+  "codes_note": "inferred: the circular's table has codes for a 1st and 2nd visit only, and no code for the extraction",
+  "labels": {"oral_exam": "oral exam", "prophylaxis": "cleaning", "fluoride_varnish": "fluoride varnish",
+             "sealant": "pit and fissure sealant", "class_v": "Class V / root surface protection", "extraction": "emergency extraction"}
+}
