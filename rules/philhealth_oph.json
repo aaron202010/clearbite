@@ -3,17 +3,17 @@
   "benefit": "Preventive Oral Health Services in Primary Care",
   "source": "PhilHealth Tamang Sagot, Circular No. 2024-0034 (philhealth.gov.ph, fetched 2026-10-29)",
   "year": "calendar",
-  "year_note": "inferred: the circular says 'sa loob ng isang taon' and does not say calendar or rolling",
+  "year_note": "inferred: the circular says the limit applies within one year and does not say whether that is a calendar year or a rolling year; we count a calendar year",
   "eligibility": [
-    {"field": "kpp_registered", "reason": "The patient must first register with a PhilHealth-accredited Konsulta Package Provider."}
+    {"field": "kpp_registered", "title": "Registered with a Konsulta Package Provider", "reason": "The patient must first register with a PhilHealth-accredited Konsulta Package Provider."}
   ],
   "mandatory_services": ["oral_exam", "prophylaxis", "fluoride_varnish"],
   "tooth_caps": [
-    {"services": ["sealant", "class_v"], "max_teeth_per_year": 2,
+    {"services": ["sealant", "class_v"], "max_teeth_per_year": 2, "title": "Sealant or Class V: at most two teeth a year",
      "reason": "Pit and fissure sealant or root surface protection: no more than two teeth in one year."}
   ],
   "conditional_services": [
-    {"service": "extraction", "requires": "emergency_pain",
+    {"service": "extraction", "requires": "emergency_pain", "title": "Extraction only for severe pain emergencies",
      "reason": "Tooth extraction is covered only when the patient has severe tooth pain treated as an emergency."}
   ],
   "filing_deadline_days": 60,

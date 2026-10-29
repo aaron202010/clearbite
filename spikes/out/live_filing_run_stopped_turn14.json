@@ -1,0 +1,143 @@
+[
+ [
+  "start",
+  {
+   "claim": {
+    "patient": "Juan Dela Cruz (sample)",
+    "pin": "12-345678901-2",
+    "kpp": "Sample Konsulta Clinic",
+    "date": "2026-10-29",
+    "visit": "2",
+    "code": "OPH02A",
+    "services": [
+     "oral_exam",
+     "prophylaxis",
+     "fluoride_varnish",
+     "sealant"
+    ],
+    "teeth": "16",
+    "dentist": "0123456"
+   },
+   "replay": false,
+   "model": "muse-spark-1.3"
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 1,
+   "action": "click, type \"Juan Dela Cruz\", click and 5 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 2,
+   "action": "click",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 3,
+   "action": "click",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 4,
+   "action": "click, press Down, press Down and 1 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 5,
+   "action": "click, press Tab, wait and 1 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 6,
+   "action": "press Tab, wait, type \"OPH02A\"",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 7,
+   "action": "click, click, click and 5 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 8,
+   "action": "click",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 9,
+   "action": "click, press Tab, press Tab and 8 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 10,
+   "action": "press Tab, press Tab, press Tab and 3 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 11,
+   "action": "click",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 12,
+   "action": "click, wait",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 13,
+   "action": "press Enter",
+   "acknowledged": true
+  }
+ ],
+ [
+  "step",
+  {
+   "n": 14,
+   "action": "click, press Tab, press Tab and 12 more",
+   "acknowledged": true
+  }
+ ],
+ [
+  "error",
+  {
+   "message": "The filing agent stopped before it finished. Nothing was sent anywhere. Try again."
+  }
+ ]
+]

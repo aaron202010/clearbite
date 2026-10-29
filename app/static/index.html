@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chairside Claim (demo)</title>
+<style>
+:root {
+  --bg: #edf1f2;
+  --surface: #ffffff;
+  --surface-2: #f5f8f9;
+  --line: #d6dee2;
+  --line-strong: #aebcc3;
+  --ink: #14232b;
+  --ink-2: #455862;
+  --ink-3: #5c6e77;
+  --accent: #0e6a75;
+  --accent-hover: #0a5560;
+  --accent-tint: #e0f0f2;
+  --pass: #1b7447;
+  --pass-tint: #e5f3ea;
+  --fail: #b3261e;
+  --fail-tint: #fbecea;
+  --sealant: #2760a8;      --sealant-tint: #dce8f6;
+  --classv: #8f5a00;       --classv-tint: #faeccb;
+  --extraction: #6b3fa0;   --extraction-tint: #ebe2f6;
+  --earlier: #6f8089;      --earlier-tint: #eceff1;
+  --font: "Segoe UI", "SF Pro Text", -apple-system, "Helvetica Neue", Lato, "Liberation Sans", Arial, sans-serif;
+  --radius: 10px;
+}
+* { box-sizing: border-box; }
+html { font-size: 15px; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1rem/1.45 var(--font); -webkit-font-smoothing: antialiased; caret-color: var(--accent); }
+::selection { background: #bfe1e6; color: var(--ink); }
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+h1, h2, h3, p, ul, ol, dl, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+button { font: inherit; color: inherit; }
+.num, .tnum { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+/* header */
+.top { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 24px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; letter-spacing: -0.005em; }
+.brand svg { width: 26px; height: 26px; }
+.top .sub { color: var(--ink-2); font-size: .87rem; padding-left: 14px; border-left: 1px solid var(--line); }
+.top .spacer { flex: 1; }
+.demo-note { color: var(--ink-2); font-size: .87rem; }
+.tag { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink-2); font-size: .8rem; font-weight: 600; letter-spacing: .02em; }
+.tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--earlier); }
+.tag[hidden] { display: none; }
+
+/* layout */
+.app { max-width: 1440px; margin: 0 auto; padding: 16px 24px 48px; display: grid; gap: 16px; align-items: start;
+  grid-template-columns: 320px minmax(0, 1fr) 430px; grid-template-areas: "a b c" "band band band"; }
+.col { display: grid; gap: 16px; min-width: 0; }
+.col.a { grid-area: a; } .col.b { grid-area: b; } .col.c { grid-area: c; }
+#band { grid-area: band; }
+@media (min-width: 1000px) { .app.filing { padding-bottom: max(48px, calc(100vh - 700px)); } }
+@media (max-width: 1239px) {
+  .app { grid-template-columns: 320px minmax(0, 1fr); grid-template-areas: "a b" "a c" "band band"; }
+}
+@media (max-width: 800px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-areas: "a" "b" "c" "band"; padding: 12px 16px 40px; }
+  .top { padding: 0 16px; } .top .sub, .demo-note { display: none; }
+}
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; min-width: 0; }
+.card h2, .band-head h2 { font-size: 1.07rem; font-weight: 700; letter-spacing: -0.005em; }
+.card .lede { color: var(--ink-2); font-size: .87rem; margin-top: 2px; }
+.label { color: var(--ink-3); font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 0 18px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); font-weight: 600; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.btn:hover:not(:disabled) { background: var(--surface-2); border-color: var(--ink-3); }
+.btn:active:not(:disabled) { background: #e6ecee; }
+.btn:focus-visible, .vbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn:disabled { cursor: not-allowed; color: var(--ink-3); background: var(--surface-2); border-color: var(--line); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn.primary:active:not(:disabled) { background: #084651; }
+.btn.primary:disabled { background: #c3d0d4; border-color: #c3d0d4; color: #fff; }
+.btn.recording { background: var(--fail); border-color: var(--fail); color: #fff; }
+.btn.recording:hover:not(:disabled) { background: #96201a; border-color: #96201a; }
+.btn.full { width: 100%; min-height: 46px; font-size: 1.04rem; }
+.dot-rec { width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* patient */
+.who { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin-top: 12px; font-size: .93rem; }
+.facts dt { color: var(--ink-3); } .facts dd { margin: 0; }
+.yes { color: var(--pass); font-weight: 600; }
+.visits { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.visits ol { margin-top: 8px; display: grid; gap: 8px; }
+.vrow { display: grid; grid-template-columns: 78px 1fr; gap: 10px; font-size: .9rem; }
+.vrow .d { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.vrow .t { color: var(--ink); }
+.vrow .t small { display: block; color: var(--ink-3); font-size: .82rem; }
+.vrow.today { padding: 8px 10px; margin: 0 -10px; background: var(--accent-tint); border-radius: 8px; }
+.vrow.today .d { color: var(--accent-hover); font-weight: 600; }
+
+/* capture */
+.rec-row { display: grid; gap: 8px; margin-top: 14px; }
+.hint { color: var(--ink-3); font-size: .83rem; min-height: 1.2em; }
+.saved { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.saved .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+.vbtn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 42px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color .15s, border-color .15s; }
+.vbtn svg { width: 12px; height: 12px; fill: currentColor; stroke: none; }
+.vbtn:hover:not(:disabled) { background: var(--surface-2); border-color: var(--ink-3); }
+.vbtn[aria-pressed="true"] { background: var(--accent-tint); border-color: var(--accent); color: var(--accent-hover); }
+.vbtn:disabled { cursor: not-allowed; opacity: .55; }
+
+/* heard */
+.heard { margin-top: 10px; min-height: 4.2em; font-size: 1.05rem; line-height: 1.5; color: var(--ink); }
+.heard.empty { color: var(--ink-3); font-size: .95rem; }
+.heard .cursor { display: inline-block; width: 2px; height: 1.05em; background: var(--accent); vertical-align: text-bottom; margin-left: 2px; animation: pulse 1s steps(2) infinite; }
+.err { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--fail-tint); color: #8c1d17; font-size: .92rem; }
+.err[hidden] { display: none; }
+
+/* chart */
+.chart-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: .83rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 18px; border-radius: 5px; border: 1.3px solid; display: inline-grid; place-items: center; font-size: .72rem; font-weight: 700; }
+.sw.s { background: var(--sealant-tint); border-color: var(--sealant); color: var(--sealant); }
+.sw.v { background: var(--classv-tint); border-color: var(--classv); color: var(--classv); }
+.sw.x { background: var(--extraction-tint); border-color: var(--extraction); color: var(--extraction); }
+.sw.e { background: var(--earlier-tint); border-color: var(--earlier); color: var(--earlier); border-style: solid; }
+.sw.n { border-color: var(--fail); border-style: dashed; background: repeating-linear-gradient(135deg, #fff 0 3px, #f6d4d1 3px 4px); }
+#chart-wrap { margin-top: 10px; display: flex; justify-content: center; }
+#chart { width: 100%; max-width: 640px; height: auto; display: block; }
+.tooth path.crown { fill: #fff; stroke: var(--line-strong); stroke-width: 1.2; transition: fill .28s ease-out, stroke .28s ease-out; }
+.tooth path.fissure { fill: none; stroke: var(--line); stroke-width: 1; transition: stroke .28s; }
+.tooth .tn { font: 600 11px var(--font); fill: var(--ink-3); text-anchor: middle; font-variant-numeric: tabular-nums; transition: fill .28s; }
+.tooth .glyph { font: 700 13px var(--font); text-anchor: middle; opacity: 0; transition: opacity .28s; }
+.tooth .strike { stroke: var(--fail); stroke-width: 1.6; stroke-linecap: round; opacity: 0; transition: opacity .28s; }
+.tooth.s-sealant path.crown { fill: var(--sealant-tint); stroke: var(--sealant); stroke-width: 1.6; } .tooth.s-sealant .glyph { fill: var(--sealant); opacity: 1; } .tooth.s-sealant .tn { fill: var(--sealant); }
+.tooth.s-class_v path.crown { fill: var(--classv-tint); stroke: var(--classv); stroke-width: 1.6; } .tooth.s-class_v .glyph { fill: var(--classv); opacity: 1; } .tooth.s-class_v .tn { fill: var(--classv); }
+.tooth.s-extraction path.crown { fill: var(--extraction-tint); stroke: var(--extraction); stroke-width: 1.6; } .tooth.s-extraction .glyph { fill: var(--extraction); opacity: 1; } .tooth.s-extraction .tn { fill: var(--extraction); }
+.tooth.earlier path.crown { fill: var(--earlier-tint); stroke: var(--earlier); } .tooth.earlier .glyph { fill: var(--earlier); opacity: 1; } .tooth.earlier .tn { fill: var(--earlier); }
+.tooth.refused path.crown { fill: url(#hatch); stroke: var(--fail); stroke-dasharray: 3 2.5; stroke-width: 1.6; }
+.tooth.refused .glyph { fill: var(--fail); opacity: .9; } .tooth.refused .strike { opacity: 1; } .tooth.refused .tn { fill: var(--fail); font-weight: 700; }
+.zone { font: 600 10.5px var(--font); fill: var(--ink-3); letter-spacing: .03em; }
+.tlist { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 6px; font-size: .92rem; }
+.tlist .none { color: var(--ink-3); }
+.trow { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: baseline; }
+.trow .nm { color: var(--ink-2); }
+.trow .bad { color: var(--fail); font-weight: 600; }
+.trow .ok { font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 800px) { .trow { grid-template-columns: 1fr; gap: 0; } }
+
+/* check */
+.result { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding: 12px 16px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); }
+.code { font-size: 1.95rem; font-weight: 700; letter-spacing: .02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.code.none { color: var(--ink-3); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 9px; border-radius: 16px; font-size: .88rem; font-weight: 700; white-space: nowrap; }
+.pill.ok { background: var(--pass-tint); color: var(--pass); }
+.pill.no { background: var(--fail-tint); color: var(--fail); }
+.meta { margin-top: 8px; color: var(--ink-2); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.leftoff { margin-top: 6px; color: var(--fail); font-size: .9rem; font-weight: 600; }
+.rules { margin-top: 14px; border-top: 1px solid var(--line); }
+.rule { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.rule .ico { margin-top: 2px; }
+.rule .rt { font-weight: 600; font-size: .95rem; line-height: 1.35; }
+.rule .rd { color: var(--ink-2); font-size: .89rem; margin-top: 1px; }
+.rule.ok .ico { color: var(--pass); } .rule.fail .ico { color: var(--fail); } .rule.na .ico { color: var(--ink-3); }
+.rule.fail .rd { color: #8c1d17; }
+.rule.na .rt { color: var(--ink-2); font-weight: 500; }
+.left { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.left strong { font-variant-numeric: tabular-nums; font-size: 1.02rem; }
+.inferred { margin-top: 12px; color: var(--ink-3); font-size: .82rem; line-height: 1.4; }
+.inferred b { color: var(--ink-2); font-weight: 600; }
+.inferred li { margin-top: 3px; }
+.act { margin-top: 14px; display: grid; gap: 8px; }
+.act .hint { text-align: center; }
+.act .hint.bad { color: var(--fail); }
+.placeholder { margin-top: 14px; padding: 18px 0 4px; color: var(--ink-3); font-size: .93rem; }
+.skel { height: 14px; border-radius: 4px; background: linear-gradient(90deg, #e6ecee 25%, #f3f6f7 50%, #e6ecee 75%); background-size: 200% 100%; animation: sh 1.3s linear infinite; margin-top: 14px; }
+@keyframes sh { to { background-position: -200% 0; } }
+
+/* filing band */
+.band { padding: 18px 20px 20px; scroll-margin-top: 12px; }
+.band[hidden] { display: none; }
+.band-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.badge { padding: 3px 10px; border-radius: 6px; background: #fff4d6; border: 1px solid #e3cf95; color: #5f4800; font-size: .83rem; font-weight: 600; }
+#band-status { margin-left: auto; color: var(--ink-2); font-size: .93rem; font-weight: 600; }
+#band-status.done { color: var(--pass); } #band-status.bad { color: var(--fail); }
+.band-body { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 20px; margin-top: 14px; align-items: start; }
+@media (max-width: 1000px) { .band-body { grid-template-columns: minmax(0, 1fr); } }
+.shot { border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; background: var(--surface-2); }
+.shot .bar { padding: 7px 12px; border-bottom: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); font-size: .82rem; }
+.shot .frame { position: relative; aspect-ratio: 8 / 5; background: #fff; }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.shot .wait[hidden] { display: none; }
+.shot .wait { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: .95rem; }
+.shot figcaption { padding: 9px 12px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-2); min-height: 2.6em; }
+.side { display: grid; gap: 18px; min-width: 0; }
+.side h3 { font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; gap: 10px; }
+.side h3 .sum { text-transform: none; letter-spacing: 0; font-size: .9rem; color: var(--ink-2); font-weight: 600; }
+.side h3 .sum.ok { color: var(--pass); } .side h3 .sum.bad { color: var(--fail); }
+#rb { margin-top: 6px; border-top: 1px solid var(--line); }
+#rb li { display: grid; grid-template-columns: 22px 148px 1fr; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .9rem; align-items: baseline; }
+#rb .mk { width: 16px; height: 16px; align-self: center; color: var(--ink-3); }
+#rb .mk svg { width: 16px; height: 16px; }
+#rb .mk .pend { display: block; width: 12px; height: 12px; margin: 2px; border-radius: 50%; border: 1.6px solid var(--line-strong); }
+#rb li.ok .mk { color: var(--pass); } #rb li.bad .mk { color: var(--fail); }
+#rb .lab { color: var(--ink-3); } #rb .val { overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+#rb .val small { display: block; color: var(--fail); font-size: .82rem; }
+#rb li.pop .mk { animation: tick .32s ease-out both; }
+@keyframes tick { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+#steps { margin-top: 6px; border-top: 1px solid var(--line); max-height: 230px; overflow-y: auto; counter-reset: s; }
+#steps li { display: grid; grid-template-columns: 28px 1fr; gap: 6px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .87rem; color: var(--ink-2); }
+#steps li b { color: var(--ink-3); font-weight: 600; font-variant-numeric: tabular-nums; }
+#steps li:last-child { color: var(--ink); }
+.fine { margin-top: 10px; color: var(--ink-3); font-size: .83rem; }
+@media (max-width: 800px) { #rb li { grid-template-columns: 22px 1fr; } #rb .lab { grid-column: 2; } #rb .val { grid-column: 2; } #rb li { gap: 0 8px; } .card { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; } }
+</style>
+</head>
+<body data-replay="0">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 16 16"><path d="M4 8h8"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 16 16"><rect x="6" y="1.5" width="4" height="8" rx="2"/><path d="M3.5 7.5a4.5 4.5 0 009 0M8 12v2.5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="6" fill="#0e6a75"/><path d="M8 7.5c1.6-1 3.6-.6 5 .3 1.4-.9 3.4-1.3 5-.3 1.8 1.2 1.6 3.6.9 5.6-.6 1.7-.6 3.6-1.3 5.2-.4.9-1.3.9-1.6 0-.5-1.5-.5-3.3-1.3-3.3h-.4c-.8 0-.8 1.8-1.3 3.3-.3.9-1.2.9-1.6 0-.7-1.6-.7-3.5-1.3-5.2-.7-2-.9-4.4.9-5.6z" fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    Chairside Claim
+  </div>
+  <span class="sub">Preventive oral health claims, checked before they are filed</span>
+  <span class="spacer"></span>
+  <span id="replay-tag" class="tag" hidden title="Every model call is answered from saved outputs. No network is used.">replay</span>
+  <span class="demo-note">Demo with a sample patient</span>
+</header>
+
+<main class="app" id="app">
+  <div class="col a">
+    <section class="card" aria-labelledby="pt-name">
+      <h2 class="sr">Patient</h2>
+      <p class="who" id="pt-name">Loading the patient</p>
+      <dl class="facts">
+        <dt>Member PIN</dt><dd id="pt-pin" class="tnum"></dd>
+        <dt>Konsulta provider</dt><dd id="pt-kpp"></dd>
+        <dt>Registered</dt><dd id="pt-reg"></dd>
+      </dl>
+      <div class="visits">
+        <h3 class="label">This year's visits</h3>
+        <ol id="pt-visits"></ol>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="cap-title">
+      <h2 id="cap-title">Today's visit</h2>
+      <p class="lede">Speak while you work. Your words become a chart, then the claim is checked.</p>
+      <div class="rec-row">
+        <button class="btn primary" id="rec" type="button"><svg class="ico"><use href="#i-mic"/></svg><span id="rec-label">Record visit</span></button>
+        <p class="hint" id="rec-hint" aria-live="polite"></p>
+      </div>
+      <div class="saved">
+        <h3 class="label">Saved visits</h3>
+        <div class="row" id="saved" role="group" aria-label="Play a saved visit"></div>
+        <p class="hint" style="margin-top:8px">The founder's own recordings, kept as a saved take.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="col b">
+    <section class="card" aria-labelledby="hd-title">
+      <h2 id="hd-title">What was heard</h2>
+      <p class="heard empty" id="heard" aria-live="polite">Record a visit or play a saved one. The words appear here.</p>
+      <p class="err" id="err" role="alert" hidden></p>
+    </section>
+
+    <section class="card" aria-labelledby="ch-title">
+      <div class="chart-head"><h2 id="ch-title">Tooth chart</h2><span class="lede">FDI numbering, 32 permanent teeth</span></div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="sw s">S</i>Sealant</span><span><i class="sw v">V</i>Class V</span><span><i class="sw x">X</i>Extraction</span>
+        <span><i class="sw n"></i>Not covered</span><span><i class="sw e">S</i>Earlier this year</span>
+      </div>
+      <div id="chart-wrap"><svg id="chart" role="img" aria-label="Tooth chart, no visit yet"></svg></div>
+      <div class="tlist" id="tlist"><p class="none">Teeth appear here when a visit arrives.</p></div>
+    </section>
+  </div>
+
+  <div class="col c">
+    <section class="card" aria-labelledby="ck-title">
+      <h2 id="ck-title">Claim check</h2>
+      <p class="lede" id="ck-src">PhilHealth Preventive Oral Health Services</p>
+      <div id="ck-body" aria-live="polite">
+        <p class="placeholder">The rules from the circular are checked here as soon as a visit arrives. Nothing is filed until you approve it.</p>
+      </div>
+      <div class="act">
+        <button class="btn primary full" id="approve" type="button" disabled>Approve and file</button>
+        <p class="hint" id="approve-hint">Nothing is filed until you approve. The agent fills a sample portal, not PhilHealth's site.</p>
+      </div>
+      <div class="inferred" id="ck-inferred"></div>
+    </section>
+  </div>
+
+  <section class="card band" id="band" hidden aria-labelledby="band-title">
+    <div class="band-head">
+      <h2 id="band-title">Filing on the sample portal</h2>
+      <span class="badge">Demo portal, not PhilHealth's site</span>
+      <span id="band-status" role="status">Starting</span>
+    </div>
+    <div class="band-body">
+      <figure class="shot">
+        <div class="bar">Sample Claims Portal (demo), a local page</div>
+        <div class="frame"><img id="shot" alt="The sample portal as the agent last saw it" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" hidden><div class="wait" id="shot-wait">Opening the sample portal</div></div>
+        <figcaption id="shot-cap" aria-live="polite"></figcaption>
+      </figure>
+      <div class="side">
+        <section aria-labelledby="rb-title">
+          <h3 id="rb-title"><span>Read-back from the portal</span><span class="sum" id="rb-sum"></span></h3>
+          <ul id="rb"></ul>
+        </section>
+        <section aria-labelledby="st-title">
+          <h3 id="st-title"><span>Agent steps</span></h3>
+          <ol id="steps"></ol>
+        </section>
+      </div>
+    </div>
+    <p class="fine" id="band-fine"></p>
+  </section>
+</main>
+
+<script>
+"use strict";
+const $ = (s) => document.querySelector(s);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const sleep = (ms) => new Promise((r) => setTimeout(r, REDUCED ? 0 : ms));
+const SVC = { sealant: { key: "S", name: "Sealant" }, class_v: { key: "V", name: "Class V" }, extraction: { key: "X", name: "Extraction" } };
+const SVC_NAME = { oral_exam: "oral exam", prophylaxis: "cleaning", fluoride_varnish: "fluoride varnish", sealant: "sealant", class_v: "Class V", extraction: "extraction" };
+const state = { replay: false, patient: null, data: null, token: 0, busy: false, filing: false, filed: false, recorder: null };
+const ico = (n) => `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const niceDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const list = (a) => a.join(", ");
+
+/* ---------- patient ---------- */
+function visitLine(v) {
+  const done = Object.keys(SVC_NAME).filter((s) => v.services.includes(s) && !SVC[s]).map((s) => SVC_NAME[s]);
+  const teeth = Object.keys(SVC).filter((s) => (v.teeth[s] || []).length).map((s) => `${SVC[s].name.toLowerCase()} on ${list(v.teeth[s])}`);
+  return { main: list(done), extra: list(teeth) };
+}
+function renderPatient() {
+  const p = state.patient;
+  $("#pt-name").textContent = p.name; $("#pt-pin").textContent = p.pin; $("#pt-kpp").textContent = p.kpp;
+  $("#pt-reg").innerHTML = p.kpp_registered ? '<span class="yes">Yes</span>' : '<span style="color:var(--fail);font-weight:600">No</span>';
+  const rows = p.history.map((v, i) => {
+    const l = visitLine(v);
+    return `<li class="vrow"><span class="d">${niceDate(v.service_date)}</span><span class="t">Visit ${i + 1}<small>${esc(l.main)}${l.extra ? "; " + esc(l.extra) : ""}</small></span></li>`;
+  });
+  if (state.data) rows.push(`<li class="vrow today"><span class="d">${niceDate(state.data.service_date)}</span><span class="t">Visit ${state.data.check.visit}<small>This visit, being checked</small></span></li>`);
+  $("#pt-visits").innerHTML = rows.join("") || '<li class="hint">No visits yet this year.</li>';
+}
+
+/* ---------- tooth chart ---------- */
+const UPPER = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+const LOWER = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+const SLOT = 46;
+const DIM = (n) => { const t = n % 10; return t >= 6 ? [31, 41, "molar"] : t >= 4 ? [26, 38, "premolar"] : t === 3 ? [22, 44, "canine"] : t === 1 ? [24, 42, "incisor"] : [21, 39, "incisor"]; };
+const rr = (x, y, w, h, rt, rb) => `M${x + rt},${y}H${x + w - rt}Q${x + w},${y} ${x + w},${y + rt}V${y + h - rb}Q${x + w},${y + h} ${x + w - rb},${y + h}H${x + rb}Q${x},${y + h} ${x},${y + h - rb}V${y + rt}Q${x},${y} ${x + rt},${y}Z`;
+let marks = {};   /* tooth -> { svc: [..], refused: bool, earlier: [..] } */
+let lit = true;
+let narrow = false;
+
+function layout() {
+  const cells = [];
+  if (!narrow) {
+    const x = (i) => 12 + i * 34 + (i >= 8 ? 24 : 0) + 17;
+    UPPER.forEach((n, i) => cells.push({ n, cx: x(i), top: 36, arch: "u", numY: 28 }));
+    LOWER.forEach((n, i) => cells.push({ n, cx: x(i), top: 128, arch: "l", numY: 128 + SLOT + 14 }));
+    return { w: 592, h: 196, cells, zones: [{ t: "Patient's right", x: 12, y: 108, a: "start" }, { t: "Patient's left", x: 580, y: 108, a: "end" }], mid: true };
+  }
+  const rows = [["Upper right", [18, 17, 16, 15, 14, 13, 12, 11], "u"], ["Upper left", [21, 22, 23, 24, 25, 26, 27, 28], "u"],
+                ["Lower right", [48, 47, 46, 45, 44, 43, 42, 41], "l"], ["Lower left", [31, 32, 33, 34, 35, 36, 37, 38], "l"]];
+  const zones = [];
+  rows.forEach(([label, ns, arch], r) => {
+    const y0 = r * 84; zones.push({ t: label, x: 12, y: y0 + 11, a: "start" });
+    ns.forEach((n, i) => cells.push({ n, cx: 12 + i * 38 + 19, top: y0 + 18, arch, numY: y0 + 18 + SLOT + 13 }));
+  });
+  return { w: 328, h: 332, cells, zones, mid: false };
+}
+
+function toothSVG(c) {
+  const [w, h, type] = DIM(c.n);
+  const x = c.cx - w / 2, y = c.arch === "u" ? c.top + SLOT - h : c.top;
+  const d = c.arch === "u" ? rr(x, y, w, h, 6, 13) : rr(x, y, w, h, 13, 6);
+  const occ = c.arch === "u" ? y + h - 14 : y + 14;
+  let fiss = "";
+  if (type === "molar") fiss = `M${c.cx - 6},${occ}H${c.cx + 6}M${c.cx},${occ - 5}V${occ + 5}`;
+  else if (type === "premolar") fiss = `M${c.cx},${occ - 5}V${occ + 5}`;
+  const m = marks[c.n] || {};
+  const cls = ["tooth"]; (m.svc || []).forEach((s, i) => { if (i === 0) cls.push("s-" + s); });
+  if (m.earlier && !m.svc) cls.push("earlier");
+  if (m.refused) cls.push("refused");
+  const glyph = (m.svc || m.earlier || []).map((s) => SVC[s].key).join("") || "";
+  const ttl = [m.svc ? (m.refused ? "Not covered: " : "") + list(m.svc.map((s) => SVC[s].name)) : "", m.earlier ? "Earlier this year: " + list(m.earlier.map((s) => SVC[s].name.toLowerCase())) : ""].filter(Boolean).join(". ");
+  return `<g class="${cls.join(" ")}" data-n="${c.n}"><title>Tooth ${c.n}${ttl ? ". " + ttl : ""}</title>
+    <path class="crown" d="${d}"/>${fiss ? `<path class="fissure" d="${fiss}"/>` : ""}
+    <text class="glyph" x="${c.cx}" y="${y + h / 2 + 4.5}">${glyph}</text>
+    <line class="strike" x1="${x + 2}" y1="${y + h - 3}" x2="${x + w - 2}" y2="${y + 3}"/>
+    <text class="tn" x="${c.cx}" y="${c.numY}">${c.n}</text></g>`;
+}
+
+function renderChart() {
+  const L = layout(), svg = $("#chart");
+  svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`); svg.style.maxWidth = narrow ? "420px" : "640px";
+  svg.innerHTML = `<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="#fdf1f0"/><line x1="0" y1="0" x2="0" y2="5" stroke="#e7aaa5" stroke-width="1.4"/></pattern></defs>`
+    + (L.mid ? `<line x1="12" y1="100" x2="580" y2="100" stroke="#d6dee2" stroke-dasharray="2 4"/><line x1="304" y1="26" x2="304" y2="${L.h - 8}" stroke="#d6dee2" stroke-dasharray="2 4"/>` : "")
+    + L.zones.map((z) => `<text class="zone" x="${z.x}" y="${z.y}" text-anchor="${z.a}">${z.t}</text>`).join("")
+    + L.cells.map(toothSVG).join("");
+}
+
+function buildMarks(d) {
+  const m = {}; const off = [];
+  const add = (n, k, v) => { (m[n] = m[n] || {})[k] = v; };
+  state.patient.history.forEach((h) => Object.keys(SVC).forEach((s) => (h.teeth[s] || []).forEach((n) => { (m[n] = m[n] || {}).earlier = [...((m[n] || {}).earlier || []), s]; })));
+  if (!d) return { m, off };
+  Object.keys(SVC).forEach((s) => (d.chart.teeth[s] || []).forEach((n) => {
+    if (!(n >= 11 && n <= 48 && UPPER.concat(LOWER).includes(n))) { off.push(n); return; }
+    m[n] = m[n] || {}; m[n].svc = [...(m[n].svc || []), s];
+    if (((d.check.refused_teeth || {})[s] || []).includes(n)) m[n].refused = true;
+  }));
+  return { m, off };
+}
+
+function lightChart(d) {
+  const { m, off } = buildMarks(d); marks = m;
+  const prevLit = lit; lit = false; renderChart();
+  const lighten = () => {
+    document.querySelectorAll("#chart .tooth").forEach((g) => g.classList.remove("s-sealant", "s-class_v", "s-extraction", "refused"));
+    const order = Object.keys(m).filter((n) => m[n].svc).map(Number);
+    order.forEach((n, i) => setTimeout(() => {
+      const g = document.querySelector(`#chart .tooth[data-n="${n}"]`); if (!g) return;
+      g.classList.add("s-" + m[n].svc[0]); if (m[n].refused) g.classList.add("refused");
+    }, REDUCED ? 0 : 160 * i));
+  };
+  /* start from the unlit look, then light up one tooth at a time */
+  document.querySelectorAll("#chart .tooth").forEach((g) => g.classList.remove("s-sealant", "s-class_v", "s-extraction", "refused"));
+  requestAnimationFrame(() => requestAnimationFrame(lighten));
+  lit = true;
+  const parts = [];
+  Object.keys(SVC).forEach((s) => {
+    const all = d.chart.teeth[s] || []; if (!all.length) return;
+    const cov = (d.check.covered_teeth || {})[s] || [], ref = (d.check.refused_teeth || {})[s] || [];
+    parts.push(`<div class="trow"><span class="nm">${SVC[s].name}</span><span>${cov.length ? `<span class="ok">${list(cov)}</span> covered` : ""}${cov.length && ref.length ? "; " : ""}${ref.length ? `<span class="bad">${list(ref)} not covered</span>` : ""}</span></div>`);
+  });
+  if (off.length) parts.push(`<div class="trow"><span class="nm">Not on this chart</span><span class="tnum">${list(off)} (baby teeth)</span></div>`);
+  $("#tlist").innerHTML = parts.join("") || '<p class="none">No tooth work in this visit.</p>';
+  const said = Object.keys(SVC).map((s) => (d.chart.teeth[s] || []).length ? `${SVC[s].name} ${list(d.chart.teeth[s])}` : "").filter(Boolean);
+  $("#chart").setAttribute("aria-label", "Tooth chart. " + (said.length ? said.join(". ") : "No tooth work in this visit."));
+  return prevLit;
+}
+
+function resetChart() {
+  marks = buildMarks(null).m; lit = true; renderChart();
+  $("#chart").setAttribute("aria-label", "Tooth chart, no visit yet");
+  $("#tlist").innerHTML = '<p class="none">Teeth appear here when a visit arrives.</p>';
+}
+
+new ResizeObserver(() => {
+  const w = $("#chart-wrap").clientWidth, n = w < 520;
+  if (n !== narrow) { narrow = n; renderChart(); }
+}).observe($("#chart-wrap"));
+
+/* ---------- checker ---------- */
+function renderCheck(d) {
+  const c = d.check, ok = c.claimable;
+  const off = Object.values(c.refused_teeth || {}).flat();
+  const rules = c.lines.map((l) => {
+    const cls = l.na ? "na" : l.ok ? "ok" : "fail";
+    return `<li class="rule ${cls}"${l.ok && l.detail ? ` title="${esc(l.detail)}"` : ""}>${ico(l.na ? "minus" : l.ok ? "check" : "x")}<div><div class="rt">${esc(l.title)}<span class="sr">${l.na ? ": not used" : l.ok ? ": met" : ": not met"}</span></div>${!l.ok && l.detail ? `<div class="rd">${esc(l.detail)}</div>` : ""}</div></li>`;
+  }).join("");
+  const left = c.left;
+  $("#ck-body").innerHTML = `
+    <div class="result"><div><div class="label">Benefit code</div><div class="code ${c.code ? "" : "none"}">${c.code || "None"}</div></div>
+      <span class="pill ${ok ? "ok" : "no"}">${ico(ok ? "check" : "x")}${ok ? "Ready to file" : "Cannot file yet"}</span></div>
+    <p class="meta">Visit ${c.visit} this year, service date ${niceDate(d.service_date)}</p>
+    ${ok && off.length ? `<p class="leftoff">Left off the claim: tooth ${list(off)}</p>` : ""}
+    <ul class="rules" aria-label="Rules checked">${rules}
+      <li class="left"><span>Left this year after this visit</span><strong>${left.teeth === null ? "-" : left.teeth} ${left.teeth === 1 ? "tooth" : "teeth"}, ${left.visits} ${left.visits === 1 ? "visit" : "visits"}</strong></li></ul>
+    `;
+  $("#ck-inferred").innerHTML = `<b>Inferred by us, not stated in the circular:</b><ul>${d.inferred.map((t) => `<li>${esc(t.charAt(0).toUpperCase() + t.slice(1))}</li>`).join("")}</ul>`;
+  const btn = $("#approve"), hint = $("#approve-hint");
+  btn.disabled = !!d.file_blocked || state.filing; btn.textContent = "Approve and file";
+  hint.classList.toggle("bad", !!d.file_blocked);
+  hint.textContent = d.file_blocked || "Nothing is filed until you approve. The agent fills a sample portal, not PhilHealth's site.";
+}
+
+function checkLoading() {
+  $("#ck-body").innerHTML = '<div class="skel" style="width:60%;height:44px"></div><div class="skel"></div><div class="skel" style="width:88%"></div><div class="skel" style="width:72%"></div><div class="skel"></div>';
+  $("#approve").disabled = true; $("#ck-inferred").innerHTML = "";
+}
+
+/* ---------- a visit ---------- */
+function showErr(msg) { const e = $("#err"); e.textContent = msg || ""; e.hidden = !msg; }
+
+async function typeHeard(text, token) {
+  const el = $("#heard"); el.classList.remove("empty");
+  const words = text.split(/\s+/);
+  for (let i = 1; i <= words.length; i++) {
+    if (token !== state.token) return false;
+    el.innerHTML = esc(words.slice(0, i).join(" ")) + (i < words.length ? '<span class="cursor"></span>' : "");
+    await sleep(32);
+  }
+  return true;
+}
+
+function setBusy(on, which) {
+  state.busy = on;
+  document.querySelectorAll(".vbtn").forEach((b) => { b.disabled = on || state.filing || false; b.setAttribute("aria-pressed", String(!!which && b.dataset.id === which)); });
+  $("#rec").disabled = on || state.filing || state.replay || !window.MediaRecorder;
+}
+
+async function sendVisit(req, which) {
+  if (state.filing) return;
+  const token = ++state.token; state.data = null; state.filed = false;
+  $("#band").hidden = true; $("#app").classList.remove("filing"); showErr(""); setBusy(true, which); checkLoading(); resetChart(); renderPatient();
+  const heard = $("#heard"); heard.classList.add("empty"); heard.textContent = req.audio ? "Listening to the recording" : "Reading the visit";
+  try {
+    const r = await fetch("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req.json) });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(body.detail || "The visit could not be read. Try again.");
+    if (token !== state.token) return;
+    const done = await typeHeard(body.heard, token); if (!done) return;
+    state.data = body; renderPatient(); lightChart(body);
+    await sleep(500); if (token !== state.token) return;
+    renderCheck(body);
+  } catch (e) {
+    if (token !== state.token) return;
+    heard.classList.add("empty"); heard.textContent = "Record a visit or play a saved one. The words appear here.";
+    $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>';
+    showErr(e.message || "Something went wrong. Try again.");
+  } finally {
+    if (token === state.token) setBusy(false, which);
+  }
+}
+
+/* ---------- recording ---------- */
+async function toggleRecord() {
+  const btn = $("#rec");
+  if (state.recorder) { state.recorder.stop(); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (e) { $("#rec-hint").textContent = "The microphone is blocked. Allow it for this page, or play a saved visit."; return; }
+  const chunks = []; const rec = new MediaRecorder(stream); state.recorder = rec;
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.onstop = () => {
+    stream.getTracks().forEach((t) => t.stop()); state.recorder = null;
+    btn.classList.remove("recording"); $("#rec-label").textContent = "Record visit"; $("#rec-hint").textContent = "";
+    const fd = new FormData(); fd.append("audio", new Blob(chunks, { type: rec.mimeType || "audio/webm" }), "visit.webm");
+    sendVisit({ audio: fd }, null);
+  };
+  rec.start(); btn.classList.add("recording");
+  const t0 = Date.now();
+  const tick = () => { if (!state.recorder) return; const s = Math.floor((Date.now() - t0) / 1000); $("#rec-label").textContent = `Stop and check (${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")})`; setTimeout(tick, 500); };
+  tick();
+  $("#rec-hint").textContent = "Recording. Speak as you would at the chair.";
+}
+
+/* ---------- filing ---------- */
+function bandReset(claim) {
+  const band = $("#band"); band.hidden = false; $("#app").classList.add("filing");
+  $("#band-status").className = ""; $("#band-status").textContent = "Starting the agent";
+  $("#shot").hidden = true; $("#shot-wait").hidden = false; $("#shot-wait").textContent = "Opening the sample portal"; $("#shot-cap").textContent = "";
+  $("#steps").innerHTML = ""; $("#rb-sum").textContent = ""; $("#rb-sum").className = "sum"; $("#band-fine").textContent = "";
+  const want = { patient: claim.patient, pin: claim.pin, kpp: claim.kpp, date: claim.date, visit: ({ 1: "1st", 2: "2nd" }[claim.visit] || claim.visit + "th") + " visit", code: claim.code,
+                 services: claim.services.map((s) => ({ oral_exam: "Oral exam", prophylaxis: "Prophylaxis", fluoride_varnish: "Fluoride varnish", sealant: "Pit and fissure sealant", class_v: "Class V", extraction: "Emergency extraction" }[s])).join(", "),
+                 teeth: claim.teeth || "none", dentist: claim.dentist };
+  const labels = { patient: "Patient name", pin: "Member PIN", kpp: "Konsulta provider", date: "Date of service", visit: "Visit this year", code: "Benefit code", services: "Services done", teeth: "Teeth", dentist: "Dentist PRC license no." };
+  $("#rb").innerHTML = Object.keys(labels).map((f) => `<li data-f="${f}"><span class="mk"><i class="pend"></i></span><span class="lab">${labels[f]}</span><span class="val">${esc(want[f])}</span></li>`).join("");
+  band.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" });
+}
+
+async function showReadback(d) {
+  let right = 0;
+  for (const row of d.readback) {
+    const li = document.querySelector(`#rb li[data-f="${row.field}"]`); if (!li) continue;
+    li.className = row.ok ? "ok pop" : "bad pop"; right += row.ok;
+    li.querySelector(".mk").innerHTML = ico(row.ok ? "check" : "x");
+    if (!row.ok) li.querySelector(".val").innerHTML = `${esc(row.want)}<small>Portal holds: ${esc(row.got || "nothing")}</small>`;
+    await sleep(110);
+  }
+  const s = $("#rb-sum"); s.textContent = `${right} of ${d.total} fields right`; s.className = "sum " + (d.all_ok ? "ok" : "bad");
+}
+
+function handleEvent(ev, data) {
+  if (ev === "start") {
+    $("#band-status").textContent = data.replay ? "Replaying the saved run" : "The agent is filling the form";
+  } else if (ev === "step") {
+    const img = $("#shot"); img.src = data.image; img.hidden = false; $("#shot-wait").hidden = true;
+    $("#shot-cap").textContent = `Step ${data.n}: ${data.action}`;
+    const li = document.createElement("li"); li.innerHTML = `<b>${data.n}</b><span>${esc(data.action)}</span>`; $("#steps").append(li); $("#steps").scrollTop = 1e6;
+    $("#band-status").textContent = `Working, step ${data.n}`;
+  } else if (ev === "done") {
+    if (data.image) { $("#shot").src = data.image; $("#shot").hidden = false; $("#shot-wait").hidden = true; }
+    const st = $("#band-status");
+    state.outcome = data.all_ok ? "ok" : "bad";
+    st.className = data.all_ok ? "done" : "bad"; st.textContent = data.all_ok ? "Filed and read back" : (data.stopped ? "Stopped before it finished" : "Filed, but fields differ");
+    $("#shot-cap").textContent = data.all_ok ? "Claim received by the sample portal" : (data.stopped || "Check the fields marked on the right");
+    $("#band-fine").textContent = `${data.acknowledged} safety ${data.acknowledged === 1 ? "check was" : "checks were"} acknowledged, only on the local sample portal and only for plain clicks and typing. `
+      + (data.replay ? `Replayed from a saved run (${data.steps} turns, ${data.seconds} seconds when it ran live).` : `${data.steps} turns, ${data.seconds} seconds.`);
+    showReadback(data);
+  } else if (ev === "error") {
+    const st = $("#band-status"); st.className = "bad"; st.textContent = data.message;
+  }
+}
+
+async function approve() {
+  if (!state.data || state.filing || state.data.file_blocked) return;
+  state.filing = true; state.filed = false; state.outcome = ""; setBusy(false, document.querySelector('.vbtn[aria-pressed="true"]')?.dataset.id);
+  document.querySelectorAll(".vbtn").forEach((b) => (b.disabled = true));
+  const btn = $("#approve"); btn.disabled = true; btn.textContent = "Filing";
+  const d = state.data;
+  try {
+    const r = await fetch("/file", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ approved: true, chart: d.chart, service_date: d.service_date, filing_date: d.filing_date }) });
+    if (!r.ok) { const b = await r.json().catch(() => ({})); throw new Error(b.detail || "The claim could not be filed."); }
+    bandReset(d.claim);
+    const reader = r.body.getReader(), dec = new TextDecoder(); let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read(); if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf("\n\n")) >= 0) {
+        const block = buf.slice(0, i); buf = buf.slice(i + 2);
+        const ev = (/^event: (.*)$/m.exec(block) || [])[1], dl = (/^data: (.*)$/m.exec(block) || [])[1];
+        if (ev && dl) handleEvent(ev, JSON.parse(dl));
+      }
+    }
+    if (state.outcome === "ok") { state.filed = true; btn.textContent = "Filed and read back"; }
+    else { btn.textContent = "Approve and file again"; btn.disabled = false; }
+  } catch (e) {
+    $("#band").hidden ? showErr(e.message) : handleEvent("error", { message: e.message });
+    btn.textContent = "Approve and file"; btn.disabled = false;
+  } finally {
+    state.filing = false;
+    document.querySelectorAll(".vbtn").forEach((b) => (b.disabled = false));
+    $("#rec").disabled = state.replay || !window.MediaRecorder;
+  }
+}
+
+/* ---------- start ---------- */
+async function init() {
+  const r = await fetch("/patient"); const j = await r.json();
+  state.patient = j.patient; state.replay = j.replay;
+  $("#replay-tag").hidden = !j.replay;
+  $("#ck-src").textContent = `${j.payer} ${j.benefit}`;
+  $("#saved").innerHTML = j.saved_visits.map((id, i) => `<button type="button" class="vbtn" data-id="${id}" aria-pressed="false" aria-label="Play saved visit ${i + 1}"><svg aria-hidden="true"><use href="#i-play"/></svg>${i + 1}</button>`).join("");
+  document.querySelectorAll(".vbtn").forEach((b) => b.addEventListener("click", () => sendVisit({ json: { visit_id: b.dataset.id } }, b.dataset.id)));
+  $("#rec").addEventListener("click", toggleRecord);
+  $("#approve").addEventListener("click", approve);
+  if (j.replay) { $("#rec").disabled = true; $("#rec-hint").textContent = "Recording is off in replay mode. Play a saved visit."; }
+  else if (!window.MediaRecorder) { $("#rec").disabled = true; $("#rec-hint").textContent = "This browser cannot record. Play a saved visit."; }
+  renderPatient(); resetChart();
+}
+init().catch(() => { $("#pt-name").textContent = "The server did not answer"; showErr("Could not load the sample patient. Reload the page."); });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "sample-001",
+    "name": "Juan Dela Cruz (sample)",
+    "pin": "12-345678901-2",
+    "kpp": "Sample Konsulta Clinic",
+    "kpp_registered": true,
+    "dentist_prc": "0123456",
+    "history": [
+      {
+        "service_date": "2026-03-12",
+        "kpp_registered": true,
+        "services": ["oral_exam", "prophylaxis", "fluoride_varnish", "sealant"],
+        "teeth": {"sealant": [46]},
+        "emergency_pain": false
+      }
+    ]
+  }
+]

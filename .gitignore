@@ -3,3 +3,5 @@ __pycache__/
 spikes/out/*.png
 spikes/out/*.log
 .claude/
+!spikes/out/wonder_*.png
+!spikes/out/ui_*.png
