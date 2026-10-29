@@ -129,10 +129,11 @@ still("1", f"{B}/c1.png", f"{B}/n1.mp3"); still("2", f"{B}/c2.png", f"{B}/n2.mp3
 tk = f"{B}/s_take.mp4"
 open(f"{B}/take_label.txt", "w").write("Founder playing the dentist")
 open(f"{B}/take_cap.txt", "w").write("\"Exam, prophy, fluoride varnish. Sealant on 16, 26 and 36.\"")
-run("ffmpeg", "-y", "-ss", "42.0", "-t", "11.2", "-i", TAKE, "-filter_complex",
+BLUR = f"{B}/take_blur.mp4"   # background blurred (Aaron 2026-10-29), made by blur_clip.py from the same 42.0 s start
+run("ffmpeg", "-y", "-i", BLUR, "-ss", "42.0", "-t", "11.2", "-i", TAKE, "-filter_complex",
     f"[0:v]scale=1280:720,drawtext=fontfile={BOLD}:textfile={B}/take_label.txt:fontsize=26:fontcolor=white:box=1:boxcolor=0x0e6a75@0.92:boxborderw=12:x=40:y=36,"
     f"drawtext=fontfile={REG}:textfile={B}/take_cap.txt:fontsize=27:fontcolor=white:box=1:boxcolor=black@0.62:boxborderw=14:x=(w-text_w)/2:y=h-text_h-46,format=yuv420p[v];"
-    f"[0:a]aresample=48000,loudnorm=I=-16:TP=-1.5[a]", "-map", "[v]", "-map", "[a]", *ENC, tk); segs.append(tk)
+    f"[1:a]aresample=48000,loudnorm=I=-16:TP=-1.5[a]", "-map", "[v]", "-map", "[a]", "-t", "11.2", *ENC, tk); segs.append(tk)
 m = json.load(open(f"{R}/marks.json"))
 screen("4", m["visit"], m["checked"], f"{B}/n4.mp3", LINES["n4"], (170, 135, 960, 540))
 screen("5", m["checked"], m["approve"], f"{B}/n5.mp3", LINES["n5"], (330, 135, 1104, 621))
