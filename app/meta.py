@@ -11,7 +11,7 @@ SERVICES = ["oral_exam", "prophylaxis", "fluoride_varnish", "sealant", "class_v"
 
 
 def key():
-    if "MODEL_API_KEY" not in os.environ:
+    if "MODEL_API_KEY" not in os.environ and os.path.exists("/root/.creds/meta-model-api.env"):   # set MODEL_API_KEY anywhere else
         for line in open("/root/.creds/meta-model-api.env"):
             if line.startswith("MODEL_API_KEY="):
                 os.environ["MODEL_API_KEY"] = line.split("=", 1)[1].strip().strip('"')
