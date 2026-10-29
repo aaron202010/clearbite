@@ -1,0 +1,122 @@
+[
+ {
+  "id": "e1",
+  "cut": "0-10.2",
+  "heard": "okay so oral uh exam done uh prophylaxis then fluoride varnish nothing else today",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": []
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e2",
+  "cut": "11.0-25.6",
+  "heard": "I exam cleaning, uh exam, uh cleaning, fluoride varnish, uh sealant sealant on sixteen. And uh and uh Class V uh restoration on thirty one.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": true,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": true
+   },
+   "teeth": {
+    "class_v": [
+     31
+    ],
+    "extraction": [],
+    "sealant": [
+     16
+    ]
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e3",
+  "cut": "27.6-38.9",
+  "heard": "so uh oral exam uh and cleaning only for today uh we skip the fluoride and uh the the patient was in hurry",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": false,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": []
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e4",
+  "cut": "42.0-54.0",
+  "heard": "uh exam, uh prophy, uh fluoride varnish, uh sealant on sixteen, and uh twenty six and uh thirty six.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": true
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": [
+     16,
+     26,
+     36
+    ]
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e5",
+  "cut": "56.6-",
+  "heard": "so this is an emergency um the patient is in severe pain uh extraction of forty six and we also did the exam on cleaning and fluoride",
+  "chart": {
+   "emergency_pain": true,
+   "services": {
+    "class_v": false,
+    "extraction": true,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [
+     46
+    ],
+    "sealant": []
+   }
+  },
+  "misses": []
+ }
+]
