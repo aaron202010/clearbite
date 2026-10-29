@@ -24,7 +24,11 @@ Coordinates are pixels in the screenshot you were last shown: (0, 0) is the top-
 Return a short batch of actions only when they do not depend on intermediate visual feedback, such as click, type, and keypress.
 Do not batch across page loads, modal transitions, or any step where the next action depends on a new screenshot.
 Finish by replying with a normal message when the goal is visibly complete, or a short explanation when the task is infeasible.
-Do not guess hidden UI state and do not claim completion unless the screenshot supports it."""
+Do not guess hidden UI state and do not claim completion unless the screenshot supports it.
+When the task is a single form on one page with no page load until Submit: click a text field and type its value, and you
+may batch several visible fields in one turn. Click checkboxes directly. For a dropdown, click it, type the first letters
+of the option and press Enter. Prefer clicking each field over pressing Tab. A static form needs no wait actions: only use
+wait after pressing Submit."""
 KEYS = {"ctrl": "Control", "control": "Control", "cmd": "Meta", "meta": "Meta", "super": "Meta", "alt": "Alt", "option": "Alt",
         "shift": "Shift", "enter": "Enter", "return": "Enter", "tab": "Tab", "esc": "Escape", "escape": "Escape",
         "backspace": "Backspace", "delete": "Delete", "del": "Delete", "space": "Space", "up": "ArrowUp", "down": "ArrowDown",
