@@ -1,0 +1,127 @@
+[
+ {
+  "id": "e1",
+  "voice": "en-PH-JamesNeural",
+  "said": "Okay, oral exam done. Prophylaxis, then fluoride varnish. Nothing else today.",
+  "heard": "okay, oral exam done. Prophylaxis, then fluoride varnish. Nothing else else today.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": []
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e2",
+  "voice": "en-PH-JamesNeural",
+  "said": "Exam, cleaning and fluoride varnish. Sealant on sixteen. And a Class V restoration on thirty-one.",
+  "heard": "exam, cleaning and fluoride varnish. sealant on 16. and a Class V restoration on 31.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": true,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": true
+   },
+   "teeth": {
+    "class_v": [
+     31
+    ],
+    "extraction": [],
+    "sealant": [
+     16
+    ]
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e3",
+  "voice": "en-PH-JamesNeural",
+  "said": "Oral exam and cleaning only. We skipped the fluoride, the patient was in a hurry.",
+  "heard": "oraloral exam and cleaning only, we skip the fluoride, the patient was in a hurry.",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": false,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": []
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e4",
+  "voice": "en-PH-JamesNeural",
+  "said": "Exam, prophy, fluoride varnish. Sealants on sixteen, twenty-six and thirty-six.",
+  "heard": "exam, prophy, fluoride varnish. varnish, sealant on 16, 26 and 36",
+  "chart": {
+   "emergency_pain": false,
+   "services": {
+    "class_v": false,
+    "extraction": false,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": true
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [],
+    "sealant": [
+     16,
+     26,
+     36
+    ]
+   }
+  },
+  "misses": []
+ },
+ {
+  "id": "e5",
+  "voice": "en-PH-JamesNeural",
+  "said": "This is an emergency, the patient is in severe pain. Extraction of forty-six. We also did the exam, cleaning and fluoride.",
+  "heard": "This is an emergency, the patient is in severe pain. Extraction of of 46. We also did the exam, cleaning and fluoride.",
+  "chart": {
+   "emergency_pain": true,
+   "services": {
+    "class_v": false,
+    "extraction": true,
+    "fluoride_varnish": true,
+    "oral_exam": true,
+    "prophylaxis": true,
+    "sealant": false
+   },
+   "teeth": {
+    "class_v": [],
+    "extraction": [
+     46
+    ],
+    "sealant": []
+   }
+  },
+  "misses": []
+ }
+]

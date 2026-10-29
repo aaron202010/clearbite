@@ -7,8 +7,9 @@ from app import meta
 
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(HERE, "out")
 VOICE = sys.argv[1] if len(sys.argv) > 1 else "fil-PH-AngeloNeural"
+LINES = sys.argv[2] if len(sys.argv) > 2 else "dictations.json"
 total = right = 0; rows = []
-for d in json.load(open(os.path.join(HERE, "dictations.json"))):
+for d in json.load(open(os.path.join(HERE, LINES))):
     mp3 = os.path.join(OUT, f"{d['id']}_{VOICE}.mp3")
     if not os.path.exists(mp3):
         subprocess.run(["uvx", "--from", "edge-tts==7.3.1", "edge-tts", "--voice", VOICE, "--rate=-5%", "--text", d["text"],
