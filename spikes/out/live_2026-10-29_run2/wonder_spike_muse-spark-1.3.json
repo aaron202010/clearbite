@@ -1,0 +1,975 @@
+{
+ "model": "muse-spark-1.3",
+ "steps": 25,
+ "seconds": 497,
+ "final": "Claim submitted successfully. Page shows 'Claim received' with reference DEMO-647762 for patient Juan Dela Cruz (sample).\n",
+ "submitted": {
+  "patient": "Juan Dela Cruz (sample)",
+  "pin": "12-345678901-2",
+  "kpp": "Sample Konsulta Clinic",
+  "date": "2026-10-29",
+  "visit": "2",
+  "code": "OPH02A",
+  "services": [
+   "fluoride_varnish",
+   "oral_exam",
+   "prophylaxis",
+   "sealant"
+  ],
+  "teeth": "16",
+  "dentist": "0123456"
+ },
+ "wrong_fields": [],
+ "acknowledged": [
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwE9v4zLilIUpaHh52VNUlXyRuCAyFqgD6s67JAhYoXB-JN2i_J8-eK2f9ftW_XRvng8MiOda8_9XigXTlLtvfoBX_6hYuSppcqKEIIXzE3k_1QAiudnjKMuZvgcUILI2gBBWMLE9wjA8Wqj_nDK4hM-5HfPo9htpMgniGjEWHa3htKhRYhz8EX_iIyZO8qir-kiAK9ox9yegmSDK0r-sGBZurIgLnCq3GfJSxW0yTjILX08PFxrVy4TFrDm8InSM4sUSmqxIcdMjRmskhdcihssA346PGe5tbgGOsCWdqd03lAApE1-ahJZaMa2sI1IAXM3Y7ZsYNWVjiF3vI_s0pJqGmVeboyFPZlUcMhHppSI7RzFdPWWocArXuRVTk8vQff2fOCfH_0fyrqs7x9onMgOUAfX4xeXa7_gAFhYoTivVAAynY9zlGChL92bQEnM4vvvsZOvZksEDh7oFrEqwffm4v1g79z3d7V12eHHBqVlpzXSADRwNEca7ZN9aKW2lPwLNqmRIwtNMr_wIWkDodAbhi4ft34DtPyxOfgjS9mvHUdXihA",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 412,
+     "y": 177
+    },
+    {
+     "text": "Juan Dela Cruz (sample)",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 177
+    },
+    {
+     "text": "12-345678901-2",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 412,
+     "y": 254
+    },
+    {
+     "text": "Sample Konsulta Clinic",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 254
+    },
+    {
+     "text": "2026-10-29",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGDwweUbuiY82MsrZD8fjZGEc0u0B5YyK9VR3Vq-7_NNlNI0c-NG5WBGsf94c-_Roy6scIZvlSbfwdso8m7wxJgkoiz7i0-YjonZuJzrC59K1QeUYOOEwwUAKv7pB6low8gwUWC0LmW8XWRzKoWmAI85gVifomh9X7Y4lYz8laZzTYl-c_Z06Rc2p3bwIQY_EwU8Z-_vV_ISJpZRa38JMS1BXJpBRxTkeisodFlTqPTA84OJgl7Dy6XNaFpEAEVtbBdDFXpjXNPRWX08KZ1LWrrpuA_A_vjSzhmliLZhne-P0J48QJxy4kVFXfHC5X4Ch-rvJ1fgq_bL-2JIkOSpiJZVyIquXWY0-4iPe5p3D_jaHfiAE3yLImxDzkyJoYyucgarGq7iJy3kktKb2xhLxB74lVTVmcO1Hg5y9ODnLSdQ95p1D69rb1hMb9p0f9ctFR9SR8AtwWRw8vewKIXmOW9tUO7R_5hkGr2ya9kvYbS9OdYdV_qwU-aFOok77qGqO207HZXYwYQy0cen0NksxdKLNeQEjHGT5HJPH_cfMRQtAF4_2I",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 412,
+     "y": 329
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEv6WZnSwvp6OwswaNzcm7esqY30Ii-6hgvxKWbZzkTR6tqfpKv6asH4T7V4Biek0l-sn1nAxiOAyODyk9K7ydrgQjN7eywbfOvgnRx-V0bHrtADhXyvWKYISX5KIykUjrPVZBNfa_l4wa42EA-Hs3bM3cwvxGsIUBpf8631CbF7IiN7lFsV4svtoswyu2BrGT1U9dahaGzEp5tTtSFM-xmf2HaDqEJ7VO3BtlDiwoSDHL5VNhQ8ywRCP_xu0gfflTVswS7hbgZsd2212RLs3IBPFsfMklZgIgxM1AYU3ACUvAzmqziulEyhJ9W1RRMPgQIuEvSvKXnIkam6-5667eBLq-9XFL9_rHgCczK0nkGJUUcqCUuKnBUdwIPE_-4s8VWf-y1ZEYWZeQhaoCcfUZwCLFqU1R0NDkmfI2IbYAroRLIu1ryAQHHdvPHzbSImTzeSbzzS4-hYp0Gk3avgUZxLr9Gqi3camiSbszyzne7xUvGQ6OZWe3PBlfXPSnMrZMEQ0PBsIFPDSpyhU8DAzFzT-Ghc8nSh8VVoa1o5xVWbeEBmbE",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 373,
+     "y": 331
+    },
+    {
+     "keys": [
+      "2"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwFEHahswDsxWdoQsKyA2XV6bAIa1SzGeLb2SK03vyY9J19NgB17w9IYP7Q6MsefwrHbe5iIrV2ul5yAftgaqTYEqN0ZBBbuhvWod9o29kRV1PrbJ5kqmf577NnGFAlsOqiBPXVxLYdUEZJU5RGOz2hX5jrma34OqMpV8BKBch3vcf5Pl2aUaSGdOHDaPiADJ_czl36Ix8p30XfpJmgliX2Vs5k_43VwJR8HkFw3N71mDKE3rAWYmaS7hObZC78xWwIAYxK2WV1Xi-NjbfGm0G64YzS_Evkc_8uxDvEIMXbe863f29SyXOgMhSJjdb97EBADT4hWj__fyaSNJDUUQ39--gH7PQNdphTzBNhARxMq0nQb59p0JYBxcZVeYQk3CnrkyyBDmfOzJ25jD6uaBCIId9pxMsrWqB9NNkR8zWFj4yO_gW_SxjQL9E9eb9GfnfJ4cdJMMQXq-GbxdfKr23GlvLx6iq9XTEUKYXUn_XMysywRL3ojROoOz33zdG3DF0LnSZwGwEGLQNU_hqp7kOwPGQ7kNu26pGlB3nYHgJVPKz8Iw40",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 618,
+     "y": 329
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHFv5P9WJeKu2lKqzjcDhnshHAMp50VxUIKO4lyUA8ep_YR0XwLxN7D1sb9jYe0CYD2gyZcJMOg_GsOQkqZDts4sBJVDceRkRnEtbl3KBZ3rywKyL1ygFUD7UA1B849fMQQFj47i8PM8yR9g90w_Tyei8N-HcPRob0-jZPDdtwx7pLeYTysg22BuipQ8DmntSOE7YtDCrXd2J5Adpy9X7gQ4QROtoQtoI585divggD02n6HeNY3Bb4fLgou51FfVTvQKxompC5y4ZPjZJHBP6a6XoAJum0VPZfnbbgCDTKb-gOcHG2TklzilBmZ7u_QZdsAQ-RB2mnBovaQRQwBeZ6yyK70BCS0kR5sVjuQxgqCe8-aIKPrNnLVmybuPYiYJblpyR2e4_I7RU7wywi4VD6ymd3U-NsHNXLD6w4JoXHMBaYp1-dTi3oXMuofzQaWLyeYScyD4yd3Ty1Z-P8Vu-P--ucWOm09lGrSPV5CSY1V_VnU2ZFPDMbmCUHLorwc6bfZgrzcq99qfh5MjGpctwduKCax-5mvy3aY0D4XP2x7dcZrRkM",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 831,
+     "y": 255
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGX8uR4eRgQEgGsJaPNlq_DHyzv2J-1kq-36_w3QcvllQXj_PUYp8ZwiCJifyE7BIDNoTc3uY7c9quttz1ng7QZtULN8VKARxMwgyDICsadhJO-voPI4PQiKV1ldn8slTVpkKngI00enIW_dqu6okya3-tww6aSDXwTEbvDNm-nb669DhFQ3SIqNFu82cRyqxmZ_kiweYUq4Biha9b169BjiP4dE_-75U3WzZ4DbBKIFbCsJibLQEnlPtCSd7_CplknxCcVWteWbhBbvx2eLlkb2pQUr8ExSh-9qidFbdhRj9Mc9RChvrN-Bm2UwGwEFrbs6nrd_kDKsh2big8nu_0tut7boBgbDnryd6wKI1nZYBNIhrlBzemvapC5MvmiOVcTJMZwSZoLyE7GcugJDCvzUf7_RiJLeLb7jV2QtJnyRh0ngKcJR3sdglYP_SbCv-mOXa0Sxr03KXQAEgKcq_xyeoNeA6LWF-Oy2Efd-JWbeKYgV19Xq6tycp2iHkIJG-ZV1cxZ1ll5oQAGMs3egMDI8DEB0Nvw1guXObYItcOwSnr9jfc",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Down"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEzawLaK2J9y9xHd5qwqt7RiqT8B7sJ_Vmvycow8zvPkBkAr1XnTyxw0sPU2XnOX3b3jukv5XOo0GF2XmXUgFd56n1Zz19KlyUSovRslcWzBWV-5cQpQ0eEk9Va_eFRt1agvCGcyxJnR0Kv40iQgqBTvTVckbRddCr3tEK8wh9_8r2GN0UJ5B7tJrEbf3cRiBO-1fp9Z_OTxwq6XmbbFskrow6MUYMMxb5wUjNr1RJVUbAHJ1p3Q9d33QOnJcUEuFZ0oJtASMyfzz83tzBdumXCupDnsauNvH335sh72r0q4xOfpAAM9vI4f1t9H_SOJo9PSeNm56yVd0J3gf09c7Va5Als91GH4HPlG42UQQ2if_zydvRmZO1ERFnU4sOMPdYid4FlxVc5weKEDZr2dFG9xpjzMytpEzPsA9ZXAlBqCUsBNyteNY_tCXak99ymCUdeKi78i3-J_J35_TvJX1EmulEWC-E_Cip1iieAZ1Rz6_o8Z7GXR_KI0_NiLDlIOVKj9KrUkPNWRhkf0Gp2kIOPNEOvxLbe-86j5dCRZn43B1ng3_Y",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Down"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEvVuMr9dnDIMdild_v8Gczm6kVf0cPGs8KFMusDpn6GrO0oyEoOVlXc37RZnRjIne-p48K3oPVgQgG5Ap8AVREBYo0S_PD2vF0Bwax9ghm8xcMvBLb9luXr82987p_pljFYq6TwBFE2utMieRsOf43NF1isySr-ioQsRRKWg-jxDXj5OQS2HTbnMcqmHPSnyA4d83EhJsRvyDtIGXTBqH3tPaS6DGxmAx-_Z9DMgmaUo831aReSNnf0SfSoTLXCOFy0Xxil2wVlgVbqpvn_fhenFRPgbGWHuLYJo-zNamGGjCKF53WU4QSYWNpH0qSH7vVbZvk3z37aAvvwqJFd2nCUUz9S_JXEiqLYsLVtbdjB5ireTX45MHKebcp2jzZ8oFrbttkwqKuCn-386cQPGUZFi9_et9BUJmAdrVaRpwn5Mer-tYQAkrOQ_L6aGMjcryetLx_thCVR5pKpmDMwIkmoTVp36z6RcSdWUMPBAWxE2OAFGBy_t8dtmwCjOSJYtiipv8l44pT1OdxndvW1jhQckWx23VXVYbWlqicwwpm4z0Bxhs",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEP2yxVEAKQvts70DM04rLVJJrTazWLsqWBk8dGDj2Kdw21jFMPxRAywo9t2ArqwzFBaKJjCB2Jk_HRuhcfi2B_7sWIV8KmjasEM-BxaL_4rNepBoz-xDarSQmXv9EIlAmNpim-yv4vEPjRJyINDMKZ1tH2s_Wb9yXc9AsalCtSTio5Aad14kWBD1neXMbZIdu7EjSvVzxkFAubjYjpOJV8arZRAFae5cPwh5PqqNU_VkdTCq0f1WnomvVELCoGc3PRB32exI0EF6oB8sfItJpb_WZj_abjed9wsKlSfO4fKZVTZlUJRG-E893_QB94uKUq2tvwd9CVo7p1jLV-7uA5r8m0n2yn60XRL5gHpuSlzGSLa7TPCgKphY_4oWCyEQDd_sG93G62aR_qUO7ze_JTXyuLv4Qbbkv5o-ywhYWGjvQ_LpTLveu864LgL_Q7uQH9BtKDK3kWcOv5V9kK5zHa8EUvS-_6zOB3g42IWPy1MpCZaU0SR8iXpCG1-ZhvQAkeq1aw0fkVOie0plVmynDEkcdUvKML464xEvsX1O1aknLS7hE",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "text": "OPH02A",
+     "type": "type"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHnW6WzzQV-ZYJCnh1HLotkZVKIRxhCzpilJKjRPGx0YDZ4Yzv7QxxyHESV76vFm5-m-WiMmywJAy3xkP9TnAGys58d4yitCTFjfm5836nlULQ2qLn2NzEcg0dQHMdTJFpR74nPu43-wIHBrsXn3DVeap_FBeR8xgWPN-h2pXHxdVkGJf_NUjOlV47w4p5wtQ5zelzrXlng-k0ATEv-PyLFIrOtShp4UvKxr3shBGz9209DDODosk08TWP_UQxWEbMQsDF6IHDrfYo6lrWDARewxggJlRztm_yKliXJqTXp-dR8uvuIpretFXF42KLOYrYYt9I2aJN6-AMAsA_tTvjhXvCld0filxchsP9OQYyWxX5kGOSrMJ52AuhW1D2ZEtvuIcJAmvs2FNajnP9OrWs_khjkNzK7kvi4All7HAy6osFleAgiYoWWkWLNfJT9JbMj8dlC1d4F74dMsGvr5FwLZRfwRr1NPWByNpmz2tySrRz7lHCp6NPz5qmnouLdQJanMGJQ2J62p7obFxXeh6g4wnGTAHpajqACgUMKRIn6qF8Q6Cg",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 220,
+     "y": 406
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 341,
+     "y": 406
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 469,
+     "y": 406
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 631,
+     "y": 406
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 412,
+     "y": 517
+    },
+    {
+     "text": "16",
+     "type": "type"
+    },
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 517
+    },
+    {
+     "text": "0123456",
+     "type": "type"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGCVB3U0iKbqw1UUbRSBttXUwZantpa8ac95Cfb99GqnnXVvzWIRcW0lMzlfGud8mQD1WTxGRZrqKsSUFOs1KuUfeJ6D_ZfFonn453c2HnuDmftlD8Dgea0uwF_OddCNnD4f-gz3StH-HQ0PGU3PK0Xv38gD1sc068riGwnLCvmK_oxgwx1rGR7uNJU4bKUx-enWkrIcmY3RXmpDi-rk4N9ZHd0izECyNssrTPc4quNs3BefavcR2cZzxJr29u8SicxJKMZ78TrwIVGUiBi4Vq4Ae_zxmJD5ItyBYA4G53vzRKr21jChVc9d5sP6FNqMyNJJ73hRitytISWRhrKsvfpkcyFnI_sAJVkqbgzBMTOqm46aAHFj3Brivkw6CAPGNcknjujf5Sa__A7w-5P43rkvHgEaQw-TM7kw58aTvN1kMVjHzsGTwrPHHoPSi48v5qY5bKGl1_OU1t66K8StpHRuU9AZdRy4ipKEV5bnuRcJw8jKj5HmlgbxnR1ctFHg-I9XlKL8VdA2vjNi66-A91B2s07IafxOFq8WWg8wcfZXAu19DM",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 219,
+     "y": 406
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHRU5_Bv8q0UDYbNJseVkQpBYK8NHmVMWHPB99jWRjWM-frZ7xXwRpcyXhzP5S6dba7vmt-wodk5E_pdqSTAm_NY4zOkBXBZ-WBxqDL0Q7JGvRnuOGfVrzwyIqz0zz6Ms_IVUpNJhjdhxnl4ROjH-GjYGNiQXPxuhYxuYv3OWvcJsqArK1KQL_vrzn-92tFLrNsd___gnvgOUBZj-DW-wPa5obJ7YTL9U_A6qTxF053f40xqtzq3K234D_KU9DxfEBZ7k7zLRBAfbDn42ZrsLuH-QnmyNbhGmC-l4MezUiLD_1oVs_leSjzMuZr_Zip-mfB8bi495O33nbHnxlFKubLVRyjcHS4I5FwIqblYNcMdlJ9pDquqbd4Kcp_kT_eb8agUX_hIRLCO2_vqR2Qc6oyOPFfZmdDmStxaSxUBe6jScEPh0g0GmsRLOmUh-8WjI15gOYfMdsp1lXbMDPUPrIsl5GQP54wD-OiIjiCughpnSCT4JB4Lkz5T_YRMXcIDRKhicLIYn5s_QGUokl8XCEWhwgnyUTYyJYf7QGrStieg5P47II",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 219,
+     "y": 406
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEU9GW6eUdX6WX1uwWQ74iMSA-XCaaCxDr_YJquqvO4BTBAnt3xYCxJfhTgzH1GVNj1ssr7dDSRZDcfqOffilM3o-NP4ZecUo8r875tuPNVz4tPqJMgH7_bQUqwLqC39KoUyty4msYQkSiNQhnq2O2fOnOyQNsvV55nhGBOrgq6-TS14hdd1nbqxZ7-nPk8twO6jXrseoC4c7BmfKYEwvoTXn7CDVq2oo6FYuzLpNE_G8cppiuyAHsVghpmRNuIE2-05BN3EqT9DuGnF9ncKHq6Ofl0SB9OpDBqTJr2BQnNynsWQVOjYX8BgHPuoJeVKKNGU3AQL1JeDDzI3gd7LLfIuwGhcnUoyJ-HeXpM_MRydJH6UZcbYfhyBpLgFDMpqOBgPYmimnxH0y77DKs0rLfSwXORMeYI9sh95tAVlhF4aPfUXPP87Pq6YUUOESo6ptkHJJ7S1b-8WxcE6lYHQeC-MFhUfzC4EboZjBuET0ILslWHwK9wWWhiKgimwGZXV1cLI693a04W_sjweOxl5nQRTeOKic46ooy0rjoPGK-r6Uz1cwk",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 220,
+     "y": 391
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGoXnuJ79usiowBHOKY8szuyplmZl3egxFrhMkqiINtQSzkwFPIdsC8ULYMhBIf2YZ88F-eavnPat_gfNH8jDPotNAKxO9qV2N7bmL0vzadeajnZ6IcRMH6jyWcF8RInHspBrbLMVfcBO8i9C3EcuEcGF5A4M_2U1GQQ4Ezy_u6i8N0FaGmvIbW-Z34obgF4hPX2Lf6ehP0vsaQCbt2yrxe3xHFLbptcooJ5gBI8kgesrjvsWZgBxYAzbjMZfY68C5IFaZ2UE0zSoIascnuNoTpJRcCzPYpM0zi-6HxRrRnFhVePRMJBtib9ZdtPZSx_7dA3gKBr0XUGhwFB0DT9A50oxzMHKHFRjCDxGO8f_4I2H6eFxPfATLQb5cUIl8LHSMHszsv3OOgF88-Y0uHVKB_u8P5pcB1Hae9IRG-cqyIxwpVwoGtT8K_VuE8xziYSigR4hACx_PpsJrX1io_9tvqbTmEocZ62tgAsY2c5pFmDtDdEvZNw7xJQwA2bNiGi0Td2RbPj78wdFuIMj1qkuc2-Mg5HxJGC8NK76y8UM9cDorJ3jc",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 866,
+     "y": 312
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwH7umD0godu04XSJQTtfbqkfiXgNOiK2Zp6bXRQOzzkLuWv51mQHJaw43x4BlzUi8XwpoFjqXCkV1aLfSRfvEGiaykN9BM_QTYTt6e3LszZoFkE-6r3qL3fUZkwlsLtmRpFYLbxaTABO08rn0LOgAYKtW07Mv5wipOUocDZUL8CxR--l9wje54gmLUoV_bX6fYOaaAl1r-pfNmbkk4AQD8AZGLFW_W8WarkwkDzNDwve6B-x0ypah_lubGfk1BmV_ldqNS6ckWomCTqD7SM_96xschue1B6nG97Q7QUrW-D4PiJZ8J1PSzIqrGNUOV01tfNFoc0fcKEzWHmK_dcspo838daeUP7UJU07Ek2H8pYBTRCTsTs0BdiM94Dc29dJOs-Dsn04wozdNG97iQVmEZOl0U0bfLvnfJ00hxm2TAM2TKWOr1ZWlt_uWD22VTtGbfT5QlwpF1BIQN1WJt0kaSnceuOi6qI7NXbT-HISmWKXN8tcfq_PjkLv4HWA26P4SFhn0CDy-fLfUNRFuE84h0xKusNtWZ5AqhM6BMyB5JC86ATUrw",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHsCFeTwtqVufDPR2DeLc437dbU7Is3zX5F2iB-1kAuD-akh4Zyl0spSdNztS5SZ1ptX6D5LNYLO_LLj3GnVbofANg3VXf-PIu7d-_0z8J2CdI3-DxXgIvAdKxkhUvYpg9dOf5kLNDxKntw9t0POkotxKCwSatAYIFThZB91y5Mlh8wKdiOLGXdRi85Kb25hN0EVcZL1EaTefiW681ET5Ppv6W4sW_KsX3-04uF35AP-QxGIqwSPXaIroWNLRjZJnA3AejvYOW6BstY1OTIjYs3ZVtjM9hxQZ8x--U8RjV83TUarMZk-3N5CPwIKqyfxvYJ2S-9AZADFgRpTTWCl-3UuppEkCUb144dPzNlPQmsp59Ky3rFlAKscRERZdR72WK_3pXM8a0KLJ8hVqhZLgPY9C6dPrGsoFmHha6_i-KCo7REbmDkrljHkattIn2wVkBNRPYfploW_T00cH5ScguMR3VgaePyQMlSS4qjCiHj1YWDdkru_4wK17RbmRGWhY0Y1Zi6g4GVOpHQ_YCCsyHtZsoG-u7AT-QdxHHrWb3wSJWxOsQ",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwGfKzdiuTG367xmLsBzgnTdYeas407hBxytowppUGP5c36-4Vt0LGN4oQr98edm2Khsy_lpaSc0axQUq-M0UE04VgUA8_3zmhyAKJ9xV1rHjKrerZRBGJxZae4bZ8ghMBcYIA1Js5-kXmtyPcGDGynIqKT4XPBPsmziXKrF3U0ncFU3DlXNJHJsovl2ismW72m2GAoGg_9rjVkfwM80-ubQ8xI8nqKzBPOP4z-2IquW1uRfjA1cS8n2XOMrB7J8noBcWkcKaKmV4yufcl8bOc6oiCg_Nw4v3yxmmsEzbSPDqLuMmkzi1J5jNlcHe86T20SrTco4vFDYLmQMXjl9UBC9iHIRMA9YL1Jp3S_84e-eOEAaXfNNg6UxIMImMQdZWfwxNH3DVkd_suUmN14AXZiceobWTPULwjWWJ_NXyU41ToSNeAvn5z5M9yh8RPmr93Rkil_o-uQQx8r1xmHTHYjIXT5Cl1-e8qMkctyJy4oaFSDRcEo-MvPxCgloJtjQDHDgHCXh7s70TiPcxN8UE9b28uFRC-TR4Npx7brz5tMqi0MNKuo",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwELZxAZsTkczUqTAsqf0U3euyWYaYtvNvLeBgGldgeM26eW5GYI9iABfB89GiGwo112G_BAwcBDc0N3wpfD6ZWTYQSA4fNSswS9EPM0e5TaLJ5ad55yr0KqEV5cHEYjJVjXZPDEH0PgFqLE_Ry0bUKPAPUIPJe4Fu6LXfBRr4GnS3DWmCwLusheVj1zYJP_0KrHaT4zrdgdS1GPHI8zbfH3DyQSmpD95o1mserkqvuYjN5HBSC1BwHRK0SftTyFGNOYafXpnCUdgdFF5QsjrI8HcJ9bii2JqV14nmQlXS5dbSbJdBK-kwbRwCcycndx_rXCZo26GQbwV-hR1JnK2x08g6lWGofiwuZiNv2qYSgT-MwFC35iuNZMiZa-2Zp5V8XeZrzafV18GJMRJ8rC4pnFpJBWGfTSYv57RN53x5-hIACrbgZPhY0eavcuXBe8FgMNLHNjsOMwDCNAbGN3m9Uq00ryeQp3TfcmwmY2DGbdINYhDAUoE1GyiBsBMGJG228ronTylusyG02HeytONIzJnX6MAnNZ7PbJl3nbVEjX-gfxEXY",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwFtLx8o10YCnGmOBCeZKLGKsD9M5_20o_3vXESHkkfc9gxFiOrlTWMEy8ajgZYoOl4Kl6MQKc2Ob9-pL_8Gaus37sLx5y0nmWALk9N-rIz74Ix00EApHhYRebNXRu7EQZFe1u9HEnVKN1-nY6aQkN0S5ObNQk0wCEp1qWSKOmMY2RhoZn9btqOIWSk3ydAFgFDUx0TPY4x2gGlqu5mftwrRXMTafG9I6Mmx09sTdTa57xHzNfEVbmhDXDIhVx5yNhYNvne9booy3H4E5ryQDSrsZMt1c8sKiLyN2zDyf7vuWjYnLXcKGG2YRstxRJZDdytA6SOO8WWtN3LMCxM2Nhb7rsza0Eky7z7ezL5As0HL4epC1lAeAxB_Bfb_PmkVplBG1iVrorG6vB7Ecmo_Kfd6HrSEzEUKg-lw4rl69LCcVUYx_b3MhsvDD3kpz9kOQ54_PotpSfdrOTzN92h9MsCvrjsv4KkHJ-J55AWucSqhRIFLey8-pDSdhJyo5a3rwER_1Q784jRjJVYUO0j_sRrICrPi3iLFgVuIz1WnevYjEmPIsHc",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Space"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwHcIHo0YpQxQpIHTmuldeiFBPFtSeIX4q30XXa_HVfOfxZhlBCQ-xct4ge2h5rga-wCpTTnZWcEUpRqaGFttmI1lNGmX8seSq975ZgisVgkwrCOePmrdVkRHGP9DTw4lDy8ZgjDobgYcIasgFQRpX2GQtlLm8oM734C_YPdOATkvn7p-guMmvEDAvcxBRIjBeewyHFbo1xMAGdCA2wIvXXO2UeOXm8l24ZqXEYJd9ArvfFe-empTks4bPQrJp_SSGSnAiLQ2E4lehxrDY6r4RCahRO_YjDdRUCS8kvvO8UxIkH-bbAcixknFUWOPqkM-qRY-2vID3whC8YKsLtSxh_6Mq_lWblrwMXU5fptbfKxtiy2iTcBoyhajU__Dj2P3cmYZnv29fKdgI2aYi_7ITBnDXRed38PNC9sEtDcMWQox_jhctsSrJpx_CzfEF8NdSKxRKZWrUVZ0nkD9PkIHjoxQcWUt_evLpScdjN_JRiwG8FFBQzGBNqGQqhYAM3wZk9h8NrE1EGeQ4Fa15RcdTbJ2GJjFAjK-rBB6oy2hVoyNzK-a14",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwH1mrxiOi-1SUhnIlOyCwsSnmk6MR7INoWeH4jCaeIT1CjY8egdHClwQeozBrkQ4V9gQHnSnSMxyOYV-d4xh8UcZ8Qu_uaMppH13dMk04sy5tckdNdaH3psp4Ff-kBfbSlnVZt2hFuBloJ25V5l4pbGyJxF2A9FSyXiiUvUzK6ocj6A134dAbWpr04SnrCcq-_Wj0Up3rQcfkZaykNORu9NsJTHjrjBass_mfo-W_uYZyIHxgRJ5fikl31FAZ6uY-UBRrso-TrKzLrGZfJSnhnz40KKNt9fU5GSP6j0eztC8gvFvLVCnxDPp2dHFerHXfMLM1yoqEx5E1crjqublmdeUsbLZ7WxGM8wUB4iiOEycZMeqHby2I0qQIIAV5JdEW7MKdLRIvzQt0DMGFSNh5b_0_kt6IGVJi1wD4v49ATzJ06ffhdjwjw7mp5Ly8Hjn6BU0yqti_YrbcNg4RgXY-yNsfwQJPDkqWoTPDriidyXLmDMY4ZjOcSjHI1nNwBDsIWkbIJJH5yUIANTZBtJWV8zHJTCtjhh4drg5mLznjlF1vkd2pU",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "text": "16",
+     "type": "type"
+    },
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "text": "0123456",
+     "type": "type"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwFYT1T9bLrDO0LdIuMCBKJuSjNJY4d1C0fJNX6oAK-t3Yff9bGAOOQmmMa8TEtLKRDYha1Ehq9WRsq1riDclbr-xZjhaClXLzV9tKCXRdOmdsWb0449I9A0xgKrhnC-AFX4L1D_pe3h2G-WukifS2VRs8RnWhe9VM4Ckwhk4i7_21mjNakkuo098VYNermq0fFZNbcjUD_IYWIgiFvAVhm2EIAHbzCD1JCtJYv-a1ic7dK9XyXJJRzXeiE1SgSqIppqht0Qkd6WFf7ZQJpQXoI0Ifb7liaFEjGgfue0woR4qSw2v97-4fFKnt7Uxr-t6ldivn4AO_57oOATZemAstugX49F8KbG9okBuTJjQROOGF2fKxmSvYZulDrGBcoR5xYRnE76KMECVhDpXuRQOX6uwWSCHYUry0IsqwUF2M4nJ9UR9zaknzJmU3YAM95TvSDKKdxsCbZvYvWIP8NEq1DsdN5gFVehK2pzv3xQ79CtnEzputAYWIAR1HBG3nMbgzfuuNaRF636yz3bOIJegKLulTb1blAssctk8lLpMKFzf4gJhKY",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 266,
+     "y": 570
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwEBlH_kwcO4LwZb90oGxUEpW1RbZGbcHIigTC6kIVxa0PYUCUO1hiO7KwFirglFL_jvx0Y5Z-um4ZuTXD47zKYrJ6wIqGw1GRxbYBa81fhPUTm4T_bTWS6echgjqVSD-fkzXgrFK1CSLN7luqjf9uFJqIZc_m6k5bGqG4_B3TVaATFE4kvO4mf2HNicphu-5TpuLkmERRc4HRKJVq-D59lE_HO7np6a5yfWXV1W3tVlSEAQ7r5qoZW1DPAVGUTDOhjpNVvRZgyIohuwfnkR1lWXAWvTK9wxAlIrnux4I7-5Q-kg8SC6rsGHTLQRTtQ08aREOddQ3NLRgothp-SeXoPw5eqY6d4k_spXtyJY-11LM6b8ut6LJaiwCAKMcA_r7kolqTcuzb0h-8bGcmYYqL26XypzUJCjuT1uGV7OY6H3_hcJLrA127JaHtEKnm_2p2vspf6cfSt7bFHXpDl3Vee1OxpQ8heftncSf9q22ontGhELq3dETYepREFClt2J6c5XlQ5iJi_Y0Pl1REj0j5r9l8HtMhDO3TOLh1mj1uncLXFHJv0",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "button": "left",
+     "type": "click",
+     "x": 267,
+     "y": 569
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  },
+  {
+   "checks": [
+    {
+     "code": "computer_action_requires_confirmation",
+     "id": "cu_sc_Q_DoFwFr-4IJGuBIy1aDtdc060gXPgynpQBfMPQb-LcE_TTq5fmGFq4blJWIYtP4iSDhfwt3vR8SsoEGI43goETI-uFXg_G2gO-Vsvf7u8tbKPI9R7LSn4R9mS-pvNNkHHvBHRWIhsZAtMWOzfFiFI9fKzscSh-OnevyvKTxRt44OY01EaHorQ4uAuW3-89KxISdc7M868Illc-iaFEsyRIMNP1lsJnAxgk-74ecbHOrXdNASwupPhyYAw7yy7jWCp9kcv9ETLM71X9ngIhHo7jTSN1Ob4UJRz7odGg6Eklz9LLdayDVWF1PYnpBYuAKKKynUN64nYmFm-3dBH08eb7Umm59H8nVUYMdtSzxD4LScI58dhC6Pecc2RmM2EV2ywBEECULgkPHWX0kQmOSEhnb_0hWd_IajvHO6XYu1-GPVR5Lt7d8YvKmDwWpgT3kaPCwf-Tt6VA8_hyKWmZSWsiY7OnE4gLM1tp7ihj6X62zjgB-1xr16PqTTodBlVy_v4-m0cuMxCprLq90K2pAMAPFy3gwo7DO2Kx6RVuKi4FfuTF4sJdCp4o",
+     "message": "Review and confirm before executing this computer action."
+    }
+   ],
+   "actions": [
+    {
+     "keys": [
+      "Tab"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    },
+    {
+     "keys": [
+      "Enter"
+     ],
+     "type": "keypress"
+    },
+    {
+     "type": "wait"
+    }
+   ]
+  }
+ ],
+ "actions": [
+  {
+   "button": "left",
+   "type": "click",
+   "x": 412,
+   "y": 177
+  },
+  {
+   "text": "Juan Dela Cruz (sample)",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 177
+  },
+  {
+   "text": "12-345678901-2",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 412,
+   "y": 254
+  },
+  {
+   "text": "Sample Konsulta Clinic",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 254
+  },
+  {
+   "text": "2026-10-29",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 412,
+   "y": 329
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 373,
+   "y": 331
+  },
+  {
+   "keys": [
+    "2"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 618,
+   "y": 329
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 831,
+   "y": 255
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Down"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Down"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "text": "OPH02A",
+   "type": "type"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 220,
+   "y": 406
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 341,
+   "y": 406
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 469,
+   "y": 406
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 631,
+   "y": 406
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 412,
+   "y": 517
+  },
+  {
+   "text": "16",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 517
+  },
+  {
+   "text": "0123456",
+   "type": "type"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 219,
+   "y": 406
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 219,
+   "y": 406
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 220,
+   "y": 391
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 866,
+   "y": 312
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Space"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "text": "16",
+   "type": "type"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "text": "0123456",
+   "type": "type"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 266,
+   "y": 570
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "button": "left",
+   "type": "click",
+   "x": 267,
+   "y": 569
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Tab"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  },
+  {
+   "keys": [
+    "Enter"
+   ],
+   "type": "keypress"
+  },
+  {
+   "type": "wait"
+  }
+ ]
+}
