@@ -17,8 +17,12 @@ PORTAL_URL = "file://" + PORTAL
 OUT = os.path.join(ROOT, "spikes", "out")
 RECORDED = os.path.join(OUT, "wonder_spike_muse-spark-1.3.json")   # the saved computer-use run, replayed by replay_claim
 MODEL = "muse-spark-1.3"   # muse-wonder-1.0 rejects the computer tool on this key
-SAFE_ACTIONS = {"click", "double_click", "move", "type", "keypress", "scroll", "wait", "screenshot"}
+SAFE_ACTIONS = {"click", "double_click", "move", "type", "keypress", "scroll", "wait", "screenshot"}   # no drag
 W, H, MAX_STEPS = 1280, 800, 40
+MAX_ACTIONS, MAX_TEXT, DEADLINE = 25, 200, 900   # per turn, per typed string, seconds per run (pre-ship review, Kimi K3, 2026-10-29)
+ALLOWED_KEYS = {"Tab", "Enter", "Backspace", "Delete", "Space", "Escape", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+                "Home", "End", "PageUp", "PageDown"}
+ALLOWED_COMBOS = {("Shift", "Tab"), ("Control", "a")}
 SYSTEM = """You are a computer-use agent operating a browser. You receive screenshots and choose the next action or actions.
 Coordinates are pixels in the screenshot you were last shown: (0, 0) is the top-left. Click the center of the target element.
 Return a short batch of actions only when they do not depend on intermediate visual feedback, such as click, type, and keypress.
@@ -125,14 +129,44 @@ def execute(page, actions, log):
         elif t == "double_click": page.mouse.dblclick(a["x"], a["y"])
         elif t == "move": page.mouse.move(a["x"], a["y"])
         elif t == "type": page.keyboard.type(a["text"], delay=15)
-        elif t == "keypress": page.keyboard.press("+".join(KEYS.get(k.lower(), k if len(k) > 1 else k.lower()) for k in a["keys"]))
+        elif t == "keypress": page.keyboard.press("+".join(key_names(a["keys"])))
         elif t == "scroll": page.mouse.move(a["x"], a["y"]); page.mouse.wheel(a.get("scroll_x", 0), a.get("scroll_y", 0))
-        elif t == "drag":
-            pts = a["path"]; page.mouse.move(pts[0]["x"], pts[0]["y"]); page.mouse.down()
-            for p in pts[1:]: page.mouse.move(p["x"], p["y"])
-            page.mouse.up()
         elif t in ("wait", "screenshot"): pass
         time.sleep(0.25 if t != "wait" else 1.0)
+
+
+def key_names(keys):
+    return [KEYS.get(k.lower(), k if len(k) > 1 else k.lower()) for k in keys]
+
+
+def on_portal(url):
+    return url == PORTAL_URL or url.startswith(PORTAL_URL + "#") or url.startswith(PORTAL_URL + "?")
+
+
+def vet(url, actions):
+    """Every turn, flagged or not: the page must be the sample portal and every action a plain, well-formed input
+    inside the screenshot. Returns the reason to stop, or None."""
+    if not on_portal(url):
+        return "the page is not the sample portal"
+    if not isinstance(actions, list) or len(actions) > MAX_ACTIONS:
+        return "too many actions in one turn"
+    xy = lambda a: all(isinstance(a.get(k), (int, float)) and 0 <= a[k] <= lim for k, lim in (("x", W), ("y", H)))
+    for a in actions:
+        t = a.get("type") if isinstance(a, dict) else None
+        if t not in SAFE_ACTIONS:
+            return f"action {t!r} is not allowed"
+        if t in ("click", "double_click", "move", "scroll") and not xy(a):
+            return f"{t} without a point inside the screen"
+        if t == "type" and not (isinstance(a.get("text"), str) and len(a["text"]) <= MAX_TEXT):
+            return "type without text, or text too long"
+        if t == "keypress":
+            ks = a.get("keys")
+            if not (isinstance(ks, list) and ks and all(isinstance(k, str) and k for k in ks)):
+                return "keypress without keys"
+            names = key_names(ks)
+            if not ((len(names) == 1 and names[0] in ALLOWED_KEYS) or tuple(names) in ALLOWED_COMBOS):
+                return "keypress " + "+".join(names) + " is not allowed"
+    return None
 
 
 def review(page, c, acked, ack_local):
@@ -140,8 +174,7 @@ def review(page, c, acked, ack_local):
     local sample portal page and only for plain input actions; every acknowledged check is logged with its actions."""
     checks, acts = c["pending_safety_checks"], c.get("actions", [])
     for chk in checks: print(f"  safety check {chk.get('code')}: {chk.get('message')}")
-    ok = ack_local and (page.url == PORTAL_URL or page.url.startswith(PORTAL_URL + "#") or page.url.startswith(PORTAL_URL + "?")) \
-        and all(a.get("type") in SAFE_ACTIONS for a in acts)
+    ok = ack_local and vet(page.url, acts) is None
     if ok: acked.append({"checks": checks, "actions": acts})
     return ok
 
@@ -186,24 +219,33 @@ def file_claim(claim, emit=None, model=MODEL, ack_local=True, stop=None, save_di
         for steps in range(1, max_steps + 1):
             if stop is not None and stop.is_set():
                 final = stopped = "stopped: the screen was closed"; break
+            if time.time() - t0 > DEADLINE:
+                final = stopped = f"stopped: over {DEADLINE // 60} minutes"; break
             calls = [o for o in resp.get("output", []) if o.get("type") == "computer_call"]
             if not calls:
                 final = " ".join(c.get("text", "") for o in resp.get("output", []) if o.get("type") == "message" for c in o.get("content", []))
                 break
             c = calls[0]
+            why = vet(page.url, c.get("actions", []))
+            if why:
+                final = stopped = "stopped: " + why; break
             ack = []
             if c.get("pending_safety_checks"):
                 if not review(page, c, acked, ack_local):
                     final = stopped = "stopped: safety check " + json.dumps([k.get("code") for k in c["pending_safety_checks"]]); break
                 ack = c["pending_safety_checks"]
             execute(page, c.get("actions", []), log)
+            if not on_portal(page.url):
+                final = stopped = "stopped: the page left the sample portal"; break
             png = page.screenshot()
             if save_dir: open(os.path.join(save_dir, f"wonder_step{steps:02d}.png"), "wb").write(png)
             emit("step", {"n": steps, "action": summarize(c.get("actions", [])), "image": small_jpeg(png), "acknowledged": bool(ack)})
             resp = call({"model": model, "previous_response_id": resp["id"], "tools": [{"type": "computer"}],
                          "input": [{"type": "computer_call_output", "call_id": c["call_id"], "acknowledged_safety_checks": ack,
                                     "output": {"type": "computer_screenshot", "image_url": shot(page)}}]})
-        got = page.evaluate("window.lastClaim || null"); png = page.screenshot()
+        else:
+            if final is None: final = stopped = "stopped: step limit reached"
+        got = page.evaluate("window.lastClaim || null") if on_portal(page.url) else None; png = page.screenshot()
         if save_dir: open(os.path.join(save_dir, "wonder_final.png"), "wb").write(png)
         b.close()
     rows = readback(claim, got)

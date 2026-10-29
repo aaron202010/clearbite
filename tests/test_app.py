@@ -267,14 +267,14 @@ class Page:
 
 
 def test_safety_checks_are_acknowledged_only_on_the_local_portal_for_plain_actions():
-    chk = {"pending_safety_checks": [{"code": "x"}], "actions": [{"type": "click"}, {"type": "type", "text": "a"}]}
+    chk = {"pending_safety_checks": [{"code": "x"}], "actions": [{"type": "click", "x": 10, "y": 10}, {"type": "type", "text": "a"}]}
     acked = []
     assert filer.review(Page(filer.PORTAL_URL), chk, acked, True) and len(acked) == 1 and acked[0]["actions"] == chk["actions"]
     assert not filer.review(Page(filer.PORTAL_URL), chk, [], False)                        # no ack flag: stop
     assert not filer.review(Page("https://example.com/"), chk, [], True)                   # another page: stop
     assert not filer.review(Page("file:///etc/passwd"), chk, [], True)
     assert not filer.review(Page(filer.PORTAL_URL + "-copy"), chk, [], True)
-    assert not filer.review(Page(filer.PORTAL_URL), {**chk, "actions": [{"type": "click"}, {"type": "open_url"}]}, [], True)  # not a plain input
+    assert not filer.review(Page(filer.PORTAL_URL), {**chk, "actions": [{"type": "click", "x": 10, "y": 10}, {"type": "open_url"}]}, [], True)  # not a plain input
 
 
 def test_readback_flags_a_wrong_field():

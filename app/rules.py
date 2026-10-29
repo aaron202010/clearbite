@@ -31,7 +31,12 @@ def load(payer=None):
 
 def valid_tooth(n):
     """FDI numbering: permanent 11-48, baby teeth 51-85."""
-    q, t = divmod(int(n), 10)
+    if isinstance(n, bool):
+        return False
+    try:
+        q, t = divmod(int(n), 10)
+    except (TypeError, ValueError):   # "A", None: not a tooth (pre-ship review, codex, 2026-10-29)
+        return False
     return (1 <= q <= 4 and 1 <= t <= 8) or (5 <= q <= 8 and 1 <= t <= 5)
 
 
@@ -186,13 +191,14 @@ def check(chart, history, rules, filing_date):
              fail_detail=f"{used} already used this year, {left} left. Not covered: tooth "
                          + ", ".join(str(n) for _, n in asked_caps[left:]) + "." if len(asked_caps) > left else None, src=cap.get("source"))
     for rule in rules.get("conditional_services", []):
-        n0 = len(problems)
-        if rule["service"] in services and not chart.get(rule["requires"]):
+        n0, s = len(problems), rule["service"]
+        used = s in services or bool(teeth.get(s))   # teeth alone count as asking for the service
+        if used and not chart.get(rule["requires"]):
             problems.append(rule["reason"])
-            covered.pop(rule["service"], None)
-        line("conditional:" + rule["service"], rule.get("title", rule["reason"]), n0,
-             "Pain emergency recorded." if rule["service"] in services else "Not used in this visit.",
-             na=rule["service"] not in services, src=rule.get("source"))
+            covered.pop(s, None)
+            refused_services.append(s)
+        line("conditional:" + s, rule.get("title", rule["reason"]), n0,
+             "Pain emergency recorded." if used else "Not used in this visit.", na=not used, src=rule.get("source"))
     for rule in rules.get("frequency", []):
         s, n0, note = rule["service"], len(problems), None
         used = s in services
