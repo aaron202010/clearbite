@@ -176,6 +176,14 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .tooth.s-sealant .tn { fill: var(--sealant); } .tooth.s-class_v .tn { fill: var(--classv); } .tooth.s-extraction .tn { fill: var(--extraction); } .tooth.earlier .tn { fill: var(--earlier); }
 .tooth.refused .tn { fill: var(--fail); }
 .midline { stroke: #c3ccd1; stroke-dasharray: 3 4; }
+@media (max-width: 560px) {
+  #chart.narrow .tn { font-size: 14px; }
+  #chart.narrow .zone { font-size: 13px; }
+  #chart.narrow .sl { display: none; }
+  .rule .rs, .inferred, .vrow .t small, .hint, .legend, .prow, .rule .nolist { font-size: .9rem; }
+  .rule .rd { font-size: .95rem; }
+}
+
 .zone { font: 600 10.5px var(--font); fill: var(--ink-3); letter-spacing: .03em; }
 .tlist { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 6px; font-size: .92rem; }
 .tlist .none { color: var(--ink-3); }
@@ -520,7 +528,7 @@ function toothSVG(c, L) {
 
 function renderChart() {
   const L = layout(), svg = $("#chart");
-  svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`); svg.style.maxWidth = narrow ? "420px" : "760px";
+  svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`); svg.style.maxWidth = narrow ? "420px" : "760px"; svg.classList.toggle("narrow", narrow);
   svg.innerHTML = `<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#c0392b" stroke-width="1.5" stroke-opacity=".75"/></pattern></defs>`
     + (L.mid ? `<line class="midline" x1="${L.mid}" y1="4" x2="${L.mid}" y2="${L.h - 4}"/>` : "")
     + L.zones.map((z) => `<text class="zone" x="${z.x}" y="${z.y}" text-anchor="${z.a}">${z.t}</text>`).join("")
