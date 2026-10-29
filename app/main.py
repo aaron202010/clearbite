@@ -76,6 +76,23 @@ def file_blocked(claim):
     return None
 
 
+def _list_of(ns):
+    ns = [str(n) for n in ns]
+    return ns[0] if len(ns) == 1 else ", ".join(ns[:-1]) + " and " + ns[-1]
+
+
+def adjusted_summary(res):
+    """One line for a claim the checker trimmed, built from the check data: how many teeth were asked, which are filed and
+    which were left off by rule. None when no tooth was removed."""
+    left_off = sorted({n for v in res["refused_teeth"].values() for n in v})
+    if not left_off:
+        return None
+    filed = sorted({n for v in res["covered_teeth"].values() for n in v})
+    asked = len(filed) + len(left_off)
+    shown = f"{'tooth' if len(filed) == 1 else 'teeth'} {_list_of(filed)}" if filed else "none"
+    return f"{asked} {'tooth' if asked == 1 else 'teeth'} asked: {shown} filed, {_list_of(left_off)} left off by rule"
+
+
 def evaluate(chart, day, filing_day):
     p = patient(); cc = check_chart(chart, p, day)
     res = rules.check(cc, p["history"], R, filing_day)
@@ -87,6 +104,7 @@ def visit_payload(heard, chart, source, day, filing_day):
     _, _, res, claim = evaluate(chart, day, filing_day)
     return {"source": source, "heard": heard, "chart": chart, "service_date": day, "filing_date": filing_day, "check": res,
             "inferred": [R[k].removeprefix("inferred: ") for k in ("year_note", "codes_note") if k in R],
+            "summary": adjusted_summary(res) if res["claimable"] else None,
             "claim": claim, "file_blocked": file_blocked(claim), "replay": replay.on()}
 
 
@@ -104,7 +122,7 @@ def screen():
 @app.get("/patient")
 def get_patient():
     p = patient()
-    return {"patient": {k: p[k] for k in ("name", "pin", "kpp", "kpp_registered", "history")}, "replay": replay.on(),
+    return {"patient": {k: p[k] for k in ("name", "pin", "kpp", "kpp_registered", "dentist_name", "dentist_prc", "history")}, "replay": replay.on(),
             "service_date": service_date(), "benefit": R["benefit"], "payer": R["payer"], "source": R["source"],
             "saved_visits": list(replay.visits())}
 

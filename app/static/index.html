@@ -24,7 +24,7 @@
   --sealant: #2760a8;      --sealant-tint: #dce8f6;
   --classv: #8f5a00;       --classv-tint: #faeccb;
   --extraction: #6b3fa0;   --extraction-tint: #ebe2f6;
-  --earlier: #6f8089;      --earlier-tint: #eceff1;
+  --earlier: #5a6b74;      --earlier-tint: #eceff1;
   --font: "Segoe UI", "SF Pro Text", -apple-system, "Helvetica Neue", Lato, "Liberation Sans", Arial, sans-serif;
   --radius: 10px;
 }
@@ -41,7 +41,7 @@ button { font: inherit; color: inherit; }
 svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
 /* header */
-.top { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 24px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top { display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 24px; background: var(--surface); border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; letter-spacing: -0.005em; }
 .brand svg { width: 26px; height: 26px; }
 .top .sub { color: var(--ink-2); font-size: .87rem; padding-left: 14px; border-left: 1px solid var(--line); }
@@ -51,19 +51,37 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--earlier); }
 .tag[hidden] { display: none; }
 
+/* workflow strip: the five models and steps behind one claim; sticky so it stays in frame while the agent files */
+.flow-wrap { position: sticky; top: 0; z-index: 20; padding: 8px 0; background: var(--surface); border-bottom: 1px solid var(--line); }
+.flow { position: relative; max-width: 1440px; margin: 0 auto; padding: 0 24px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.flow li { display: flex; align-items: center; gap: 11px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: .95rem; line-height: 1.3; color: var(--ink-2); box-shadow: inset 0 0 0 1px transparent; transition: background-color .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out; }
+.flow .ft b { display: block; color: var(--ink); font-size: 1.07rem; font-weight: 700; }
+.flow .fn { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line-strong); color: var(--ink-3); font-size: .82rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.flow .fn i { font-style: normal; }
+.flow .fn svg { display: none; width: 14px; height: 14px; stroke-width: 2.2; }
+.flow li.done .fn { background: var(--accent-tint); border-color: var(--accent); color: var(--accent-hover); }
+.flow li.done .fn i { display: none; } .flow li.done .fn svg { display: block; }
+.flow li.active { background: var(--accent-tint); border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); color: var(--ink); }
+.flow li.active .fn { background: var(--accent); border-color: var(--accent); color: #fff; }
+.flow li.flag { background: var(--fail-tint); border-color: var(--fail); box-shadow: inset 0 0 0 1px var(--fail); color: var(--ink); }
+.flow li.flag .fn { border-color: var(--fail); color: var(--fail); }
+
 /* layout */
-.app { max-width: 1440px; margin: 0 auto; padding: 16px 24px 48px; display: grid; gap: 16px; align-items: start;
-  grid-template-columns: 320px minmax(0, 1fr) 430px; grid-template-areas: "a b c" "band band band"; }
-.col { display: grid; gap: 16px; min-width: 0; }
+.app { max-width: 1440px; margin: 0 auto; padding: 14px 24px 48px; display: grid; gap: 14px; align-items: start;
+  grid-template-columns: 320px minmax(0, 1fr) 456px; grid-template-areas: "a b c" "band band band"; }
+.col { display: grid; gap: 14px; min-width: 0; }
 .col.a { grid-area: a; } .col.b { grid-area: b; } .col.c { grid-area: c; }
 #band { grid-area: band; }
-@media (min-width: 1000px) { .app.filing { padding-bottom: max(48px, calc(100vh - 700px)); } }
+@media (min-width: 1000px) { .app.filing { padding-bottom: max(48px, calc(100vh - 380px)); } }
 @media (max-width: 1239px) {
   .app { grid-template-columns: 320px minmax(0, 1fr); grid-template-areas: "a b" "a c" "band band"; }
 }
 @media (max-width: 800px) {
   .app { grid-template-columns: minmax(0, 1fr); grid-template-areas: "a" "b" "c" "band"; padding: 12px 16px 40px; }
   .top { padding: 0 16px; } .top .sub, .demo-note { display: none; }
+  .flow-wrap { position: static; }
+  .flow { padding: 0 16px; grid-auto-columns: 236px; }
+  .flow .ft b { font-size: 1rem; }
 }
 
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; min-width: 0; }
@@ -84,7 +102,6 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .btn.recording { background: var(--fail); border-color: var(--fail); color: #fff; }
 .btn.recording:hover:not(:disabled) { background: #96201a; border-color: #96201a; }
 .btn.full { width: 100%; min-height: 46px; font-size: 1.04rem; }
-.dot-rec { width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .35; } }
 
 /* patient */
@@ -92,6 +109,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin-top: 12px; font-size: .93rem; }
 .facts dt { color: var(--ink-3); } .facts dd { margin: 0; }
 .yes { color: var(--pass); font-weight: 600; }
+.dentist { margin-top: 10px; color: var(--ink-2); font-size: .9rem; }
 .visits { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
 .visits ol { margin-top: 8px; display: grid; gap: 8px; }
 .vrow { display: grid; grid-template-columns: 78px 1fr; gap: 10px; font-size: .9rem; }
@@ -152,28 +170,29 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 @media (max-width: 800px) { .trow { grid-template-columns: 1fr; gap: 0; } }
 
 /* check */
-.result { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding: 12px 16px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); }
+.result { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin-top: 10px; padding: 10px 16px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); }
 .code { font-size: 1.95rem; font-weight: 700; letter-spacing: .02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .code.none { color: var(--ink-3); }
-.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 9px; border-radius: 16px; font-size: .88rem; font-weight: 700; white-space: nowrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px 7px 10px; border-radius: 16px; font-size: .88rem; font-weight: 700; white-space: nowrap; }
 .pill.ok { background: var(--pass-tint); color: var(--pass); }
 .pill.no { background: var(--fail-tint); color: var(--fail); }
 .meta { margin-top: 8px; color: var(--ink-2); font-size: .9rem; font-variant-numeric: tabular-nums; }
-.leftoff { margin-top: 6px; color: var(--fail); font-size: .9rem; font-weight: 600; }
-.rules { margin-top: 14px; border-top: 1px solid var(--line); }
-.rule { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.adjust { margin-top: 8px; padding: 9px 12px; border-radius: 8px; background: var(--accent-tint); color: var(--ink); font-size: .93rem; font-weight: 600; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.adjust + .meta { margin-top: 8px; }
+.rules { margin-top: 12px; border-top: 1px solid var(--line); }
+.rule { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
 .rule .ico { margin-top: 2px; }
 .rule .rt { font-weight: 600; font-size: .95rem; line-height: 1.35; }
 .rule .rd { color: var(--ink-2); font-size: .89rem; margin-top: 1px; }
 .rule.ok .ico { color: var(--pass); } .rule.fail .ico { color: var(--fail); } .rule.na .ico { color: var(--ink-3); }
 .rule.fail .rd { color: #8c1d17; }
 .rule.na .rt { color: var(--ink-2); font-weight: 500; }
-.left { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.left { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .left strong { font-variant-numeric: tabular-nums; font-size: 1.02rem; }
-.inferred { margin-top: 12px; color: var(--ink-3); font-size: .82rem; line-height: 1.4; }
+.inferred { margin-top: 10px; color: var(--ink-3); font-size: .82rem; line-height: 1.4; }
 .inferred b { color: var(--ink-2); font-weight: 600; }
 .inferred li { margin-top: 3px; }
-.act { margin-top: 14px; display: grid; gap: 8px; }
+.act { margin-top: 12px; display: grid; gap: 8px; }
 .act .hint { text-align: center; }
 .act .hint.bad { color: var(--fail); }
 .placeholder { margin-top: 14px; padding: 18px 0 4px; color: var(--ink-3); font-size: .93rem; }
@@ -181,27 +200,28 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 @keyframes sh { to { background-position: -200% 0; } }
 
 /* filing band */
-.band { padding: 18px 20px 20px; scroll-margin-top: 12px; }
+.band { padding: 18px 20px 20px; scroll-margin-top: 78px; }
 .band[hidden] { display: none; }
 .band-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
-.badge { padding: 3px 10px; border-radius: 6px; background: #fff4d6; border: 1px solid #e3cf95; color: #5f4800; font-size: .83rem; font-weight: 600; }
+.badge { padding: 5px 12px; border-radius: 6px; background: #fff4d6; border: 1px solid #e3cf95; color: #5f4800; font-size: .83rem; font-weight: 600; }
 #band-status { margin-left: auto; color: var(--ink-2); font-size: .93rem; font-weight: 600; }
 #band-status.done { color: var(--pass); } #band-status.bad { color: var(--fail); }
-.band-body { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 20px; margin-top: 14px; align-items: start; }
+.band-body { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 20px; margin-top: 14px; align-items: start; }
+.shotcol { min-width: 0; }
 @media (max-width: 1000px) { .band-body { grid-template-columns: minmax(0, 1fr); } }
 .shot { border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; background: var(--surface-2); }
-.shot .bar { padding: 7px 12px; border-bottom: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); font-size: .82rem; }
-.shot .frame { position: relative; aspect-ratio: 8 / 5; background: #fff; }
-.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.shot .bar { padding: 9px 12px; border-bottom: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); font-size: .82rem; }
+.shot .frame { position: relative; aspect-ratio: 32 / 14.5; padding: 8px; background: var(--surface-2); }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; background: #fff; border: 1px solid var(--line); border-radius: 4px; }
 .shot .wait[hidden] { display: none; }
-.shot .wait { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: .95rem; }
-.shot figcaption { padding: 9px 12px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-2); min-height: 2.6em; }
+.shot .wait { position: absolute; inset: 8px; display: grid; place-items: center; color: var(--ink-3); font-size: .95rem; }
+.shot figcaption { padding: 10px 12px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--ink-2); min-height: 2.6em; }
 .side { display: grid; gap: 18px; min-width: 0; }
-.side h3 { font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; gap: 10px; }
-.side h3 .sum { text-transform: none; letter-spacing: 0; font-size: .9rem; color: var(--ink-2); font-weight: 600; }
-.side h3 .sum.ok { color: var(--pass); } .side h3 .sum.bad { color: var(--fail); }
+.band h3 { font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); display: flex; justify-content: space-between; gap: 10px; }
+.band h3 .sum { text-transform: none; letter-spacing: 0; font-size: .9rem; color: var(--ink-2); font-weight: 600; }
+.band h3 .sum.ok { color: var(--pass); } .band h3 .sum.bad { color: var(--fail); }
 #rb { margin-top: 6px; border-top: 1px solid var(--line); }
-#rb li { display: grid; grid-template-columns: 22px 148px 1fr; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .9rem; align-items: baseline; }
+#rb li { display: grid; grid-template-columns: 22px 142px 1fr; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .9rem; align-items: baseline; }
 #rb .mk { width: 16px; height: 16px; align-self: center; color: var(--ink-3); }
 #rb .mk svg { width: 16px; height: 16px; }
 #rb .mk .pend { display: block; width: 12px; height: 12px; margin: 2px; border-radius: 50%; border: 1.6px solid var(--line-strong); }
@@ -210,12 +230,15 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 #rb .val small { display: block; color: var(--fail); font-size: .82rem; }
 #rb li.pop .mk { animation: tick .32s ease-out both; }
 @keyframes tick { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
-#steps { margin-top: 6px; border-top: 1px solid var(--line); max-height: 230px; overflow-y: auto; counter-reset: s; }
-#steps li { display: grid; grid-template-columns: 28px 1fr; gap: 6px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .87rem; color: var(--ink-2); }
+.steps-sec { margin-top: 16px; }
+#steps { --r: 4; margin-top: 6px; border-top: 1px solid var(--line); display: grid; grid-auto-flow: column; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(var(--r), auto); column-gap: 28px; }
+#steps li { display: grid; grid-template-columns: 26px 1fr; gap: 6px; padding: 5px 0; border-bottom: 1px solid var(--line); font-size: .87rem; line-height: 1.3; color: var(--ink-2); }
 #steps li b { color: var(--ink-3); font-weight: 600; font-variant-numeric: tabular-nums; }
 #steps li:last-child { color: var(--ink); }
-.fine { margin-top: 10px; color: var(--ink-3); font-size: .83rem; }
-@media (max-width: 800px) { #rb li { grid-template-columns: 22px 1fr; } #rb .lab { grid-column: 2; } #rb .val { grid-column: 2; } #rb li { gap: 0 8px; } .card { padding: 16px; } }
+@media (max-width: 1000px) { #steps { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; } }
+@media (max-width: 800px) { #steps { grid-template-columns: minmax(0, 1fr); } }
+.fine { margin-top: 14px; color: var(--ink-2); font-size: .87rem; line-height: 1.45; }
+@media (max-width: 800px) { .band { scroll-margin-top: 12px; } #rb li { grid-template-columns: 22px 1fr; } #rb .lab { grid-column: 2; } #rb .val { grid-column: 2; } #rb li { gap: 0 8px; } .card { padding: 16px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; } }
 </style>
 </head>
@@ -242,6 +265,16 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
   <span class="demo-note">Demo with a sample patient</span>
 </header>
 
+<div class="flow-wrap">
+  <ol class="flow" id="flow" aria-label="How a visit becomes a filed claim">
+    <li><span class="fn"><i>1</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Voice Transcribe:</b> speech to text</span></li>
+    <li><span class="fn"><i>2</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark:</b> structured chart</span></li>
+    <li><span class="fn"><i>3</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>PhilHealth rule check</b></span></li>
+    <li><span class="fn"><i>4</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Dentist approves</b></span></li>
+    <li><span class="fn"><i>5</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark computer use:</b> files the claim</span></li>
+  </ol>
+</div>
+
 <main class="app" id="app">
   <div class="col a">
     <section class="card" aria-labelledby="pt-name">
@@ -252,6 +285,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
         <dt>Konsulta provider</dt><dd id="pt-kpp"></dd>
         <dt>Registered</dt><dd id="pt-reg"></dd>
       </dl>
+      <p class="dentist" id="pt-dentist"></p>
       <div class="visits">
         <h3 class="label">This year's visits</h3>
         <ol id="pt-visits"></ol>
@@ -313,23 +347,25 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
       <span id="band-status" role="status">Starting</span>
     </div>
     <div class="band-body">
+      <div class="shotcol">
       <figure class="shot">
         <div class="bar">Sample Claims Portal (demo), a local page</div>
         <div class="frame"><img id="shot" alt="The sample portal as the agent last saw it" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" hidden><div class="wait" id="shot-wait">Opening the sample portal</div></div>
         <figcaption id="shot-cap" aria-live="polite"></figcaption>
       </figure>
+      </div>
       <div class="side">
         <section aria-labelledby="rb-title">
           <h3 id="rb-title"><span>Read-back from the portal</span><span class="sum" id="rb-sum"></span></h3>
           <ul id="rb"></ul>
         </section>
-        <section aria-labelledby="st-title">
-          <h3 id="st-title"><span>Agent steps</span></h3>
-          <ol id="steps"></ol>
-        </section>
+        <p class="fine" id="band-fine"></p>
       </div>
     </div>
-    <p class="fine" id="band-fine"></p>
+    <section class="steps-sec" aria-labelledby="st-title">
+      <h3 id="st-title"><span>Agent steps</span></h3>
+      <ol id="steps"></ol>
+    </section>
   </section>
 </main>
 
@@ -346,6 +382,19 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 const niceDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const list = (a) => a.join(", ");
 
+/* ---------- workflow strip ---------- */
+/* stage: the step now running (1 to 5), 6 = all done, 0 = none; bad: a step that stopped the flow */
+function flow(stage, bad) {
+  const f = $("#flow");
+  f.querySelectorAll("li").forEach((li, i) => {
+    const n = i + 1;
+    li.className = n === bad ? "flag" : n < stage ? "done" : n === stage ? "active" : "";
+    if (li.className === "active") li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+  });
+  const cur = f.querySelector("li.active, li.flag");
+  if (cur && f.scrollWidth > f.clientWidth) f.scrollTo({ left: Math.max(0, cur.offsetLeft - 16), behavior: REDUCED ? "auto" : "smooth" });
+}
+
 /* ---------- patient ---------- */
 function visitLine(v) {
   const done = Object.keys(SVC_NAME).filter((s) => v.services.includes(s) && !SVC[s]).map((s) => SVC_NAME[s]);
@@ -355,6 +404,7 @@ function visitLine(v) {
 function renderPatient() {
   const p = state.patient;
   $("#pt-name").textContent = p.name; $("#pt-pin").textContent = p.pin; $("#pt-kpp").textContent = p.kpp;
+  $("#pt-dentist").textContent = `Dentist: ${p.dentist_name}, PRC license ${p.dentist_prc}`;
   $("#pt-reg").innerHTML = p.kpp_registered ? '<span class="yes">Yes</span>' : '<span style="color:var(--fail);font-weight:600">No</span>';
   const rows = p.history.map((v, i) => {
     const l = visitLine(v);
@@ -476,8 +526,7 @@ new ResizeObserver(() => {
 
 /* ---------- checker ---------- */
 function renderCheck(d) {
-  const c = d.check, ok = c.claimable;
-  const off = Object.values(c.refused_teeth || {}).flat();
+  const c = d.check, ok = c.claimable, adj = ok ? d.summary : null;
   const rules = c.lines.map((l) => {
     const cls = l.na ? "na" : l.ok ? "ok" : "fail";
     return `<li class="rule ${cls}"${l.ok && l.detail ? ` title="${esc(l.detail)}"` : ""}>${ico(l.na ? "minus" : l.ok ? "check" : "x")}<div><div class="rt">${esc(l.title)}<span class="sr">${l.na ? ": not used" : l.ok ? ": met" : ": not met"}</span></div>${!l.ok && l.detail ? `<div class="rd">${esc(l.detail)}</div>` : ""}</div></li>`;
@@ -485,9 +534,9 @@ function renderCheck(d) {
   const left = c.left;
   $("#ck-body").innerHTML = `
     <div class="result"><div><div class="label">Benefit code</div><div class="code ${c.code ? "" : "none"}">${c.code || "None"}</div></div>
-      <span class="pill ${ok ? "ok" : "no"}">${ico(ok ? "check" : "x")}${ok ? "Ready to file" : "Cannot file yet"}</span></div>
+      <span class="pill ${ok ? "ok" : "no"}">${ico(ok ? "check" : "x")}${ok ? (adj ? "Adjusted claim ready" : "Ready to file") : "Cannot file yet"}</span></div>
+    ${adj ? `<p class="adjust">${esc(adj)}</p>` : ""}
     <p class="meta">Visit ${c.visit} this year, service date ${niceDate(d.service_date)}</p>
-    ${ok && off.length ? `<p class="leftoff">Left off the claim: tooth ${list(off)}</p>` : ""}
     <ul class="rules" aria-label="Rules checked">${rules}
       <li class="left"><span>Left this year after this visit</span><strong>${left.teeth === null ? "-" : left.teeth} ${left.teeth === 1 ? "tooth" : "teeth"}, ${left.visits} ${left.visits === 1 ? "visit" : "visits"}</strong></li></ul>
     `;
@@ -496,6 +545,7 @@ function renderCheck(d) {
   btn.disabled = !!d.file_blocked || state.filing; btn.textContent = "Approve and file";
   hint.classList.toggle("bad", !!d.file_blocked);
   hint.textContent = d.file_blocked || "Nothing is filed until you approve. The agent fills a sample portal, not PhilHealth's site.";
+  flow(ok ? 4 : 3, ok ? 0 : 3);
 }
 
 function checkLoading() {
@@ -527,6 +577,7 @@ async function sendVisit(req, which) {
   if (state.filing) return;
   const token = ++state.token; state.data = null; state.filed = false;
   $("#band").hidden = true; $("#app").classList.remove("filing"); showErr(""); setBusy(true, which); checkLoading(); resetChart(); renderPatient();
+  flow(1);
   const heard = $("#heard"); heard.classList.add("empty"); heard.textContent = req.audio ? "Listening to the recording" : "Reading the visit";
   try {
     const r = await fetch("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req.json) });
@@ -534,13 +585,14 @@ async function sendVisit(req, which) {
     if (!r.ok) throw new Error(body.detail || "The visit could not be read. Try again.");
     if (token !== state.token) return;
     const done = await typeHeard(body.heard, token); if (!done) return;
-    state.data = body; renderPatient(); lightChart(body);
-    await sleep(500); if (token !== state.token) return;
+    flow(2); state.data = body; renderPatient(); lightChart(body);
+    await sleep(700); if (token !== state.token) return;
+    flow(3); await sleep(600); if (token !== state.token) return;
     renderCheck(body);
   } catch (e) {
     if (token !== state.token) return;
     heard.classList.add("empty"); heard.textContent = "Record a visit or play a saved one. The words appear here.";
-    $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>';
+    $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>'; flow(0);
     showErr(e.message || "Something went wrong. Try again.");
   } finally {
     if (token === state.token) setBusy(false, which);
@@ -574,7 +626,7 @@ function bandReset(claim) {
   const band = $("#band"); band.hidden = false; $("#app").classList.add("filing");
   $("#band-status").className = ""; $("#band-status").textContent = "Starting the agent";
   $("#shot").hidden = true; $("#shot-wait").hidden = false; $("#shot-wait").textContent = "Opening the sample portal"; $("#shot-cap").textContent = "";
-  $("#steps").innerHTML = ""; $("#rb-sum").textContent = ""; $("#rb-sum").className = "sum"; $("#band-fine").textContent = "";
+  $("#steps").innerHTML = ""; $("#steps").style.setProperty("--r", 4); $("#rb-sum").textContent = ""; $("#rb-sum").className = "sum"; $("#band-fine").textContent = "";
   const want = { patient: claim.patient, pin: claim.pin, kpp: claim.kpp, date: claim.date, visit: ({ 1: "1st", 2: "2nd" }[claim.visit] || claim.visit + "th") + " visit", code: claim.code,
                  services: claim.services.map((s) => ({ oral_exam: "Oral exam", prophylaxis: "Prophylaxis", fluoride_varnish: "Fluoride varnish", sealant: "Pit and fissure sealant", class_v: "Class V", extraction: "Emergency extraction" }[s])).join(", "),
                  teeth: claim.teeth || "none", dentist: claim.dentist };
@@ -595,25 +647,33 @@ async function showReadback(d) {
   const s = $("#rb-sum"); s.textContent = `${right} of ${d.total} fields right`; s.className = "sum " + (d.all_ok ? "ok" : "bad");
 }
 
+function addStep(n, text) {
+  const ol = $("#steps"), li = document.createElement("li");
+  li.innerHTML = `<b>${n}</b><span>${esc(text)}</span>`; ol.append(li);
+  ol.style.setProperty("--r", Math.max(4, Math.ceil(ol.children.length / 3)));   /* fill down three columns, so the list never scrolls */
+}
+
 function handleEvent(ev, data) {
   if (ev === "start") {
     $("#band-status").textContent = data.replay ? "Replaying the saved run" : "The agent is filling the form";
   } else if (ev === "step") {
     const img = $("#shot"); img.src = data.image; img.hidden = false; $("#shot-wait").hidden = true;
     $("#shot-cap").textContent = `Step ${data.n}: ${data.action}`;
-    const li = document.createElement("li"); li.innerHTML = `<b>${data.n}</b><span>${esc(data.action)}</span>`; $("#steps").append(li); $("#steps").scrollTop = 1e6;
+    addStep(data.n, data.action);
     $("#band-status").textContent = `Working, step ${data.n}`;
   } else if (ev === "done") {
     if (data.image) { $("#shot").src = data.image; $("#shot").hidden = false; $("#shot-wait").hidden = true; }
     const st = $("#band-status");
     state.outcome = data.all_ok ? "ok" : "bad";
+    flow(data.all_ok ? 6 : 5, data.all_ok ? 0 : 5);
+    if (data.all_ok && data.steps === $("#steps").children.length + 1) addStep(data.steps, "Replies that the claim is filed");
     st.className = data.all_ok ? "done" : "bad"; st.textContent = data.all_ok ? "Filed and read back" : (data.stopped ? "Stopped before it finished" : "Filed, but fields differ");
     $("#shot-cap").textContent = data.all_ok ? "Claim received by the sample portal" : (data.stopped || "Check the fields marked on the right");
     $("#band-fine").textContent = `${data.acknowledged} safety ${data.acknowledged === 1 ? "check was" : "checks were"} acknowledged, only on the local sample portal and only for plain clicks and typing. `
-      + (data.replay ? `Replayed from a saved run (${data.steps} turns, ${data.seconds} seconds when it ran live).` : `${data.steps} turns, ${data.seconds} seconds.`);
+      + (data.replay ? `Replayed from a recorded live run, ${data.steps} agent turns.` : `${data.steps} turns, ${data.seconds} seconds.`);
     showReadback(data);
   } else if (ev === "error") {
-    const st = $("#band-status"); st.className = "bad"; st.textContent = data.message;
+    const st = $("#band-status"); st.className = "bad"; st.textContent = data.message; flow(5, 5);
   }
 }
 
@@ -621,7 +681,7 @@ async function approve() {
   if (!state.data || state.filing || state.data.file_blocked) return;
   state.filing = true; state.filed = false; state.outcome = ""; setBusy(false, document.querySelector('.vbtn[aria-pressed="true"]')?.dataset.id);
   document.querySelectorAll(".vbtn").forEach((b) => (b.disabled = true));
-  const btn = $("#approve"); btn.disabled = true; btn.textContent = "Filing";
+  const btn = $("#approve"); btn.disabled = true; btn.textContent = "Filing"; flow(5);
   const d = state.data;
   try {
     const r = await fetch("/file", { method: "POST", headers: { "Content-Type": "application/json" },
@@ -642,7 +702,7 @@ async function approve() {
     if (state.outcome === "ok") { state.filed = true; btn.textContent = "Filed and read back"; }
     else { btn.textContent = "Approve and file again"; btn.disabled = false; }
   } catch (e) {
-    $("#band").hidden ? showErr(e.message) : handleEvent("error", { message: e.message });
+    if ($("#band").hidden) { showErr(e.message); flow(4); } else handleEvent("error", { message: e.message });
     btn.textContent = "Approve and file"; btn.disabled = false;
   } finally {
     state.filing = false;
@@ -663,7 +723,7 @@ async function init() {
   $("#approve").addEventListener("click", approve);
   if (j.replay) { $("#rec").disabled = true; $("#rec-hint").textContent = "Recording is off in replay mode. Play a saved visit."; }
   else if (!window.MediaRecorder) { $("#rec").disabled = true; $("#rec-hint").textContent = "This browser cannot record. Play a saved visit."; }
-  renderPatient(); resetChart();
+  renderPatient(); resetChart(); flow(0);
 }
 init().catch(() => { $("#pt-name").textContent = "The server did not answer"; showErr("Could not load the sample patient. Reload the page."); });
 </script>

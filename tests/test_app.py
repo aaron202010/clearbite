@@ -130,6 +130,56 @@ def test_late_filing_blocks_the_claim(client):
     assert not d["check"]["claimable"] and any("within 60 days" in p for p in d["check"]["problems"])
 
 
+# ---------- the adjusted-claim summary line ----------
+
+def test_adjusted_claim_has_a_summary_built_from_the_check(client):
+    d = visit(client, "e4")   # sealant on 16, 26, 36: one tooth left in the year, so 16 is filed and 26, 36 are left off
+    assert d["summary"] == "3 teeth asked: tooth 16 filed, 26 and 36 left off by rule"
+
+
+@pytest.mark.parametrize("vid", ["e1", "e5"])
+def test_no_summary_when_nothing_was_removed(client, vid):
+    d = visit(client, vid)
+    assert d["check"]["claimable"] and d["check"]["refused_teeth"] == {} and d["summary"] is None
+
+
+def test_summary_when_one_tooth_is_removed(client):
+    assert visit(client, "e2")["summary"] == "2 teeth asked: tooth 16 filed, 31 left off by rule"
+
+
+def test_no_summary_when_the_claim_cannot_be_filed(client):
+    assert visit(client, "e3")["summary"] is None
+
+
+@pytest.mark.parametrize("covered,refused,line", [
+    ({"sealant": [16]}, {"sealant": [26]}, "2 teeth asked: tooth 16 filed, 26 left off by rule"),
+    ({"sealant": [16, 17]}, {"class_v": [26, 27, 36]}, "5 teeth asked: teeth 16 and 17 filed, 26, 27 and 36 left off by rule"),
+    ({}, {"extraction": [46]}, "1 tooth asked: none filed, 46 left off by rule"),
+])
+def test_summary_wording(covered, refused, line):
+    assert main.adjusted_summary({"covered_teeth": covered, "refused_teeth": refused}) == line
+    assert main.adjusted_summary({"covered_teeth": covered, "refused_teeth": {}}) is None
+
+
+def test_screen_carries_the_five_step_workflow_strip_and_the_new_status_words(client):
+    html = client.get("/").text
+    for step in ("Muse Voice Transcribe:</b> speech to text", "Muse Spark:</b> structured chart", "PhilHealth rule check",
+                 "Dentist approves", "Muse Spark computer use:</b> files the claim"):
+        assert step in html
+    assert "Adjusted claim ready" in html and "Ready to file" in html and "Replayed from a recorded live run" in html
+
+
+# ---------- the dentist comes from the patient data ----------
+
+def test_dentist_line_data_is_served_and_the_claim_uses_it(client, monkeypatch):
+    p = client.get("/patient").json()["patient"]
+    assert p["dentist_name"] == "sample dentist" and p["dentist_prc"] == "0123456"
+    assert visit(client, "e4")["claim"]["dentist"] == "0123456"
+    real = main.patient()
+    monkeypatch.setattr(main, "patient", lambda: {**real, "dentist_prc": "7654321"})
+    assert visit(client, "e4")["claim"]["dentist"] == "7654321"   # no constant anywhere: it follows data/patients.json
+
+
 # ---------- /file ----------
 
 def body(client, vid="e4", **extra):

@@ -5,6 +5,7 @@
     "pin": "12-345678901-2",
     "kpp": "Sample Konsulta Clinic",
     "kpp_registered": true,
+    "dentist_name": "sample dentist",
     "dentist_prc": "0123456",
     "history": [
       {
