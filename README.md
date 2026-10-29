@@ -2,6 +2,8 @@
 
 A dentist talks while working. The claim is checked against the insurer's rules and filed, after the dentist approves.
 
+Live demo, replay mode (recorded takes and a recorded live filing, no live model calls): https://claim.aaroncabantugan.com
+
 Built for the Meta model API hackathon (Startup track) on three Meta capabilities:
 
 | Step | Meta model | What it does here |
