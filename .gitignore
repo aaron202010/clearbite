@@ -5,3 +5,6 @@ spikes/out/*.log
 .claude/
 !spikes/out/wonder_*.png
 !spikes/out/ui_*.png
+video/raw/
+video/build/
+video/*.mp4
