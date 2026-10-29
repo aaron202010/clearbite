@@ -5,6 +5,7 @@ import json, os, queue, tempfile, threading
 from datetime import date
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.concurrency import run_in_threadpool
 from app import filer, meta, replay, rules
 
@@ -14,6 +15,7 @@ R = rules.load()
 MAX_AUDIO, MAX_TEXT = 10_000_000, 4000
 FILING = threading.Lock()   # one filing at a time: it drives one browser
 app = FastAPI(title="Chairside claim (demo)", docs_url=None, redoc_url=None)
+app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")), name="static")
 
 
 def patient():

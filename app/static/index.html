@@ -68,7 +68,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 
 /* layout */
 .app { max-width: 1440px; margin: 0 auto; padding: 14px 24px 48px; display: grid; gap: 14px; align-items: start;
-  grid-template-columns: 320px minmax(0, 1fr) 456px; grid-template-areas: "a b c" "band band band"; }
+  grid-template-columns: 288px minmax(0, 1fr) 430px; grid-template-areas: "a b c" "band band band"; }
 .col { display: grid; gap: 14px; min-width: 0; }
 .col.a { grid-area: a; } .col.b { grid-area: b; } .col.c { grid-area: c; }
 #band { grid-area: band; }
@@ -148,18 +148,28 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .sw.e { background: var(--earlier-tint); border-color: var(--earlier); color: var(--earlier); border-style: solid; }
 .sw.n { border-color: var(--fail); border-style: dashed; background: repeating-linear-gradient(135deg, #fff 0 3px, #f6d4d1 3px 4px); }
 #chart-wrap { margin-top: 10px; display: flex; justify-content: center; }
-#chart { width: 100%; max-width: 640px; height: auto; display: block; }
-.tooth path.crown { fill: #fff; stroke: var(--line-strong); stroke-width: 1.2; transition: fill .28s ease-out, stroke .28s ease-out; }
-.tooth path.fissure { fill: none; stroke: var(--line); stroke-width: 1; transition: stroke .28s; }
-.tooth .tn { font: 600 11px var(--font); fill: var(--ink-3); text-anchor: middle; font-variant-numeric: tabular-nums; transition: fill .28s; }
-.tooth .glyph { font: 700 13px var(--font); text-anchor: middle; opacity: 0; transition: opacity .28s; }
-.tooth .strike { stroke: var(--fail); stroke-width: 1.6; stroke-linecap: round; opacity: 0; transition: opacity .28s; }
-.tooth.s-sealant path.crown { fill: var(--sealant-tint); stroke: var(--sealant); stroke-width: 1.6; } .tooth.s-sealant .glyph { fill: var(--sealant); opacity: 1; } .tooth.s-sealant .tn { fill: var(--sealant); }
-.tooth.s-class_v path.crown { fill: var(--classv-tint); stroke: var(--classv); stroke-width: 1.6; } .tooth.s-class_v .glyph { fill: var(--classv); opacity: 1; } .tooth.s-class_v .tn { fill: var(--classv); }
-.tooth.s-extraction path.crown { fill: var(--extraction-tint); stroke: var(--extraction); stroke-width: 1.6; } .tooth.s-extraction .glyph { fill: var(--extraction); opacity: 1; } .tooth.s-extraction .tn { fill: var(--extraction); }
-.tooth.earlier path.crown { fill: var(--earlier-tint); stroke: var(--earlier); } .tooth.earlier .glyph { fill: var(--earlier); opacity: 1; } .tooth.earlier .tn { fill: var(--earlier); }
-.tooth.refused path.crown { fill: url(#hatch); stroke: var(--fail); stroke-dasharray: 3 2.5; stroke-width: 1.6; }
-.tooth.refused .glyph { fill: var(--fail); opacity: .9; } .tooth.refused .strike { opacity: 1; } .tooth.refused .tn { fill: var(--fail); font-weight: 700; }
+#chart { width: 100%; max-width: 760px; height: auto; display: block; }
+.tooth .timg { transition: filter .28s; }
+.tooth .tint { fill: transparent; opacity: 0; transition: opacity .28s ease-out; }
+.tooth.s-sealant .tint { fill: var(--sealant); opacity: .5; }
+.tooth.s-class_v .tint { fill: var(--classv); opacity: .45; }
+.tooth.s-extraction .tint { fill: var(--extraction); opacity: .45; }
+.tooth.earlier .tint { fill: var(--earlier); opacity: .4; }
+.tooth.refused .tint { fill: url(#hatch); opacity: 1; }
+.tooth.refused .timg { opacity: .55; }
+.tooth.s-sealant .timg, .tooth.s-class_v .timg, .tooth.s-extraction .timg, .tooth.earlier .timg, .tooth.refused .timg { filter: grayscale(1) brightness(1.05); }
+.tooth .xx, .tooth .sx { stroke: var(--extraction); stroke-width: 2.2; stroke-linecap: round; fill: none; opacity: 0; transition: opacity .28s; }
+.tooth.s-extraction:not(.refused) .xx, .tooth.s-extraction:not(.refused) .sx { opacity: 1; }
+.tooth .sf { fill: #fff; stroke: #9a8a64; stroke-width: .8; transition: fill .28s; }
+.tooth .sl { font-family: var(--font); font-weight: 650; fill: #7a6a44; text-anchor: middle; dominant-baseline: central; pointer-events: none; transition: fill .28s; }
+.tooth.s-sealant:not(.refused) .sf.o { fill: var(--sealant); } .tooth.s-sealant:not(.refused) .sl.lo { fill: #fff; }
+.tooth.s-class_v:not(.refused) .sf.b { fill: var(--classv); } .tooth.s-class_v:not(.refused) .sl.lb { fill: #fff; }
+.tooth .ring { fill: none; stroke: var(--fail); stroke-width: 1.4; stroke-dasharray: 3 2.5; opacity: 0; transition: opacity .28s; }
+.tooth.refused .ring { opacity: 1; }
+.tooth .tn { font: 700 11px var(--font); fill: var(--ink-3); text-anchor: middle; font-variant-numeric: tabular-nums; transition: fill .28s; }
+.tooth.s-sealant .tn { fill: var(--sealant); } .tooth.s-class_v .tn { fill: var(--classv); } .tooth.s-extraction .tn { fill: var(--extraction); } .tooth.earlier .tn { fill: var(--earlier); }
+.tooth.refused .tn { fill: var(--fail); }
+.midline { stroke: #c3ccd1; stroke-dasharray: 3 4; }
 .zone { font: 600 10.5px var(--font); fill: var(--ink-3); letter-spacing: .03em; }
 .tlist { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 6px; font-size: .92rem; }
 .tlist .none { color: var(--ink-3); }
@@ -417,9 +427,10 @@ function renderPatient() {
 /* ---------- tooth chart ---------- */
 const UPPER = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 const LOWER = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
-const SLOT = 46;
-const DIM = (n) => { const t = n % 10; return t >= 6 ? [31, 41, "molar"] : t >= 4 ? [26, 38, "premolar"] : t === 3 ? [22, 44, "canine"] : t === 1 ? [24, 42, "incisor"] : [21, 39, "incisor"]; };
-const rr = (x, y, w, h, rt, rb) => `M${x + rt},${y}H${x + w - rt}Q${x + w},${y} ${x + w},${y + rt}V${y + h - rb}Q${x + w},${y + h} ${x + w - rb},${y + h}H${x + rb}Q${x},${y + h} ${x},${y + h - rb}V${y + rt}Q${x},${y} ${x + rt},${y}Z`;
+/* Tooth pictures: the HeyDenta odontogram set (Aaron's call 2026-10-29: reuse them; the copyright risk was flagged and accepted).
+   Natural orientation is crown up (lower arch); the upper arch flips so every crown faces its surface circle. */
+const TTYPE = (n) => ({ 1: "central", 2: "lateral", 3: "canine", 4: "premolar", 5: "premolar", 6: "molar", 7: "molar", 8: "molar" })[n % 10];
+const TSIZE = { central: [43, 127], lateral: [38, 125], canine: [37, 119], premolar: [35, 110], molar: [51, 113] };
 let marks = {};   /* tooth -> { svc: [..], refused: bool, earlier: [..] } */
 let lit = true;
 let narrow = false;
@@ -427,49 +438,61 @@ let narrow = false;
 function layout() {
   const cells = [];
   if (!narrow) {
-    const x = (i) => 12 + i * 34 + (i >= 8 ? 24 : 0) + 17;
-    UPPER.forEach((n, i) => cells.push({ n, cx: x(i), top: 36, arch: "u", numY: 28 }));
-    LOWER.forEach((n, i) => cells.push({ n, cx: x(i), top: 128, arch: "l", numY: 128 + SLOT + 14 }));
-    return { w: 592, h: 196, cells, zones: [{ t: "Patient's right", x: 12, y: 108, a: "start" }, { t: "Patient's left", x: 580, y: 108, a: "end" }], mid: true };
+    const x = (i) => 12 + i * 44 + 22;
+    UPPER.forEach((n, i) => cells.push({ n, cx: x(i), arch: "u", numY: 12, box: [18, 84], cy: 124 }));
+    LOWER.forEach((n, i) => cells.push({ n, cx: x(i), arch: "l", numY: 294, box: [194, 84], cy: 172 }));
+    return { w: 728, h: 300, cells, zones: [{ t: "Patient's right", x: 12, y: 151, a: "start" }, { t: "Patient's left", x: 716, y: 151, a: "end" }], mid: 364, r: 14, bw: 36 };
   }
   const rows = [["Upper right", [18, 17, 16, 15, 14, 13, 12, 11], "u"], ["Upper left", [21, 22, 23, 24, 25, 26, 27, 28], "u"],
                 ["Lower right", [48, 47, 46, 45, 44, 43, 42, 41], "l"], ["Lower left", [31, 32, 33, 34, 35, 36, 37, 38], "l"]];
   const zones = [];
   rows.forEach(([label, ns, arch], r) => {
-    const y0 = r * 84; zones.push({ t: label, x: 12, y: y0 + 11, a: "start" });
-    ns.forEach((n, i) => cells.push({ n, cx: 12 + i * 38 + 19, top: y0 + 18, arch, numY: y0 + 18 + SLOT + 13 }));
+    const y0 = r * 152; zones.push({ t: label, x: 8, y: y0 + 11, a: "start" });
+    ns.forEach((n, i) => {
+      const cx = 8 + i * 40 + 20;
+      if (arch === "u") cells.push({ n, cx, arch, numY: y0 + 28, box: [y0 + 34, 70], cy: y0 + 124 });
+      else cells.push({ n, cx, arch, numY: y0 + 144, box: [y0 + 56, 70], cy: y0 + 38 });
+    });
   });
-  return { w: 328, h: 332, cells, zones, mid: false };
+  return { w: 336, h: 606, cells, zones, mid: null, r: 12.5, bw: 30 };
 }
 
-function toothSVG(c) {
-  const [w, h, type] = DIM(c.n);
-  const x = c.cx - w / 2, y = c.arch === "u" ? c.top + SLOT - h : c.top;
-  const d = c.arch === "u" ? rr(x, y, w, h, 6, 13) : rr(x, y, w, h, 13, 6);
-  const occ = c.arch === "u" ? y + h - 14 : y + 14;
-  let fiss = "";
-  if (type === "molar") fiss = `M${c.cx - 6},${occ}H${c.cx + 6}M${c.cx},${occ - 5}V${occ + 5}`;
-  else if (type === "premolar") fiss = `M${c.cx},${occ - 5}V${occ + 5}`;
+function toothSVG(c, L) {
+  const t = TTYPE(c.n), [iw, ih] = TSIZE[t], [by, bh] = c.box, k = Math.min(L.bw / iw, bh / ih), w = iw * k, h = ih * k;
+  const x = c.cx - w / 2, y = by, src = `/static/teeth/${t}.png`;
+  const flip = c.arch === "u" ? ` transform="translate(0,${2 * by + bh}) scale(1,-1)"` : "";
   const m = marks[c.n] || {};
   const cls = ["tooth"]; (m.svc || []).forEach((s, i) => { if (i === 0) cls.push("s-" + s); });
   if (m.earlier && !m.svc) cls.push("earlier");
   if (m.refused) cls.push("refused");
-  const glyph = (m.svc || m.earlier || []).map((s) => SVC[s].key).join("") || "";
   const ttl = [m.svc ? (m.refused ? "Not covered: " : "") + list(m.svc.map((s) => SVC[s].name)) : "", m.earlier ? "Earlier this year: " + list(m.earlier.map((s) => SVC[s].name.toLowerCase())) : ""].filter(Boolean).join(". ");
+  /* PDA surface circle: B on top, L below, O in the centre, mesial (M) faces the midline */
+  const R = L.r, r = R * .39, cx = c.cx, cy = c.cy, mr = Math.floor(c.n / 10) % 3 === 1, PI = Math.PI;
+  const P = (a, rad) => [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
+  const sec = (a0, a1, cl) => { const [x0, y0] = P(a0, R), [x1, y1] = P(a1, R), [x2, y2] = P(a1, r), [x3, y3] = P(a0, r);
+    return `<path class="sf ${cl}" d="M${x0},${y0}A${R},${R} 0 0 1 ${x1},${y1}L${x2},${y2}A${r},${r} 0 0 0 ${x3},${y3}Z"/>`; };
+  const fs = (R * .38).toFixed(1), off = R * .7, lab = (lx, ly, txt, cl) => `<text class="sl ${cl}" x="${lx}" y="${ly}" font-size="${fs}">${txt}</text>`;
+  const d = R * .78;
   return `<g class="${cls.join(" ")}" data-n="${c.n}"><title>Tooth ${c.n}${ttl ? ". " + ttl : ""}</title>
-    <path class="crown" d="${d}"/>${fiss ? `<path class="fissure" d="${fiss}"/>` : ""}
-    <text class="glyph" x="${c.cx}" y="${y + h / 2 + 4.5}">${glyph}</text>
-    <line class="strike" x1="${x + 2}" y1="${y + h - 3}" x2="${x + w - 2}" y2="${y + 3}"/>
+    <g${flip}><mask id="tm-${c.n}" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}" style="mask-type:alpha"><image href="${src}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="none"/></mask>
+      <image class="timg" href="${src}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="none"/>
+      <rect class="tint" x="${x}" y="${y}" width="${w}" height="${h}" mask="url(#tm-${c.n})"/>
+      <path class="xx" d="M${x + 2},${y + 4}L${x + w - 2},${y + h - 4}M${x + w - 2},${y + 4}L${x + 2},${y + h - 4}"/></g>
+    ${sec(-3 * PI / 4, -PI / 4, "b")}${sec(-PI / 4, PI / 4, mr ? "m" : "d")}${sec(PI / 4, 3 * PI / 4, "l")}${sec(3 * PI / 4, 5 * PI / 4, mr ? "d" : "m")}
+    <circle class="sf o" cx="${cx}" cy="${cy}" r="${r}"/>
+    ${lab(cx, cy - off, "B", "lb")}${lab(cx, cy + off, "L", "")}${lab(cx, cy, "O", "lo")}${lab(cx + (mr ? off : -off), cy, "M", "")}${lab(cx + (mr ? -off : off), cy, "D", "")}
+    <circle class="ring" cx="${cx}" cy="${cy}" r="${R + 2}"/>
+    <path class="sx" d="M${cx - d},${cy - d}L${cx + d},${cy + d}M${cx + d},${cy - d}L${cx - d},${cy + d}"/>
     <text class="tn" x="${c.cx}" y="${c.numY}">${c.n}</text></g>`;
 }
 
 function renderChart() {
   const L = layout(), svg = $("#chart");
-  svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`); svg.style.maxWidth = narrow ? "420px" : "640px";
-  svg.innerHTML = `<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="#fdf1f0"/><line x1="0" y1="0" x2="0" y2="5" stroke="#e7aaa5" stroke-width="1.4"/></pattern></defs>`
-    + (L.mid ? `<line x1="12" y1="100" x2="580" y2="100" stroke="#d6dee2" stroke-dasharray="2 4"/><line x1="304" y1="26" x2="304" y2="${L.h - 8}" stroke="#d6dee2" stroke-dasharray="2 4"/>` : "")
+  svg.setAttribute("viewBox", `0 0 ${L.w} ${L.h}`); svg.style.maxWidth = narrow ? "420px" : "760px";
+  svg.innerHTML = `<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#c0392b" stroke-width="1.5" stroke-opacity=".75"/></pattern></defs>`
+    + (L.mid ? `<line class="midline" x1="${L.mid}" y1="4" x2="${L.mid}" y2="${L.h - 4}"/>` : "")
     + L.zones.map((z) => `<text class="zone" x="${z.x}" y="${z.y}" text-anchor="${z.a}">${z.t}</text>`).join("")
-    + L.cells.map(toothSVG).join("");
+    + L.cells.map((c) => toothSVG(c, L)).join("");
 }
 
 function buildMarks(d) {
