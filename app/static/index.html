@@ -141,11 +141,13 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .chart-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: .83rem; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend span[hidden] { display: none; }
 .sw { width: 18px; height: 18px; border-radius: 5px; border: 1.3px solid; display: inline-grid; place-items: center; font-size: .72rem; font-weight: 700; }
 .sw.s { background: var(--sealant-tint); border-color: var(--sealant); color: var(--sealant); }
 .sw.v { background: var(--classv-tint); border-color: var(--classv); color: var(--classv); }
 .sw.x { background: var(--extraction-tint); border-color: var(--extraction); color: var(--extraction); }
 .sw.e { background: var(--earlier-tint); border-color: var(--earlier); color: var(--earlier); border-style: solid; }
+.sw.u { background: var(--earlier-tint); border-color: var(--earlier); border-style: dotted; }
 .sw.n { border-color: var(--fail); border-style: dashed; background: repeating-linear-gradient(135deg, #fff 0 3px, #f6d4d1 3px 4px); }
 #chart-wrap { margin-top: 10px; display: flex; justify-content: center; }
 #chart { width: 100%; max-width: 760px; height: auto; display: block; }
@@ -157,6 +159,10 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .tooth.earlier .tint { fill: var(--earlier); opacity: .4; }
 .tooth.refused .tint { fill: url(#hatch); opacity: 1; }
 .tooth.refused .timg { opacity: .55; }
+.tooth.unruled .tint { fill: var(--earlier); opacity: .4; }
+.tooth.unruled .timg { filter: grayscale(1) brightness(1.05); }
+.tooth.unruled .ring { opacity: 1; stroke: var(--earlier); }
+.tooth.unruled .tn { fill: var(--earlier); }
 .tooth.s-sealant .timg, .tooth.s-class_v .timg, .tooth.s-extraction .timg, .tooth.earlier .timg, .tooth.refused .timg { filter: grayscale(1) brightness(1.05); }
 .tooth .xx, .tooth .sx { stroke: var(--extraction); stroke-width: 2.2; stroke-linecap: round; fill: none; opacity: 0; transition: opacity .28s; }
 .tooth.s-extraction:not(.refused) .xx, .tooth.s-extraction:not(.refused) .sx { opacity: 1; }
@@ -177,12 +183,29 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .trow .nm { color: var(--ink-2); }
 .trow .bad { color: var(--fail); font-weight: 600; }
 .trow .ok { font-weight: 600; font-variant-numeric: tabular-nums; }
+.trow .mute { color: var(--ink-3); }
 @media (max-width: 800px) { .trow { grid-template-columns: 1fr; gap: 0; } }
 
 /* check */
+.seg { display: flex; gap: 6px; min-width: 0; margin-top: 12px; }
+#seg-patient { margin: 0 0 14px; }
+.segb { flex: 1 1 auto; min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); font-weight: 600; font-size: .9rem; cursor: pointer; transition: background-color .15s, border-color .15s; }
+.segb:hover:not(:disabled) { background: var(--surface-2); border-color: var(--ink-3); }
+.segb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.segb[aria-pressed="true"] { background: var(--accent-tint); border-color: var(--accent); color: var(--accent-hover); }
+.segb:disabled { cursor: not-allowed; opacity: .55; }
 .result { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin-top: 10px; padding: 10px 16px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); }
 .code { font-size: 1.95rem; font-weight: 700; letter-spacing: .02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .code.none { color: var(--ink-3); }
+.code.text { font-size: 1.35rem; letter-spacing: 0; }
+.procs { flex: 1 0 100%; display: grid; gap: 6px; margin-top: 2px; padding-top: 8px; border-top: 1px solid var(--line); }
+.prow { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 8px; align-items: start; font-size: .85rem; }
+.prow .pl { color: var(--ink-3); padding-top: 3px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { padding: 2px 9px; border-radius: 12px; border: 1px solid; font-weight: 600; font-variant-numeric: tabular-nums; }
+.chip.c { background: var(--pass-tint); border-color: #b5dcc4; color: var(--pass); }
+.chip.n { background: var(--fail-tint); border-color: #eec3bf; color: var(--fail); }
+.chip.u { background: var(--earlier-tint); border-color: #cfd6da; color: var(--ink-2); }
 .pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px 7px 10px; border-radius: 16px; font-size: .88rem; font-weight: 700; white-space: nowrap; }
 .pill.ok { background: var(--pass-tint); color: var(--pass); }
 .pill.no { background: var(--fail-tint); color: var(--fail); }
@@ -190,13 +213,15 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .adjust { margin-top: 8px; padding: 9px 12px; border-radius: 8px; background: var(--accent-tint); color: var(--ink); font-size: .93rem; font-weight: 600; line-height: 1.4; font-variant-numeric: tabular-nums; }
 .adjust + .meta { margin-top: 8px; }
 .rules { margin-top: 12px; border-top: 1px solid var(--line); }
-.rule { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.rule { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--line); }
 .rule .ico { margin-top: 2px; }
 .rule .rt { font-weight: 600; font-size: .95rem; line-height: 1.35; }
 .rule .rd { color: var(--ink-2); font-size: .89rem; margin-top: 1px; }
 .rule.ok .ico { color: var(--pass); } .rule.fail .ico { color: var(--fail); } .rule.na .ico { color: var(--ink-3); }
 .rule.fail .rd { color: #8c1d17; }
 .rule.na .rt { color: var(--ink-2); font-weight: 500; }
+.rule .rs { color: var(--ink-3); font-size: .78rem; margin-top: 1px; }
+.rule .nolist { margin-top: 2px; color: var(--ink-3); font-size: .86rem; }
 .left { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .left strong { font-variant-numeric: tabular-nums; font-size: 1.02rem; }
 .inferred { margin-top: 10px; color: var(--ink-3); font-size: .82rem; line-height: 1.4; }
@@ -279,7 +304,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
   <ol class="flow" id="flow" aria-label="How a visit becomes a filed claim">
     <li><span class="fn"><i>1</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Voice Transcribe:</b> speech to text</span></li>
     <li><span class="fn"><i>2</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark:</b> structured chart</span></li>
-    <li><span class="fn"><i>3</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>PhilHealth rule check</b></span></li>
+    <li><span class="fn"><i>3</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft" id="flow-rules"><b>PhilHealth rule check</b></span></li>
     <li><span class="fn"><i>4</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Dentist approves</b></span></li>
     <li><span class="fn"><i>5</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark computer use:</b> files the claim</span></li>
   </ol>
@@ -289,13 +314,16 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
   <div class="col a">
     <section class="card" aria-labelledby="pt-name">
       <h2 class="sr">Patient</h2>
+      <div class="seg" id="seg-patient" role="group" aria-label="Patient"></div>
       <p class="who" id="pt-name">Loading the patient</p>
       <dl class="facts">
-        <dt>Member PIN</dt><dd id="pt-pin" class="tnum"></dd>
-        <dt>Konsulta provider</dt><dd id="pt-kpp"></dd>
-        <dt>Registered</dt><dd id="pt-reg"></dd>
+        <dt data-m="pin">Member PIN</dt><dd id="pt-pin" class="tnum" data-m="pin"></dd>
+        <dt data-m="kpp">Konsulta provider</dt><dd id="pt-kpp" data-m="kpp"></dd>
+        <dt data-m="kpp_registered">Registered</dt><dd id="pt-reg" data-m="kpp_registered"></dd>
+        <dt data-m="born">Born</dt><dd id="pt-born" class="tnum" data-m="born"></dd>
+        <dt data-m="age">Age at visit</dt><dd id="pt-age" class="tnum" data-m="age"></dd>
       </dl>
-      <p class="dentist" id="pt-dentist"></p>
+      <p class="dentist" id="pt-dentist" data-m="dentist"></p>
       <div class="visits">
         <h3 class="label">This year's visits</h3>
         <ol id="pt-visits"></ol>
@@ -328,7 +356,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
       <div class="chart-head"><h2 id="ch-title">Tooth chart</h2><span class="lede">FDI numbering, 32 permanent teeth</span></div>
       <div class="legend" aria-hidden="true">
         <span><i class="sw s">S</i>Sealant</span><span><i class="sw v">V</i>Class V</span><span><i class="sw x">X</i>Extraction</span>
-        <span><i class="sw n"></i>Not covered</span><span><i class="sw e">S</i>Earlier this year</span>
+        <span><i class="sw n"></i>Not covered</span><span><i class="sw e">S</i>Earlier this year</span><span id="lg-unruled" hidden><i class="sw u"></i>No rule in this file</span>
       </div>
       <div id="chart-wrap"><svg id="chart" role="img" aria-label="Tooth chart, no visit yet"></svg></div>
       <div class="tlist" id="tlist"><p class="none">Teeth appear here when a visit arrives.</p></div>
@@ -339,6 +367,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
     <section class="card" aria-labelledby="ck-title">
       <h2 id="ck-title">Claim check</h2>
       <p class="lede" id="ck-src">PhilHealth Preventive Oral Health Services</p>
+      <div class="seg" id="seg-payer" role="group" aria-label="Payer"></div>
       <div id="ck-body" aria-live="polite">
         <p class="placeholder">The rules from the circular are checked here as soon as a visit arrives. Nothing is filed until you approve it.</p>
       </div>
@@ -386,7 +415,7 @@ const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, REDUCED ? 0 : ms));
 const SVC = { sealant: { key: "S", name: "Sealant" }, class_v: { key: "V", name: "Class V" }, extraction: { key: "X", name: "Extraction" } };
 const SVC_NAME = { oral_exam: "oral exam", prophylaxis: "cleaning", fluoride_varnish: "fluoride varnish", sealant: "sealant", class_v: "Class V", extraction: "extraction" };
-const state = { replay: false, patient: null, data: null, token: 0, busy: false, filing: false, filed: false, recorder: null };
+const state = { replay: false, payers: [], payerId: null, patients: [], patientId: null, patient: null, data: null, token: 0, busy: false, filing: false, filed: false, recorder: null };
 const ico = (n) => `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const niceDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
@@ -411,9 +440,12 @@ function visitLine(v) {
   const teeth = Object.keys(SVC).filter((s) => (v.teeth[s] || []).length).map((s) => `${SVC[s].name.toLowerCase()} on ${list(v.teeth[s])}`);
   return { main: list(done), extra: list(teeth) };
 }
+const payerOf = (id) => state.payers.find((p) => p.id === id);
 function renderPatient() {
-  const p = state.patient;
+  const p = state.patient, shown = payerOf(state.payerId).patient_facts;
+  document.querySelectorAll("[data-m]").forEach((el) => { el.hidden = !shown.includes(el.dataset.m); });
   $("#pt-name").textContent = p.name; $("#pt-pin").textContent = p.pin; $("#pt-kpp").textContent = p.kpp;
+  $("#pt-born").textContent = niceDate(p.birth_date); $("#pt-age").textContent = `${p.age} years`;
   $("#pt-dentist").textContent = `Dentist: ${p.dentist_name}, PRC license ${p.dentist_prc}`;
   $("#pt-reg").innerHTML = p.kpp_registered ? '<span class="yes">Yes</span>' : '<span style="color:var(--fail);font-weight:600">No</span>';
   const rows = p.history.map((v, i) => {
@@ -462,10 +494,10 @@ function toothSVG(c, L) {
   const x = c.cx - w / 2, y = by, src = `/static/teeth/${t}.png`;
   const flip = c.arch === "u" ? ` transform="translate(0,${2 * by + bh}) scale(1,-1)"` : "";
   const m = marks[c.n] || {};
-  const cls = ["tooth"]; (m.svc || []).forEach((s, i) => { if (i === 0) cls.push("s-" + s); });
+  const cls = ["tooth"]; (m.svc || []).forEach((s, i) => { if (i === 0) cls.push(m.unruled ? "unruled" : "s-" + s); });
   if (m.earlier && !m.svc) cls.push("earlier");
   if (m.refused) cls.push("refused");
-  const ttl = [m.svc ? (m.refused ? "Not covered: " : "") + list(m.svc.map((s) => SVC[s].name)) : "", m.earlier ? "Earlier this year: " + list(m.earlier.map((s) => SVC[s].name.toLowerCase())) : ""].filter(Boolean).join(". ");
+  const ttl = [m.svc ? (m.unruled ? "No rule in this file: " : m.refused ? "Not covered: " : "") + list(m.svc.map((s) => SVC[s].name)) : "", m.earlier ? "Earlier this year: " + list(m.earlier.map((s) => SVC[s].name.toLowerCase())) : ""].filter(Boolean).join(". ");
   /* PDA surface circle: B on top, L below, O in the centre, mesial (M) faces the midline */
   const R = L.r, r = R * .39, cx = c.cx, cy = c.cy, mr = Math.floor(c.n / 10) % 3 === 1, PI = Math.PI;
   const P = (a, rad) => [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
@@ -504,6 +536,7 @@ function buildMarks(d) {
     if (!(n >= 11 && n <= 48 && UPPER.concat(LOWER).includes(n))) { off.push(n); return; }
     m[n] = m[n] || {}; m[n].svc = [...(m[n].svc || []), s];
     if (((d.check.refused_teeth || {})[s] || []).includes(n)) m[n].refused = true;
+    if (((d.check.unruled_teeth || {})[s] || []).includes(n)) m[n].unruled = true;
   }));
   return { m, off };
 }
@@ -512,23 +545,24 @@ function lightChart(d) {
   const { m, off } = buildMarks(d); marks = m;
   const prevLit = lit; lit = false; renderChart();
   const lighten = () => {
-    document.querySelectorAll("#chart .tooth").forEach((g) => g.classList.remove("s-sealant", "s-class_v", "s-extraction", "refused"));
+    document.querySelectorAll("#chart .tooth").forEach((g) => g.classList.remove("s-sealant", "s-class_v", "s-extraction", "refused", "unruled"));
     const order = Object.keys(m).filter((n) => m[n].svc).map(Number);
     order.forEach((n, i) => setTimeout(() => {
       const g = document.querySelector(`#chart .tooth[data-n="${n}"]`); if (!g) return;
-      g.classList.add("s-" + m[n].svc[0]); if (m[n].refused) g.classList.add("refused");
+      g.classList.add(m[n].unruled ? "unruled" : "s-" + m[n].svc[0]); if (m[n].refused) g.classList.add("refused");
     }, REDUCED ? 0 : 160 * i));
   };
   /* start from the unlit look, then light up one tooth at a time */
-  document.querySelectorAll("#chart .tooth").forEach((g) => g.classList.remove("s-sealant", "s-class_v", "s-extraction", "refused"));
+  document.querySelectorAll("#chart .tooth").forEach((g) => g.classList.remove("s-sealant", "s-class_v", "s-extraction", "refused", "unruled"));
   requestAnimationFrame(() => requestAnimationFrame(lighten));
   lit = true;
   const parts = [];
   Object.keys(SVC).forEach((s) => {
     const all = d.chart.teeth[s] || []; if (!all.length) return;
-    const cov = (d.check.covered_teeth || {})[s] || [], ref = (d.check.refused_teeth || {})[s] || [];
-    parts.push(`<div class="trow"><span class="nm">${SVC[s].name}</span><span>${cov.length ? `<span class="ok">${list(cov)}</span> covered` : ""}${cov.length && ref.length ? "; " : ""}${ref.length ? `<span class="bad">${list(ref)} not covered</span>` : ""}</span></div>`);
+    const cov = (d.check.covered_teeth || {})[s] || [], ref = (d.check.refused_teeth || {})[s] || [], unr = (d.check.unruled_teeth || {})[s] || [];
+    parts.push(`<div class="trow"><span class="nm">${SVC[s].name}</span><span>${cov.length ? `<span class="ok">${list(cov)}</span> covered` : ""}${cov.length && ref.length ? "; " : ""}${ref.length ? `<span class="bad">${list(ref)} not covered</span>` : ""}${unr.length ? `<span class="ok">${list(unr)}</span> <span class="mute">no rule in this file</span>` : ""}</span></div>`);
   });
+  $("#lg-unruled").hidden = !Object.keys(d.check.unruled_teeth || {}).length;
   if (off.length) parts.push(`<div class="trow"><span class="nm">Not on this chart</span><span class="tnum">${list(off)} (baby teeth)</span></div>`);
   $("#tlist").innerHTML = parts.join("") || '<p class="none">No tooth work in this visit.</p>';
   const said = Object.keys(SVC).map((s) => (d.chart.teeth[s] || []).length ? `${SVC[s].name} ${list(d.chart.teeth[s])}` : "").filter(Boolean);
@@ -537,7 +571,7 @@ function lightChart(d) {
 }
 
 function resetChart() {
-  marks = buildMarks(null).m; lit = true; renderChart();
+  marks = buildMarks(null).m; lit = true; renderChart(); $("#lg-unruled").hidden = true;
   $("#chart").setAttribute("aria-label", "Tooth chart, no visit yet");
   $("#tlist").innerHTML = '<p class="none">Teeth appear here when a visit arrives.</p>';
 }
@@ -548,32 +582,98 @@ new ResizeObserver(() => {
 }).observe($("#chart-wrap"));
 
 /* ---------- checker ---------- */
-function renderCheck(d) {
-  const c = d.check, ok = c.claimable, adj = ok ? d.summary : null;
-  const rules = c.lines.map((l) => {
+const cap1 = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const andList = (a) => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
+const defaultHint = (P) => P.filing_demo ? "Nothing is filed until you approve. The agent fills a sample portal, not PhilHealth's site." : P.filing_note;
+const placeholder = (P) => `<p class="placeholder">The rules from ${esc(P.rules_text)} are checked here as soon as a visit arrives. Nothing is filed until you approve it.</p>`;
+
+/* the covered procedures of a claim that has no benefit code: what is covered, what is not, and what the file has no rule for */
+function procedureRows(c) {
+  const rows = { c: [], n: [], u: [] }, on = (x, ns) => `${cap1(x.label)} on ${andList(ns)}`;
+  c.procedures.forEach((x) => {
+    if (x.state === "no_rule") { rows.u.push(x.asked.length ? on(x, x.asked) : cap1(x.label)); return; }
+    if (!x.tooth) { rows[x.state === "covered" ? "c" : "n"].push(cap1(x.label)); return; }
+    const off = x.asked.filter((n) => !x.teeth.includes(n));
+    if (x.teeth.length) rows.c.push(on(x, x.teeth));
+    if (off.length) rows.n.push(on(x, off)); else if (!x.teeth.length) rows.n.push(cap1(x.label));
+  });
+  const row = (k, name, none) => rows[k].length || none ? `<div class="prow"><span class="pl">${name}</span><span class="chips">${rows[k].map((t) => `<span class="chip ${k}">${esc(t)}</span>`).join("") || '<span class="pl">none</span>'}</span></div>` : "";
+  return `<div class="procs">${row("c", "Covered", true)}${row("n", "Not covered")}${row("u", "No rule")}</div>`;
+}
+
+function ruleRows(lines) {
+  const none = lines.filter((l) => l.id.startsWith("none:"));
+  const rows = lines.filter((l) => !l.id.startsWith("none:")).map((l) => {
     const cls = l.na ? "na" : l.ok ? "ok" : "fail";
-    return `<li class="rule ${cls}"${l.ok && l.detail ? ` title="${esc(l.detail)}"` : ""}>${ico(l.na ? "minus" : l.ok ? "check" : "x")}<div><div class="rt">${esc(l.title)}<span class="sr">${l.na ? ": not used" : l.ok ? ": met" : ": not met"}</span></div>${!l.ok && l.detail ? `<div class="rd">${esc(l.detail)}</div>` : ""}</div></li>`;
-  }).join("");
-  const left = c.left;
+    return `<li class="rule ${cls}"${l.ok && l.detail ? ` title="${esc(l.detail)}"` : ""}>${ico(l.na ? "minus" : l.ok ? "check" : "x")}<div><div class="rt">${esc(l.title)}<span class="sr">${l.na ? ": not used" : l.ok ? ": met" : ": not met"}</span></div>${!l.ok && l.detail ? `<div class="rd">${esc(l.detail)}</div>` : ""}${l.source ? `<div class="rs">${esc(l.source)}</div>` : ""}</div></li>`;
+  });
+  if (none.length) rows.push(`<li class="rule na">${ico("minus")}<div><div class="rt">No rule in this file</div><ul class="nolist">${none.map((l) => `<li>${esc(l.title)}</li>`).join("")}</ul></div></li>`);
+  return rows.join("");
+}
+
+function renderCheck(d) {
+  const c = d.check, ok = c.claimable, adj = ok ? d.summary : null, P = payerOf(d.payer);
+  const left = c.left, hasLeft = left.teeth !== null || left.visits !== null;
+  const pill = `<span class="pill ${ok ? "ok" : "no"}">${ico(ok ? "check" : "x")}${ok ? (adj ? "Adjusted claim ready" : "Ready to file") : "Cannot file yet"}</span>`;
+  const result = P.per_procedure
+    ? `<div class="result"><div><div class="label">Claim type</div><div class="code text">Per-procedure claim</div></div>${pill}${procedureRows(c)}</div>`
+    : `<div class="result"><div><div class="label">Benefit code</div><div class="code ${c.code ? "" : "none"}">${c.code || "None"}</div></div>${pill}</div>`;
   $("#ck-body").innerHTML = `
-    <div class="result"><div><div class="label">Benefit code</div><div class="code ${c.code ? "" : "none"}">${c.code || "None"}</div></div>
-      <span class="pill ${ok ? "ok" : "no"}">${ico(ok ? "check" : "x")}${ok ? (adj ? "Adjusted claim ready" : "Ready to file") : "Cannot file yet"}</span></div>
+    ${result}
     ${adj ? `<p class="adjust">${esc(adj)}</p>` : ""}
-    <p class="meta">Visit ${c.visit} this year, service date ${niceDate(d.service_date)}</p>
-    <ul class="rules" aria-label="Rules checked">${rules}
-      <li class="left"><span>Left this year after this visit</span><strong>${left.teeth === null ? "-" : left.teeth} ${left.teeth === 1 ? "tooth" : "teeth"}, ${left.visits} ${left.visits === 1 ? "visit" : "visits"}</strong></li></ul>
+    <p class="meta">${P.per_procedure ? `Service date ${niceDate(d.service_date)}${c.age === null ? "" : `, age ${c.age} that day`}` : `Visit ${c.visit} this year, service date ${niceDate(d.service_date)}`}</p>
+    <ul class="rules" aria-label="Rules checked">${ruleRows(c.lines)}
+      ${hasLeft ? `<li class="left"><span>Left this year after this visit</span><strong>${left.teeth === null ? "-" : left.teeth} ${left.teeth === 1 ? "tooth" : "teeth"}, ${left.visits} ${left.visits === 1 ? "visit" : "visits"}</strong></li>` : ""}</ul>
     `;
-  $("#ck-inferred").innerHTML = `<b>Inferred by us, not stated in the circular:</b><ul>${d.inferred.map((t) => `<li>${esc(t.charAt(0).toUpperCase() + t.slice(1))}</li>`).join("")}</ul>`;
+  $("#ck-inferred").innerHTML = `<b>Inferred by us, not stated in ${esc(P.rules_text)}:</b><ul>${d.inferred.map((t) => `<li>${esc(t.charAt(0).toUpperCase() + t.slice(1))}</li>`).join("")}</ul>`;
   const btn = $("#approve"), hint = $("#approve-hint");
   btn.disabled = !!d.file_blocked || state.filing; btn.textContent = "Approve and file";
-  hint.classList.toggle("bad", !!d.file_blocked);
-  hint.textContent = d.file_blocked || "Nothing is filed until you approve. The agent fills a sample portal, not PhilHealth's site.";
+  hint.classList.toggle("bad", !!d.file_blocked && P.filing_demo);
+  hint.textContent = d.file_blocked || defaultHint(P);
   flow(ok ? 4 : 3, ok ? 0 : 3);
 }
 
 function checkLoading() {
   $("#ck-body").innerHTML = '<div class="skel" style="width:60%;height:44px"></div><div class="skel"></div><div class="skel" style="width:88%"></div><div class="skel" style="width:72%"></div><div class="skel"></div>';
   $("#approve").disabled = true; $("#ck-inferred").innerHTML = "";
+}
+
+/* ---------- payer and patient switches ---------- */
+function syncSwitches() {
+  $("#seg-payer").querySelectorAll(".segb").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === state.payerId)));
+  $("#seg-patient").querySelectorAll(".segb").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === state.patientId)));
+}
+function applyPayer() {
+  const P = payerOf(state.payerId);
+  $("#ck-src").textContent = `${P.name} ${P.benefit}`; $("#flow-rules").innerHTML = P.short_name.length > 14 ? `<b>${esc(P.short_name)}:</b> rule check` : `<b>${esc(P.short_name)} rule check</b>`;
+  if (!state.data) { $("#ck-body").innerHTML = placeholder(P); $("#ck-inferred").innerHTML = ""; $("#approve").disabled = true; $("#approve-hint").classList.remove("bad"); $("#approve-hint").textContent = defaultHint(P); }
+}
+async function recheck() {
+  const d = state.data, token = ++state.token, which = document.querySelector('.vbtn[aria-pressed="true"]')?.dataset.id;
+  state.filed = false; showErr(""); setBusy(true, which); checkLoading(); flow(2);
+  try {
+    const r = await fetch("/check", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chart: d.chart, service_date: d.service_date, filing_date: d.filing_date, payer: state.payerId, patient_id: state.patientId }) });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(body.detail || "The chart could not be checked. Try again.");
+    if (token !== state.token) return;
+    state.data = { ...body, heard: d.heard, source: d.source }; renderPatient(); lightChart(state.data);
+    flow(3); await sleep(450); if (token !== state.token) return;
+    renderCheck(state.data);
+  } catch (e) {
+    if (token !== state.token) return;
+    $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>'; flow(0);
+    showErr(e.message || "Something went wrong. Try again.");
+  } finally {
+    if (token === state.token) setBusy(false, which);
+  }
+}
+function choose(kind, id) {
+  if (state.busy || state.filing) return;
+  if (kind === "payer") state.payerId = id; else { state.patientId = id; state.patient = state.patients.find((p) => p.id === id); }
+  syncSwitches(); applyPayer();
+  $("#band").hidden = true; $("#app").classList.remove("filing");
+  if (state.data) recheck(); else { renderPatient(); resetChart(); }
 }
 
 /* ---------- a visit ---------- */
@@ -593,6 +693,7 @@ async function typeHeard(text, token) {
 function setBusy(on, which) {
   state.busy = on;
   document.querySelectorAll(".vbtn").forEach((b) => { b.disabled = on || state.filing || false; b.setAttribute("aria-pressed", String(!!which && b.dataset.id === which)); });
+  document.querySelectorAll(".segb").forEach((b) => { b.disabled = on || state.filing; });
   $("#rec").disabled = on || state.filing || state.replay || !window.MediaRecorder;
 }
 
@@ -603,7 +704,7 @@ async function sendVisit(req, which) {
   flow(1);
   const heard = $("#heard"); heard.classList.add("empty"); heard.textContent = req.audio ? "Listening to the recording" : "Reading the visit";
   try {
-    const r = await fetch("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req.json) });
+    const r = await fetch("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...req.json, payer: state.payerId, patient_id: state.patientId }) });
     const body = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(body.detail || "The visit could not be read. Try again.");
     if (token !== state.token) return;
@@ -634,7 +735,7 @@ async function toggleRecord() {
   rec.onstop = () => {
     stream.getTracks().forEach((t) => t.stop()); state.recorder = null;
     btn.classList.remove("recording"); $("#rec-label").textContent = "Record visit"; $("#rec-hint").textContent = "";
-    const fd = new FormData(); fd.append("audio", new Blob(chunks, { type: rec.mimeType || "audio/webm" }), "visit.webm");
+    const fd = new FormData(); fd.append("audio", new Blob(chunks, { type: rec.mimeType || "audio/webm" }), "visit.webm"); fd.append("payer", state.payerId); fd.append("patient_id", state.patientId);
     sendVisit({ audio: fd }, null);
   };
   rec.start(); btn.classList.add("recording");
@@ -703,12 +804,12 @@ function handleEvent(ev, data) {
 async function approve() {
   if (!state.data || state.filing || state.data.file_blocked) return;
   state.filing = true; state.filed = false; state.outcome = ""; setBusy(false, document.querySelector('.vbtn[aria-pressed="true"]')?.dataset.id);
-  document.querySelectorAll(".vbtn").forEach((b) => (b.disabled = true));
+  document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = true));
   const btn = $("#approve"); btn.disabled = true; btn.textContent = "Filing"; flow(5);
   const d = state.data;
   try {
     const r = await fetch("/file", { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ approved: true, chart: d.chart, service_date: d.service_date, filing_date: d.filing_date }) });
+      body: JSON.stringify({ approved: true, chart: d.chart, service_date: d.service_date, filing_date: d.filing_date, payer: state.payerId, patient_id: state.patientId }) });
     if (!r.ok) { const b = await r.json().catch(() => ({})); throw new Error(b.detail || "The claim could not be filed."); }
     bandReset(d.claim);
     const reader = r.body.getReader(), dec = new TextDecoder(); let buf = "";
@@ -729,7 +830,7 @@ async function approve() {
     btn.textContent = "Approve and file"; btn.disabled = false;
   } finally {
     state.filing = false;
-    document.querySelectorAll(".vbtn").forEach((b) => (b.disabled = false));
+    document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = false));
     $("#rec").disabled = state.replay || !window.MediaRecorder;
   }
 }
@@ -737,9 +838,13 @@ async function approve() {
 /* ---------- start ---------- */
 async function init() {
   const r = await fetch("/patient"); const j = await r.json();
-  state.patient = j.patient; state.replay = j.replay;
+  state.patients = j.patients; state.patient = j.patient; state.patientId = j.patient.id; state.payers = j.payers; state.payerId = j.payer_id; state.replay = j.replay;
   $("#replay-tag").hidden = !j.replay;
-  $("#ck-src").textContent = `${j.payer} ${j.benefit}`;
+  $("#seg-payer").innerHTML = j.payers.map((p) => `<button type="button" class="segb" data-id="${esc(p.id)}" aria-pressed="false">${esc(p.name)}</button>`).join("");
+  $("#seg-patient").innerHTML = j.patients.map((p) => `<button type="button" class="segb" data-id="${esc(p.id)}" aria-pressed="false">${esc(p.name.split(" ")[0])}</button>`).join("");
+  document.querySelectorAll("#seg-payer .segb").forEach((b) => b.addEventListener("click", () => choose("payer", b.dataset.id)));
+  document.querySelectorAll("#seg-patient .segb").forEach((b) => b.addEventListener("click", () => choose("patient", b.dataset.id)));
+  syncSwitches(); applyPayer();
   $("#saved").innerHTML = j.saved_visits.map((id, i) => `<button type="button" class="vbtn" data-id="${id}" aria-pressed="false" aria-label="Play saved visit ${i + 1}"><svg aria-hidden="true"><use href="#i-play"/></svg>${i + 1}</button>`).join("");
   document.querySelectorAll(".vbtn").forEach((b) => b.addEventListener("click", () => sendVisit({ json: { visit_id: b.dataset.id } }, b.dataset.id)));
   $("#rec").addEventListener("click", toggleRecord);

@@ -1,5 +1,5 @@
 """The dentist screen's server. GET / is the screen, POST /visit turns a visit (audio, text or a saved visit) into a chart and a
-rule check, POST /file fills the approved claim on the sample portal and streams progress as Server-Sent Events.
+rule check, POST /check re-checks a chart on the screen for another payer or patient (no model call), POST /file fills the approved claim on the sample portal and streams progress as Server-Sent Events.
 Run: uvicorn app.main:app --port 8096    Replay (no network): CLAIM_REPLAY=1 uvicorn app.main:app --port 8096"""
 import json, os, queue, tempfile, threading
 from datetime import date
@@ -11,15 +11,53 @@ from app import filer, meta, replay, rules
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PATIENTS = os.path.join(HERE, "..", "data", "patients.json")
-R = rules.load()
+PAYERS = {pid: rules.load(pid) for pid in rules.payers()}
+DEFAULT_PAYER = rules.default()
+R = PAYERS[DEFAULT_PAYER]
 MAX_AUDIO, MAX_TEXT = 10_000_000, 4000
 FILING = threading.Lock()   # one filing at a time: it drives one browser
 app = FastAPI(title="Chairside claim (demo)", docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")), name="static")
 
 
+def all_patients():
+    return json.load(open(PATIENTS))
+
+
 def patient():
-    return json.load(open(PATIENTS))[0]
+    return all_patients()[0]
+
+
+def pick_patient(pid):
+    """Trust boundary: the patient id comes from the browser. None = the first sample patient."""
+    if pid is None:
+        return patient()
+    return next((p for p in all_patients() if p["id"] == pid), None) or bad("Unknown patient.", 404)
+
+
+def pick_payer(pid):
+    """Trust boundary: the payer id comes from the browser and must be one of the rules files that were loaded at start."""
+    if pid is None:
+        return DEFAULT_PAYER, R
+    return pid, (PAYERS.get(pid) if isinstance(pid, str) else None) or bad("Unknown payer.", 404)
+
+
+def choose(body):
+    pid, rl = pick_payer(body.get("payer"))
+    return pick_patient(body.get("patient_id")), pid, rl
+
+
+def public_patient(p, day):
+    """What the screen gets about a patient; the age is the age on the service date."""
+    return {**{k: p[k] for k in ("id", "name", "birth_date", "pin", "kpp", "kpp_registered", "dentist_name", "dentist_prc", "history")},
+            "age": rules.age_on(p["birth_date"], day)}
+
+
+def payer_info(pid, rl):
+    """What the screen needs to show a payer: names, the source line, which member facts apply, and whether the demo can file for it."""
+    return {"id": pid, "name": rl["payer"], "short_name": rl["short_name"], "benefit": rl["benefit"], "source": rl["source"],
+            "rules_text": rl["rules_text"], "patient_facts": rl["patient_facts"], "per_procedure": not rl.get("codes"),
+            "filing_demo": bool(rl.get("filing_demo")), "filing_note": rl.get("filing_note")}
 
 
 def service_date():
@@ -54,7 +92,7 @@ def normalize_chart(raw):
 
 
 def check_chart(chart, p, service_day):
-    return {"service_date": service_day, "kpp_registered": p["kpp_registered"],
+    return {"service_date": service_day, "birth_date": p.get("birth_date"), "kpp_registered": p["kpp_registered"],
             "services": [s for s in meta.SERVICES if chart["services"][s]],
             "teeth": {s: v for s, v in chart["teeth"].items() if v}, "emergency_pain": chart["emergency_pain"]}
 
@@ -69,12 +107,15 @@ def build_claim(p, cc, res):
             "code": res["code"], "services": services, "teeth": ", ".join(map(str, teeth)), "dentist": p["dentist_prc"]}
 
 
-def file_blocked(claim):
+def file_blocked(claim, rl=None):
     """Why this claim cannot be filed right now, or None."""
+    rl = rl or R
+    if not rl.get("filing_demo"):
+        return rl["filing_note"]
     if claim is None:
         return "The checker found no benefit code for this visit. Fix the problems listed, then file."
     if replay.on() and not filer.replay_matches(claim):
-        return "Replay mode has one recorded filing: the claim from saved visit 2 or 4 (sealant on tooth 16, code OPH02A)."
+        return "Replay mode has one recorded filing: Juan's claim from saved visit 2 or 4 (sealant on tooth 16, code OPH02A)."
     return None
 
 
@@ -95,19 +136,27 @@ def adjusted_summary(res):
     return f"{asked} {'tooth' if asked == 1 else 'teeth'} asked: {shown} filed, {_list_of(left_off)} left off by rule"
 
 
-def evaluate(chart, day, filing_day):
-    p = patient(); cc = check_chart(chart, p, day)
-    res = rules.check(cc, p["history"], R, filing_day)
-    claim = build_claim(p, cc, res) if res["claimable"] else None
+def evaluate(chart, day, filing_day, p=None, rl=None):
+    p, rl = p or patient(), rl or R
+    cc = check_chart(chart, p, day)
+    res = rules.check(cc, p["history"], rl, filing_day)
+    claim = build_claim(p, cc, res) if rl.get("filing_demo") and res["claimable"] else None
     return p, cc, res, claim
 
 
-def visit_payload(heard, chart, source, day, filing_day):
-    _, _, res, claim = evaluate(chart, day, filing_day)
-    return {"source": source, "heard": heard, "chart": chart, "service_date": day, "filing_date": filing_day, "check": res,
-            "inferred": [R[k].removeprefix("inferred: ") for k in ("year_note", "codes_note") if k in R],
+def check_payload(chart, day, filing_day, choice):
+    """One chart checked for one payer and one patient. choice = (patient, payer id, payer rules)."""
+    p, pid, rl = choice
+    _, _, res, claim = evaluate(chart, day, filing_day, p, rl)
+    notes = [rl[k] for k in ("year_note", "codes_note") if k in rl] + rl.get("inferred_notes", [])
+    return {"payer": pid, "patient": public_patient(p, day), "chart": chart, "service_date": day, "filing_date": filing_day, "check": res,
+            "inferred": [n.removeprefix("inferred: ") for n in notes],
             "summary": adjusted_summary(res) if res["claimable"] else None,
-            "claim": claim, "file_blocked": file_blocked(claim), "replay": replay.on()}
+            "claim": claim, "file_blocked": file_blocked(claim, rl), "replay": replay.on()}
+
+
+def visit_payload(heard, chart, source, day, filing_day, choice):
+    return {**check_payload(chart, day, filing_day, choice), "source": source, "heard": heard}
 
 
 # ---------- routes ----------
@@ -123,10 +172,10 @@ def screen():
 
 @app.get("/patient")
 def get_patient():
-    p = patient()
-    return {"patient": {k: p[k] for k in ("name", "pin", "kpp", "kpp_registered", "dentist_name", "dentist_prc", "history")}, "replay": replay.on(),
-            "service_date": service_date(), "benefit": R["benefit"], "payer": R["payer"], "source": R["source"],
-            "saved_visits": list(replay.visits())}
+    p, day = patient(), service_date()
+    return {"patient": public_patient(p, day), "patients": [public_patient(q, day) for q in all_patients()], "replay": replay.on(),
+            "service_date": day, "benefit": R["benefit"], "payer": R["payer"], "source": R["source"], "payer_id": DEFAULT_PAYER,
+            "payers": [payer_info(pid, rl) for pid, rl in PAYERS.items()], "saved_visits": list(replay.visits())}
 
 
 def _meta_failed(e):
@@ -166,7 +215,8 @@ async def post_visit(request: Request):
     tmp = None
     try:
         if ctype.startswith("multipart/form-data"):
-            up = (await request.form()).get("audio")
+            form = await request.form()
+            up = form.get("audio")
             if up is None or not hasattr(up, "read"):
                 bad("Send the recording in a form field named audio.")
             data = await up.read(MAX_AUDIO + 1)
@@ -177,7 +227,7 @@ async def post_visit(request: Request):
             if replay.on():
                 bad("Replay mode has no live recording. Play one of the five saved visits.", 409)
             tmp = tempfile.mkdtemp(); path = os.path.join(tmp, "visit.audio"); open(path, "wb").write(data)
-            kind, value, body = "audio", path, {}
+            kind, value, body = "audio", path, {"payer": form.get("payer"), "patient_id": form.get("patient_id")}
         else:
             try:
                 body = await request.json()
@@ -194,12 +244,27 @@ async def post_visit(request: Request):
             else:
                 bad("Send text, a visit_id or a recording.")
         day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
+        choice = choose(body)
         heard, chart, source = await run_in_threadpool(run_visit, kind, value)
-        return visit_payload(heard, normalize_chart(chart), source, day, filing_day)
+        return visit_payload(heard, normalize_chart(chart), source, day, filing_day, choice)
     finally:
         if tmp:
             for f in os.listdir(tmp): os.remove(os.path.join(tmp, f))
             os.rmdir(tmp)
+
+
+@app.post("/check")
+async def post_check(request: Request):
+    """Checks a chart that is already on the screen against a payer and a patient. No model call: the chart came from the screen,
+    so this works in replay mode and is what the payer and patient switches use."""
+    try:
+        body = await request.json()
+    except ValueError:
+        bad("Send JSON with chart, payer and patient_id.")
+    if not isinstance(body, dict):
+        bad("Send JSON with chart, payer and patient_id.")
+    day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
+    return check_payload(normalize_chart(body.get("chart")), day, filing_day, choose(body))
 
 
 def sse(event, data):
@@ -252,8 +317,9 @@ async def post_file(request: Request):
     if not isinstance(body, dict) or body.get("approved") is not True:
         bad("The dentist must approve the claim before it is filed.")
     day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
-    _, _, _, claim = evaluate(normalize_chart(body.get("chart")), day, filing_day)
-    blocked = file_blocked(claim)
+    p, _, rl = choose(body)
+    _, _, _, claim = evaluate(normalize_chart(body.get("chart")), day, filing_day, p, rl)
+    blocked = file_blocked(claim, rl)
     if blocked:
         bad(blocked, 409 if claim else 400)
     if not FILING.acquire(blocking=False):

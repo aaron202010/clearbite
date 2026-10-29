@@ -1,22 +1,30 @@
 {
   "payer": "PhilHealth",
+  "short_name": "PhilHealth",
+  "default": true,
   "benefit": "Preventive Oral Health Services in Primary Care",
   "source": "PhilHealth Tamang Sagot, Circular No. 2024-0034 (philhealth.gov.ph, fetched 2026-10-29)",
+  "rules_text": "the circular",
+  "patient_facts": ["pin", "kpp", "kpp_registered", "dentist"],
+  "filing_demo": true,
   "year": "calendar",
   "year_note": "inferred: the circular says the limit applies within one year and does not say whether that is a calendar year or a rolling year; we count a calendar year",
   "eligibility": [
-    {"field": "kpp_registered", "title": "Registered with a Konsulta Package Provider", "reason": "The patient must first register with a PhilHealth-accredited Konsulta Package Provider."}
+    {"field": "kpp_registered", "title": "Registered with a Konsulta Package Provider", "reason": "The patient must first register with a PhilHealth-accredited Konsulta Package Provider.",
+     "source": "Circular No. 2024-0034"}
   ],
   "mandatory_services": ["oral_exam", "prophylaxis", "fluoride_varnish"],
+  "mandatory_source": "Circular No. 2024-0034",
   "tooth_caps": [
     {"services": ["sealant", "class_v"], "max_teeth_per_year": 2, "title": "Sealant or Class V: at most two teeth a year",
-     "reason": "Pit and fissure sealant or root surface protection: no more than two teeth in one year."}
+     "reason": "Pit and fissure sealant or root surface protection: no more than two teeth in one year.", "source": "Circular No. 2024-0034"}
   ],
   "conditional_services": [
     {"service": "extraction", "requires": "emergency_pain", "title": "Extraction only for severe pain emergencies",
-     "reason": "Tooth extraction is covered only when the patient has severe tooth pain treated as an emergency."}
+     "reason": "Tooth extraction is covered only when the patient has severe tooth pain treated as an emergency.", "source": "Circular No. 2024-0034"}
   ],
   "filing_deadline_days": 60,
+  "filing_deadline_source": "Circular No. 2024-0034",
   "codes": [
     {"visit": 1, "teeth_min": 0, "teeth_max": 0, "code": "OPH01"},
     {"visit": 1, "teeth_min": 1, "teeth_max": 1, "code": "OPH01A"},
@@ -25,6 +33,7 @@
     {"visit": 2, "teeth_min": 1, "teeth_max": 1, "code": "OPH02A"},
     {"visit": 2, "teeth_min": 2, "teeth_max": 99, "code": "OPH02B"}
   ],
+  "codes_source": "Circular No. 2024-0034",
   "codes_note": "inferred: the circular's table has codes for a 1st and 2nd visit only, and no code for the extraction",
   "labels": {"oral_exam": "oral exam", "prophylaxis": "cleaning", "fluoride_varnish": "fluoride varnish",
              "sealant": "pit and fissure sealant", "class_v": "Class V / root surface protection", "extraction": "emergency extraction"}

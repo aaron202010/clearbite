@@ -1,0 +1,45 @@
+{
+  "payer": "Washington Apple Health (Medicaid)",
+  "short_name": "Washington Apple Health",
+  "benefit": "dental program",
+  "source": "Washington Administrative Code (WAC) 182-535-1082, 182-535-1080 and 182-502-0150 (app.leg.wa.gov, fetched 2026-10-29)",
+  "rules_text": "the Washington Administrative Code",
+  "patient_facts": ["born", "age"],
+  "filing_demo": false,
+  "filing_note": "The filing demo uses the PhilHealth sample portal.",
+  "inferred_notes": [
+    "inferred: the chart's oral exam, cleaning and fluoride varnish are read as the regulation's periodic oral evaluation, prophylaxis and topical fluoride",
+    "inferred: the regulation numbers the sealant teeth 2, 3, 14, 15, 18, 19, 30 and 31 (Universal numbering); the FDI numbers on this screen are our conversion",
+    "inferred: a limit counts back from the service date in calendar months, so the same date six or twelve months later is allowed"
+  ],
+  "age_limits": [
+    {"service": "sealant", "max_age": 20, "title": "Sealants: age 20 and younger", "source": "WAC 182-535-1082"}
+  ],
+  "eligible_teeth": [
+    {"service": "sealant", "teeth": [17, 16, 26, 27, 37, 36, 46, 47], "title": "Sealants: only teeth 16, 17, 26, 27, 36, 37, 46, 47",
+     "source": "WAC 182-535-1082 (Universal 2, 3, 14, 15, 18, 19, 30, 31)"}
+  ],
+  "tooth_windows": [
+    {"service": "sealant", "window_months": 36, "title": "Sealants: once per tooth in three years", "source": "WAC 182-535-1082"}
+  ],
+  "frequency": [
+    {"service": "oral_exam", "title": "Oral exam: once every 6 months", "source": "WAC 182-535-1080",
+     "bands": [{"count": 1, "window_months": 6}]},
+    {"service": "prophylaxis", "title": "Cleaning: every 6 months to age 18, every 12 months from 19", "source": "WAC 182-535-1082",
+     "bands": [{"max_age": 18, "count": 1, "window_months": 6}, {"min_age": 19, "count": 1, "window_months": 12}]},
+    {"service": "fluoride_varnish", "title": "Topical fluoride: 3, 2 or 1 times a year, by age", "source": "WAC 182-535-1082",
+     "bands": [{"max_age": 6, "count": 3, "window_months": 12, "min_days_apart": 110},
+               {"min_age": 7, "max_age": 18, "count": 2, "window_months": 12, "min_days_apart": 170},
+               {"min_age": 19, "count": 1, "window_months": 12}]}
+  ],
+  "filing_deadline_days": 365,
+  "filing_deadline_source": "WAC 182-502-0150",
+  "not_in_this_file": [
+    {"id": "mandatory", "title": "Exam, cleaning and fluoride every visit"},
+    {"id": "tooth_cap", "title": "Two sealant or Class V teeth a year"},
+    {"id": "code", "title": "Benefit code by visit and tooth count"},
+    {"id": "class_v_extraction", "title": "Class V and emergency extraction"}
+  ],
+  "labels": {"oral_exam": "oral exam", "prophylaxis": "cleaning", "fluoride_varnish": "fluoride varnish",
+             "sealant": "sealant", "class_v": "Class V", "extraction": "extraction"}
+}

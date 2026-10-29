@@ -2,6 +2,7 @@
   {
     "id": "sample-001",
     "name": "Juan Dela Cruz (sample)",
+    "birth_date": "1986-05-14",
     "pin": "12-345678901-2",
     "kpp": "Sample Konsulta Clinic",
     "kpp_registered": true,
@@ -13,6 +14,25 @@
         "kpp_registered": true,
         "services": ["oral_exam", "prophylaxis", "fluoride_varnish", "sealant"],
         "teeth": {"sealant": [46]},
+        "emergency_pain": false
+      }
+    ]
+  },
+  {
+    "id": "sample-002",
+    "name": "Ana Reyes (sample)",
+    "birth_date": "2014-03-09",
+    "pin": "12-987654321-0",
+    "kpp": "Sample Konsulta Clinic",
+    "kpp_registered": true,
+    "dentist_name": "sample dentist",
+    "dentist_prc": "0123456",
+    "history": [
+      {
+        "service_date": "2026-04-20",
+        "kpp_registered": true,
+        "services": ["oral_exam", "prophylaxis", "fluoride_varnish"],
+        "teeth": {},
         "emergency_pain": false
       }
     ]
