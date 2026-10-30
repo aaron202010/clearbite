@@ -74,6 +74,9 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
   grid-template-columns: 288px minmax(0, 1fr) 430px; grid-template-areas: "a b c" "band band band"; }
 .col { display: grid; gap: 14px; min-width: 0; }
 .col.a { grid-area: a; } .col.b { grid-area: b; } .col.c { grid-area: c; }
+.try { list-style: none; margin: 10px 0 14px; padding: 0; display: grid; gap: 6px; }
+.try li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink-2, inherit); }
+.try b { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; background: var(--accent-tint, #e6f2f3); color: var(--accent-hover, #0e6a75); }
 #band { grid-area: band; }
 @media (min-width: 1000px) { .app.filing { padding-bottom: max(48px, calc(100vh - 380px)); } }
 @media (max-width: 1239px) {
@@ -81,6 +84,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 }
 @media (max-width: 800px) {
   .app { grid-template-columns: minmax(0, 1fr); grid-template-areas: "a" "b" "c" "band"; padding: 12px 16px 40px; }
+  .col.a > section[aria-labelledby="cap-title"] { order: -1; }   /* phones: the record card first, so a visitor sees the action before the patient */
   .top { padding: 0 16px; } .top .sub, .demo-note { display: none; }
   .flow-wrap { position: static; }
   .flow { padding: 0 16px; grid-auto-columns: 236px; }
@@ -346,6 +350,11 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
     <section class="card" aria-labelledby="cap-title">
       <h2 id="cap-title">Today's visit</h2>
       <p class="lede">Speak while you work. Your words become a chart, then the claim is checked.</p>
+      <ol class="try" aria-label="Try it">
+        <li><b>1</b> Record a visit or play a sample</li>
+        <li><b>2</b> See the rules check the claim</li>
+        <li><b>3</b> Approve and file</li>
+      </ol>
       <div class="rec-row">
         <button class="btn primary" id="rec" type="button"><svg class="ico"><use href="#i-mic"/></svg><span id="rec-label">Record visit</span></button>
         <button class="btn" id="sample" type="button" hidden><svg class="ico"><use href="#i-play"/></svg><span>Play a sample visit</span></button>
