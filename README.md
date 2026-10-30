@@ -2,7 +2,7 @@
 
 A dentist talks while working. The claim is checked against the insurer's rules and filed, after the dentist approves.
 
-Live demo, replay mode (recorded takes and a recorded live filing, no live model calls): https://claim.aaroncabantugan.com
+Live demo: https://claim.aaroncabantugan.com. Record your own visit and the speech to text, the chart and the rules check run live on Meta's models (5 recordings per visitor per hour). The saved visits and the filing are replays of recorded takes and a recorded live filing.
 
 Built for the Meta model API hackathon (Startup track) on three Meta capabilities:
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 python3 -m playwright install chromium
 CLAIM_REPLAY=1 python3 -m uvicorn app.main:app --port 8096    # replay: no network, recorded takes and a recorded live filing
 MODEL_API_KEY=... python3 -m uvicorn app.main:app --port 8096  # live: real Meta calls
-python3 -m pytest -q                                           # 143 tests
+python3 -m pytest -q                                           # 153 tests
 ```
 
 ## How it was checked
