@@ -15,7 +15,7 @@ LINES = {
   "n6": "The dentist approves. A Muse Spark computer-use agent fills the claim on a sample portal, then every field is read back.",
   "n7": "The rules live in a file. Switch to Washington State Medicaid, and this adult gets no sealants.",
   "n8": "A twelve-year-old gets all three.",
-  "n9": "Chairside Claim. Claims checked before they're filed. The code and the live demo are linked below.",
+  "n9": "Clearbite. Claims checked before they're filed. The code and the live demo are linked below.",
   "ni": "PhilHealth covers 113.86 million Filipinos. Only 1,482 dentists are accredited to claim its benefits.",
   "b1": "Under the hood, every rule lives in a file, with its source cited on screen.",
   "b2": "143 tests guard the decisions, and two outside models, Codex and Kimi, reviewed the code before release.",
@@ -99,7 +99,7 @@ dark("cb4", "Five timed live runs", [
 import qrcode as _qr
 q = _qr.make("https://claim.aaroncabantugan.com").resize((230, 230))
 im = Image.new("RGB", (1280, 720), BG); d = ImageDraw.Draw(im); d.rectangle((0, 0, 1280, 8), fill=TEAL)
-d.text((110, 220), "Chairside Claim", font=ImageFont.truetype(BOLD, 66), fill=INK)
+d.text((110, 220), "Clearbite", font=ImageFont.truetype(BOLD, 66), fill=INK)
 d.text((112, 310), "Dental claims checked before they're filed.", font=ImageFont.truetype(REG, 32), fill=MUTED)
 d.text((112, 400), "Live demo   claim.aaroncabantugan.com", font=ImageFont.truetype(REG, 28), fill=INK)
 d.text((112, 445), "Code        github.com/aaron202010/chairside-claim", font=ImageFont.truetype(REG, 28), fill=INK)

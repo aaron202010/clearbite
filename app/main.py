@@ -16,7 +16,7 @@ DEFAULT_PAYER = rules.default()
 R = PAYERS[DEFAULT_PAYER]
 MAX_AUDIO, MAX_TEXT = 10_000_000, 4000
 FILING = threading.Lock()   # one filing at a time: it drives one browser
-app = FastAPI(title="Chairside claim (demo)", docs_url=None, redoc_url=None)
+app = FastAPI(title="Clearbite (demo)", docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")), name="static")
 
 

@@ -1,4 +1,4 @@
-# Chairside Claim
+# Clearbite
 
 A dentist talks while working. The claim is checked against the insurer's rules and filed, after the dentist approves.
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 python3 -m playwright install chromium
 CLAIM_REPLAY=1 python3 -m uvicorn app.main:app --port 8096    # replay: no network, recorded takes and a recorded live filing
 MODEL_API_KEY=... python3 -m uvicorn app.main:app --port 8096  # live: real Meta calls
-python3 -m pytest -q                                           # 138 tests
+python3 -m pytest -q                                           # 143 tests
 ```
 
 ## How it was checked
@@ -46,3 +46,15 @@ python3 -m pytest -q                                           # 138 tests
 - The portal is a sample built for this demo. It is not PhilHealth's site and is not connected to PhilHealth or to Washington's Health Care Authority.
 - The founder plays the dentist in the video and is not a dentist. Patients are samples.
 - Muse Wonder answered "Unsupported tool type: 'computer'" on this API key, so Muse Spark runs the computer-use loop, as Meta's docs allow.
+
+## Built during the hackathon
+
+- All code, rules files, tests and the sample portal in this repo were written during the hackathon build window. The first commit is 2026-10-29 03:51 UTC; the git history shows the work day by day.
+- Prior work, called out: the founder runs HeyDenta, a dental clinic system for the Philippines. No HeyDenta code, data, keys or prompts are in this repo. The tooth chart follows the same dental-chart conventions (FDI numbering, five-surface circles) but is written fresh here.
+- The tooth pictures in `app/static/teeth/` are reused from the founder's HeyDenta app (prior work).
+- The rules come from public sources, cited in each rules file: PhilHealth's Tamang Sagot on Circular 2024-0034 and the Washington Administrative Code.
+
+## License
+
+MIT for the code, see `LICENSE`. The tooth pictures in `app/static/teeth/` are not covered by it.
+
