@@ -273,7 +273,11 @@ async def post_visit(request: Request):
         day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
         choice = choose(body)
         heard, chart, source = await run_in_threadpool(run_visit, kind, value)
-        return visit_payload(heard, normalize_chart(chart), source, day, filing_day, choice)
+        chart = normalize_chart(chart)
+        if kind == "audio":   # sizes only, never the words: a visitor's recording is their own
+            print(f"live visit: {len(data)} bytes, {ctype.split(';')[0]}, heard {len(heard)} chars, "
+                  f"{sum(1 for v in chart.get('services', {}).values() if v)} services marked", flush=True)
+        return visit_payload(heard, chart, source, day, filing_day, choice)
     finally:
         if tmp:
             for f in os.listdir(tmp): os.remove(os.path.join(tmp, f))
