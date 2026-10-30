@@ -737,6 +737,10 @@ async function sendVisit(req, which) {
     if (token !== state.token) return;
     const done = await typeHeard(body.heard, token); if (!done) return;
     flow(2); state.data = body; renderPatient(); lightChart(body);
+    if (req.audio) {   // a live recording with no dental service in it: say so, so it never looks like nothing happened
+      const any = Object.values((body.chart && body.chart.services) || {}).some(Boolean);
+      $("#rec-hint").textContent = any ? "" : "I heard you, but no dental services were in it. Try: \"exam, cleaning, fluoride varnish, sealant on 16\".";
+    }
     await sleep(700); if (token !== state.token) return;
     flow(3); await sleep(600); if (token !== state.token) return;
     renderCheck(body);
