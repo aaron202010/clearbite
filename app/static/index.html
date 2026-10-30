@@ -880,7 +880,7 @@ async function init() {
   if (j.replay && j.live_voice && window.MediaRecorder) {
     // Live voice next to replay: the visitor's own recording goes to the live models; the saved visits and the filing stay replayed.
     $("#rec-label").textContent = "Record your own visit"; $("#sample").hidden = false;
-    $("#rec-hint").textContent = "Say a short visit, like \"exam, cleaning, sealant on 16\". Up to 60 seconds. Filing replays a recorded live run.";
+    $("#rec-hint").textContent = "Say a short visit, like \"exam, cleaning, fluoride varnish, sealant on 16\". Leave one out and watch the rules catch it. Up to 60 seconds; filing replays a recorded live run.";
   } else if (j.replay) {
     state.liveVoice = false;
     // Demo mode: the main button plays the founder's recorded visit instead of sitting greyed out (a visitor read the page as "not clickable").
