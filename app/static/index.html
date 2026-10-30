@@ -54,6 +54,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .tag[hidden] { display: none; }
 
 /* workflow strip: the five models and steps behind one claim; sticky so it stays in frame while the agent files */
+#flow li[data-jump] { cursor: pointer; }
 .flow-wrap { position: sticky; top: 0; z-index: 20; padding: 8px 0; background: var(--surface); border-bottom: 1px solid var(--line); }
 .flow { position: relative; max-width: 1440px; margin: 0 auto; padding: 0 24px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .flow li { display: flex; align-items: center; gap: 11px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: .95rem; line-height: 1.3; color: var(--ink-2); box-shadow: inset 0 0 0 1px transparent; transition: background-color .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out; }
@@ -313,12 +314,12 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 </header>
 
 <div class="flow-wrap">
-  <ol class="flow" id="flow" aria-label="How a visit becomes a filed claim">
-    <li><span class="fn"><i>1</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Voice Transcribe:</b> speech to text</span></li>
-    <li><span class="fn"><i>2</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark:</b> structured chart</span></li>
-    <li><span class="fn"><i>3</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft" id="flow-rules"><b>PhilHealth rule check</b></span></li>
-    <li><span class="fn"><i>4</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Dentist approves</b></span></li>
-    <li><span class="fn"><i>5</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark computer use:</b> files the claim</span></li>
+  <ol class="flow" id="flow" aria-label="How a visit becomes a filed claim (tap a step to jump to it)">
+    <li data-jump="hd-title" tabindex="0" role="link"><span class="fn"><i>1</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Voice Transcribe:</b> speech to text</span></li>
+    <li data-jump="ch-title" tabindex="0" role="link"><span class="fn"><i>2</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark:</b> structured chart</span></li>
+    <li data-jump="ck-title" tabindex="0" role="link"><span class="fn"><i>3</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft" id="flow-rules"><b>PhilHealth rule check</b></span></li>
+    <li data-jump="approve" tabindex="0" role="link"><span class="fn"><i>4</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Dentist approves</b></span></li>
+    <li data-jump="band" tabindex="0" role="link"><span class="fn"><i>5</i><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ft"><b>Muse Spark computer use:</b> files the claim</span></li>
   </ol>
 </div>
 
@@ -347,6 +348,7 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
       <p class="lede">Speak while you work. Your words become a chart, then the claim is checked.</p>
       <div class="rec-row">
         <button class="btn primary" id="rec" type="button"><svg class="ico"><use href="#i-mic"/></svg><span id="rec-label">Record visit</span></button>
+        <button class="btn" id="sample" type="button" hidden><svg class="ico"><use href="#i-play"/></svg><span>Play a sample visit</span></button>
         <p class="hint" id="rec-hint" aria-live="polite"></p>
       </div>
       <div class="saved">
@@ -427,7 +429,7 @@ const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, REDUCED ? 0 : ms));
 const SVC = { sealant: { key: "S", name: "Sealant" }, class_v: { key: "V", name: "Class V" }, extraction: { key: "X", name: "Extraction" } };
 const SVC_NAME = { oral_exam: "oral exam", prophylaxis: "cleaning", fluoride_varnish: "fluoride varnish", sealant: "sealant", class_v: "Class V", extraction: "extraction" };
-const state = { replay: false, payers: [], payerId: null, patients: [], patientId: null, patient: null, data: null, token: 0, busy: false, filing: false, filed: false, recorder: null };
+const state = { replay: false, liveVoice: false, payers: [], payerId: null, patients: [], patientId: null, patient: null, data: null, token: 0, busy: false, filing: false, filed: false, recorder: null };
 const ico = (n) => `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const niceDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
@@ -708,11 +710,18 @@ function playSample() {
   if (b && !b.disabled) b.click();
 }
 
+// The step boxes jump to their part of the screen (the filing band shows only once a filing starts, so step 5 lands on Approve).
+document.querySelectorAll("#flow li[data-jump]").forEach((li) => {
+  const go = () => { let el = document.getElementById(li.dataset.jump); if (!el || el.closest("[hidden]")) el = document.getElementById("approve"); el.scrollIntoView({ behavior: "smooth", block: "center" }); };
+  li.addEventListener("click", go); li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+});
+
 function setBusy(on, which) {
   state.busy = on;
   document.querySelectorAll(".vbtn").forEach((b) => { b.disabled = on || state.filing || false; b.setAttribute("aria-pressed", String(!!which && b.dataset.id === which)); });
   document.querySelectorAll(".segb").forEach((b) => { b.disabled = on || state.filing; });
-  $("#rec").disabled = on || state.filing || (!state.replay && !window.MediaRecorder);   // in replay mode the button plays the sample visit
+  $("#rec").disabled = on || state.filing || ((!state.replay || state.liveVoice) && !window.MediaRecorder);   // replay without live voice: the button plays the sample visit
+  $("#sample").disabled = on || state.filing;
 }
 
 async function sendVisit(req, which) {
@@ -735,7 +744,7 @@ async function sendVisit(req, which) {
     if (token !== state.token) return;
     heard.classList.add("empty"); heard.textContent = "Record a visit or play a saved one. The words appear here.";
     $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>'; flow(0);
-    showErr(e.message || "Something went wrong. Try again.");
+    showErr((e.message || "Something went wrong. Try again.") + (req.audio && state.replay ? " The saved visits still work: tap Play a sample visit." : ""));
   } finally {
     if (token === state.token) setBusy(false, which);
   }
@@ -752,13 +761,13 @@ async function toggleRecord() {
   rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
   rec.onstop = () => {
     stream.getTracks().forEach((t) => t.stop()); state.recorder = null;
-    btn.classList.remove("recording"); $("#rec-label").textContent = "Record visit"; $("#rec-hint").textContent = "";
+    btn.classList.remove("recording"); $("#rec-label").textContent = state.liveVoice ? "Record your own visit" : "Record visit"; $("#rec-hint").textContent = "";
     const fd = new FormData(); fd.append("audio", new Blob(chunks, { type: rec.mimeType || "audio/webm" }), "visit.webm"); fd.append("payer", state.payerId); fd.append("patient_id", state.patientId);
     sendVisit({ audio: fd }, null);
   };
   rec.start(); btn.classList.add("recording");
   const t0 = Date.now();
-  const tick = () => { if (!state.recorder) return; const s = Math.floor((Date.now() - t0) / 1000); $("#rec-label").textContent = `Stop and check (${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")})`; setTimeout(tick, 500); };
+  const tick = () => { if (!state.recorder) return; const s = Math.floor((Date.now() - t0) / 1000); if (s >= 60) { state.recorder.stop(); return; } /* 60 s cap */ $("#rec-label").textContent = `Stop and check (${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")})`; setTimeout(tick, 500); };
   tick();
   $("#rec-hint").textContent = "Recording. Speak as you would at the chair.";
 }
@@ -849,14 +858,14 @@ async function approve() {
   } finally {
     state.filing = false;
     document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = false));
-    $("#rec").disabled = !state.replay && !window.MediaRecorder;
+    $("#rec").disabled = (!state.replay || state.liveVoice) && !window.MediaRecorder; $("#sample").disabled = false;
   }
 }
 
 /* ---------- start ---------- */
 async function init() {
   const r = await fetch("/patient"); const j = await r.json();
-  state.patients = j.patients; state.patient = j.patient; state.patientId = j.patient.id; state.payers = j.payers; state.payerId = j.payer_id; state.replay = j.replay;
+  state.patients = j.patients; state.patient = j.patient; state.patientId = j.patient.id; state.payers = j.payers; state.payerId = j.payer_id; state.replay = j.replay; state.liveVoice = !!j.live_voice;
   $("#replay-tag").hidden = !j.replay;
   $("#seg-payer").innerHTML = j.payers.map((p) => `<button type="button" class="segb" data-id="${esc(p.id)}" aria-pressed="false">${esc(p.name)}</button>`).join("");
   $("#seg-patient").innerHTML = j.patients.map((p) => `<button type="button" class="segb" data-id="${esc(p.id)}" aria-pressed="false">${esc(p.name.split(" ")[0])}</button>`).join("");
@@ -865,9 +874,15 @@ async function init() {
   syncSwitches(); applyPayer();
   $("#saved").innerHTML = j.saved_visits.map((id, i) => `<button type="button" class="vbtn" data-id="${id}" aria-pressed="false" aria-label="Play saved visit ${i + 1}"><svg aria-hidden="true"><use href="#i-play"/></svg>${i + 1}</button>`).join("");
   document.querySelectorAll(".vbtn").forEach((b) => b.addEventListener("click", () => sendVisit({ json: { visit_id: b.dataset.id } }, b.dataset.id)));
-  $("#rec").addEventListener("click", () => (state.replay ? playSample() : toggleRecord()));
+  $("#rec").addEventListener("click", () => (state.replay && !state.liveVoice ? playSample() : toggleRecord()));
+  $("#sample").addEventListener("click", playSample);
   $("#approve").addEventListener("click", approve);
-  if (j.replay) {
+  if (j.replay && j.live_voice && window.MediaRecorder) {
+    // Live voice next to replay: the visitor's own recording goes to the live models; the saved visits and the filing stay replayed.
+    $("#rec-label").textContent = "Record your own visit"; $("#sample").hidden = false;
+    $("#rec-hint").textContent = "Say a short visit, like \"exam, cleaning, sealant on 16\". Up to 60 seconds. Filing replays a recorded live run.";
+  } else if (j.replay) {
+    state.liveVoice = false;
     // Demo mode: the main button plays the founder's recorded visit instead of sitting greyed out (a visitor read the page as "not clickable").
     $("#rec-label").textContent = "Play a sample visit"; $("#rec use").setAttribute("href", "#i-play");
     $("#rec-hint").textContent = "Live recording is off in this demo. This plays a visit the founder recorded.";

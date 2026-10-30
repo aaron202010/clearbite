@@ -10,6 +10,12 @@ def on():
     return os.environ.get("CLAIM_REPLAY") == "1"
 
 
+def live_voice():
+    """CLAIM_LIVE_VOICE=1 next to replay: a visitor's own recording goes to the live Meta models (speech to text, then the chart);
+    the saved visits and the filing stay replayed."""
+    return os.environ.get("CLAIM_LIVE_VOICE") == "1"
+
+
 def visits():
     return {v["id"]: v for v in json.load(open(os.path.join(OUT, "real_take_take1.json")))}
 

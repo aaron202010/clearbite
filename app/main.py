@@ -1,7 +1,8 @@
 """The dentist screen's server. GET / is the screen, POST /visit turns a visit (audio, text or a saved visit) into a chart and a
 rule check, POST /check re-checks a chart on the screen for another payer or patient (no model call), POST /file fills the approved claim on the sample portal and streams progress as Server-Sent Events.
 Run: uvicorn app.main:app --port 8096    Replay (no network): CLAIM_REPLAY=1 uvicorn app.main:app --port 8096"""
-import json, os, queue, tempfile, threading
+import json, os, queue, tempfile, threading, time
+from collections import deque
 from datetime import date
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
@@ -16,6 +17,8 @@ DEFAULT_PAYER = rules.default()
 R = PAYERS[DEFAULT_PAYER]
 MAX_AUDIO, MAX_TEXT = 10_000_000, 4000
 FILING = threading.Lock()   # one filing at a time: it drives one browser
+LIVE_PER_HOUR, LIVE_PER_DAY = 5, 300   # live recordings in replay mode: per visitor per hour, and for the whole demo per day (a cost cap)
+LIVE_HITS: dict = {}; LIVE_DAY = deque(); LIVE_LOCK = threading.Lock()
 app = FastAPI(title="Clearbite (demo)", docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")), name="static")
 
@@ -170,12 +173,34 @@ def screen():
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
+def client_ip(request):
+    """The last X-Forwarded-For hop is the one Traefik added; earlier entries can be forged by the visitor."""
+    xff = request.headers.get("x-forwarded-for", "")
+    return xff.split(",")[-1].strip() or (request.client.host if request.client else "unknown")
+
+
+def live_allowed(ip, now=None):
+    """True and counts the recording when this visitor is under the hourly limit and the demo is under the daily cap."""
+    now = time.time() if now is None else now
+    with LIVE_LOCK:
+        while LIVE_DAY and now - LIVE_DAY[0] > 86400:
+            LIVE_DAY.popleft()
+        hits = LIVE_HITS.setdefault(ip, deque())
+        while hits and now - hits[0] > 3600:
+            hits.popleft()
+        if len(hits) >= LIVE_PER_HOUR or len(LIVE_DAY) >= LIVE_PER_DAY:
+            return False
+        hits.append(now); LIVE_DAY.append(now)
+        return True
+
+
 @app.get("/patient")
 def get_patient():
     p, day = patient(), service_date()
     return {"patient": public_patient(p, day), "patients": [public_patient(q, day) for q in all_patients()], "replay": replay.on(),
             "service_date": day, "benefit": R["benefit"], "payer": R["payer"], "source": R["source"], "payer_id": DEFAULT_PAYER,
-            "payers": [payer_info(pid, rl) for pid, rl in PAYERS.items()], "saved_visits": list(replay.visits())}
+            "payers": [payer_info(pid, rl) for pid, rl in PAYERS.items()], "saved_visits": list(replay.visits()),
+            "live_voice": replay.on() and replay.live_voice()}
 
 
 def _meta_failed(e):
@@ -193,7 +218,7 @@ def run_visit(kind, value):
             return v["heard"], meta.chart_from_text(v["heard"]), "saved"
         except Exception as e:
             _meta_failed(e)
-    if replay.on():
+    if replay.on() and not (kind == "audio" and replay.live_voice()):   # live voice: a visitor's recording goes to the live models
         saved = replay.by_text(value) if kind == "text" else None
         if saved:
             return saved["heard"], saved["chart"], "text"
@@ -224,8 +249,10 @@ async def post_visit(request: Request):
                 bad("The recording is empty.")
             if len(data) > MAX_AUDIO:
                 bad("The recording is too large.", 413)
-            if replay.on():
+            if replay.on() and not replay.live_voice():
                 bad("Replay mode has no live recording. Play one of the five saved visits.", 409)
+            if replay.on() and not live_allowed(client_ip(request)):
+                bad("That's the live recording limit for now. Play a saved visit, or try again in an hour.", 429)
             tmp = tempfile.mkdtemp(); path = os.path.join(tmp, "visit.audio"); open(path, "wb").write(data)
             kind, value, body = "audio", path, {"payer": form.get("payer"), "patient_id": form.get("patient_id")}
         else:
