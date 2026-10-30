@@ -91,3 +91,13 @@ def test_filing_stays_the_recorded_replay_in_live_voice_mode(demo, monkeypatch):
     with demo.stream("POST", "/file", json={"approved": True, "chart": chart}) as r:
         text = "".join(r.iter_text())
     assert used == [] and "event: done" in text
+
+
+def test_a_tooth_set_from_the_screen_is_checked_like_a_spoken_one(demo):
+    """Tapping a tooth sends the edited chart to /check (no model call); the sealant limit applies to it."""
+    chart = demo.post("/visit", json={"visit_id": "e4"}).json()["chart"]
+    chart["teeth"]["sealant"] = sorted(set(chart["teeth"]["sealant"]) | {47})
+    r = demo.post("/check", json={"chart": chart})
+    assert r.status_code == 200, r.text
+    refused = r.json()["check"].get("refused_teeth", {}).get("sealant", [])
+    assert 47 in refused and demo.calls == []

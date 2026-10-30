@@ -56,6 +56,13 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 
 /* workflow strip: the five models and steps behind one claim; sticky so it stays in frame while the agent files */
 #flow li[data-jump] { cursor: pointer; }
+#chart .tooth[data-n] { cursor: pointer; }
+#chart .tooth[data-n]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+#tmenu { position: fixed; z-index: 50; min-width: 150px; padding: 6px; background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 28px -12px rgba(23, 33, 38, .35); }
+#tmenu .tm-h { margin: 4px 10px 6px; font-size: .8rem; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+#tmenu button { display: block; width: 100%; min-height: 40px; padding: 8px 12px; border: 0; border-radius: 10px; background: transparent; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
+#tmenu button:hover, #tmenu button:focus-visible { background: var(--accent-tint); outline: none; }
+#chart-hint { margin: 6px 0 0; font-size: .9rem; color: var(--ink-2); }
 .flow-wrap { position: sticky; top: 0; z-index: 20; padding: 8px 0; background: var(--surface); border-bottom: 1px solid var(--line); }
 .flow { position: relative; max-width: 1440px; margin: 0 auto; padding: 0 24px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .flow li { display: flex; align-items: center; gap: 11px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: .95rem; line-height: 1.3; color: var(--ink-2); box-shadow: inset 0 0 0 1px transparent; transition: background-color .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out; }
@@ -563,7 +570,8 @@ body { line-height: 1.55; letter-spacing: 0; background: var(--bg); }
         <span><i class="sw s">S</i>Sealant</span><span><i class="sw v">V</i>Class V</span><span><i class="sw x">X</i>Extraction</span>
         <span><i class="sw n"></i>Not covered</span><span><i class="sw e">S</i>Earlier this year</span><span id="lg-unruled" hidden><i class="sw u"></i>No rule in this file</span>
       </div>
-      <div id="chart-wrap"><svg id="chart" role="img" aria-label="Tooth chart, no visit yet"></svg></div>
+      <div id="chart-wrap"><svg id="chart" role="group" aria-label="Tooth chart, no visit yet"></svg></div>
+      <p id="chart-hint">Tap a tooth to change its work. The rules check runs again at once.</p>
       <div class="tlist" id="tlist"><p class="none">Teeth appear here when a visit arrives.</p></div>
     </section>
   </div>
@@ -710,7 +718,7 @@ function toothSVG(c, L) {
     return `<path class="sf ${cl}" d="M${x0},${y0}A${R},${R} 0 0 1 ${x1},${y1}L${x2},${y2}A${r},${r} 0 0 0 ${x3},${y3}Z"/>`; };
   const fs = (R * .38).toFixed(1), off = R * .7, lab = (lx, ly, txt, cl) => `<text class="sl ${cl}" x="${lx}" y="${ly}" font-size="${fs}">${txt}</text>`;
   const d = R * .78;
-  return `<g class="${cls.join(" ")}" data-n="${c.n}"><title>Tooth ${c.n}${ttl ? ". " + ttl : ""}</title>
+  return `<g class="${cls.join(" ")}" data-n="${c.n}" tabindex="0" role="button" aria-haspopup="menu"><title>Tooth ${c.n}${ttl ? ". " + ttl : ""}</title>
     <g${flip}><mask id="tm-${c.n}" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}" style="mask-type:alpha"><image href="${src}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="none"/></mask>
       <image class="timg" href="${src}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="none"/>
       <rect class="tint" x="${x}" y="${y}" width="${w}" height="${h}" mask="url(#tm-${c.n})"/>
@@ -907,6 +915,48 @@ document.querySelectorAll("#flow li[data-jump]").forEach((li) => {
   li.addEventListener("click", go); li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 });
 
+/* ---------- tap a tooth: set its work, then the rules check re-runs (POST /check, no model call) ---------- */
+const TOOTH_WORK = [["sealant", "Sealant"], ["class_v", "Class V"], ["extraction", "Extraction"], [null, "None"]];
+function closeToothMenu() { const m = $("#tmenu"); if (m) m.remove(); }
+function openToothMenu(g, x, y) {
+  if (state.busy || state.filing) return;
+  closeToothMenu();
+  const n = Number(g.dataset.n), m = document.createElement("div");
+  m.id = "tmenu"; m.setAttribute("role", "menu"); m.setAttribute("aria-label", `Work on tooth ${n}`);
+  m.innerHTML = `<p class="tm-h">Tooth ${n}</p>` + TOOTH_WORK.map(([k, label]) => `<button type="button" role="menuitem" data-k="${k || ""}">${label}</button>`).join("");
+  document.body.appendChild(m);
+  const r = m.getBoundingClientRect();
+  m.style.left = Math.max(8, Math.min(x, innerWidth - r.width - 8)) + "px";
+  m.style.top = Math.max(8, Math.min(y, innerHeight - r.height - 8)) + "px";
+  m.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { closeToothMenu(); setToothWork(n, b.dataset.k || null); g.focus && g.focus(); }));
+  m.querySelector("button").focus();
+}
+function setToothWork(n, kind) {
+  if (state.busy || state.filing) return;
+  if (!state.data) {   // nothing on screen yet: start an empty visit for the sample patient
+    const svc = {}; Object.keys(SVC).forEach((k) => (svc[k] = false));
+    ["oral_exam", "prophylaxis", "fluoride_varnish"].forEach((k) => (svc[k] = false));
+    state.data = { chart: { services: svc, teeth: { sealant: [], class_v: [], extraction: [] }, emergency_pain: false },
+                   service_date: state.serviceDate, filing_date: state.serviceDate, heard: "", source: "chart" };
+  }
+  const c = JSON.parse(JSON.stringify(state.data.chart));
+  ["sealant", "class_v", "extraction"].forEach((k) => { c.teeth[k] = (c.teeth[k] || []).filter((t) => t !== n); });
+  if (kind) c.teeth[kind] = [...c.teeth[kind], n].sort((a, b) => a - b);
+  ["sealant", "class_v", "extraction"].forEach((k) => { c.services[k] = (c.teeth[k] || []).length > 0; });
+  state.data = { ...state.data, chart: c };
+  recheck();
+}
+document.addEventListener("click", (e) => {
+  const g = e.target.closest && e.target.closest("#chart .tooth[data-n]");
+  if (g) { e.stopPropagation(); openToothMenu(g, e.clientX + 6, e.clientY + 6); return; }
+  if (!e.target.closest || !e.target.closest("#tmenu")) closeToothMenu();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") { closeToothMenu(); return; }
+  const g = e.target.closest && e.target.closest("#chart .tooth[data-n]");
+  if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); const r = g.getBoundingClientRect(); openToothMenu(g, r.left, r.bottom + 4); }
+});
+
 function setBusy(on, which) {
   state.busy = on;
   document.querySelectorAll(".vbtn").forEach((b) => { b.disabled = on || state.filing || false; b.setAttribute("aria-pressed", String(!!which && b.dataset.id === which)); });
@@ -1060,7 +1110,7 @@ async function approve() {
 /* ---------- start ---------- */
 async function init() {
   const r = await fetch("/patient"); const j = await r.json();
-  state.patients = j.patients; state.patient = j.patient; state.patientId = j.patient.id; state.payers = j.payers; state.payerId = j.payer_id; state.replay = j.replay; state.liveVoice = !!j.live_voice;
+  state.patients = j.patients; state.patient = j.patient; state.patientId = j.patient.id; state.payers = j.payers; state.payerId = j.payer_id; state.replay = j.replay; state.liveVoice = !!j.live_voice; state.serviceDate = j.service_date;
   $("#replay-tag").hidden = !j.replay;
   $("#seg-payer").innerHTML = j.payers.map((p) => `<button type="button" class="segb" data-id="${esc(p.id)}" aria-pressed="false">${esc(p.name)}</button>`).join("");
   $("#seg-patient").innerHTML = j.patients.map((p) => `<button type="button" class="segb" data-id="${esc(p.id)}" aria-pressed="false">${esc(p.name.split(" ")[0])}</button>`).join("");
