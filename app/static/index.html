@@ -702,11 +702,17 @@ async function typeHeard(text, token) {
   return true;
 }
 
+// Demo mode: play the saved visit the film shows (sealant on 16, 26 and 36).
+function playSample() {
+  const b = document.querySelectorAll(".vbtn")[3] || document.querySelector(".vbtn");
+  if (b && !b.disabled) b.click();
+}
+
 function setBusy(on, which) {
   state.busy = on;
   document.querySelectorAll(".vbtn").forEach((b) => { b.disabled = on || state.filing || false; b.setAttribute("aria-pressed", String(!!which && b.dataset.id === which)); });
   document.querySelectorAll(".segb").forEach((b) => { b.disabled = on || state.filing; });
-  $("#rec").disabled = on || state.filing || state.replay || !window.MediaRecorder;
+  $("#rec").disabled = on || state.filing || (!state.replay && !window.MediaRecorder);   // in replay mode the button plays the sample visit
 }
 
 async function sendVisit(req, which) {
@@ -843,7 +849,7 @@ async function approve() {
   } finally {
     state.filing = false;
     document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = false));
-    $("#rec").disabled = state.replay || !window.MediaRecorder;
+    $("#rec").disabled = !state.replay && !window.MediaRecorder;
   }
 }
 
@@ -859,9 +865,13 @@ async function init() {
   syncSwitches(); applyPayer();
   $("#saved").innerHTML = j.saved_visits.map((id, i) => `<button type="button" class="vbtn" data-id="${id}" aria-pressed="false" aria-label="Play saved visit ${i + 1}"><svg aria-hidden="true"><use href="#i-play"/></svg>${i + 1}</button>`).join("");
   document.querySelectorAll(".vbtn").forEach((b) => b.addEventListener("click", () => sendVisit({ json: { visit_id: b.dataset.id } }, b.dataset.id)));
-  $("#rec").addEventListener("click", toggleRecord);
+  $("#rec").addEventListener("click", () => (state.replay ? playSample() : toggleRecord()));
   $("#approve").addEventListener("click", approve);
-  if (j.replay) { $("#rec").disabled = true; $("#rec-hint").textContent = "Recording is off in replay mode. Play a saved visit."; }
+  if (j.replay) {
+    // Demo mode: the main button plays the founder's recorded visit instead of sitting greyed out (a visitor read the page as "not clickable").
+    $("#rec-label").textContent = "Play a sample visit"; $("#rec use").setAttribute("href", "#i-play");
+    $("#rec-hint").textContent = "Live recording is off in this demo. This plays a visit the founder recorded.";
+  }
   else if (!window.MediaRecorder) { $("#rec").disabled = true; $("#rec-hint").textContent = "This browser cannot record. Play a saved visit."; }
   renderPatient(); resetChart(); flow(0);
 }
