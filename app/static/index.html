@@ -756,7 +756,7 @@ async function toggleRecord() {
   if (state.recorder) { state.recorder.stop(); return; }
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-  catch (e) { $("#rec-hint").textContent = "The microphone is blocked. Allow it for this page, or play a saved visit."; return; }
+  catch (e) { $("#rec-hint").textContent = "The microphone is blocked. Allow it for this page, or open the page in Chrome or Safari if you are inside another app. You can also play a saved visit."; return; }
   const chunks = []; const rec = new MediaRecorder(stream); state.recorder = rec;
   rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
   rec.onstop = () => {
@@ -885,7 +885,9 @@ async function init() {
     state.liveVoice = false;
     // Demo mode: the main button plays the founder's recorded visit instead of sitting greyed out (a visitor read the page as "not clickable").
     $("#rec-label").textContent = "Play a sample visit"; $("#rec use").setAttribute("href", "#i-play");
-    $("#rec-hint").textContent = "Live recording is off in this demo. This plays a visit the founder recorded.";
+    $("#rec-hint").textContent = j.live_voice
+      ? "Recording doesn't work in this browser (in-app browsers often block the microphone). Open claim.aaroncabantugan.com in Chrome or Safari to record your own visit. Meanwhile, this plays a visit the founder recorded."
+      : "Live recording is off in this demo. This plays a visit the founder recorded.";
   }
   else if (!window.MediaRecorder) { $("#rec").disabled = true; $("#rec-hint").textContent = "This browser cannot record. Play a saved visit."; }
   renderPatient(); resetChart(); flow(0);
