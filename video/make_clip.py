@@ -102,7 +102,7 @@ im = Image.new("RGB", (1280, 720), BG); d = ImageDraw.Draw(im); d.rectangle((0, 
 d.text((110, 220), "Clearbite", font=ImageFont.truetype(BOLD, 66), fill=INK)
 d.text((112, 310), "Dental claims checked before they're filed.", font=ImageFont.truetype(REG, 32), fill=MUTED)
 d.text((112, 400), "Live demo   claim.aaroncabantugan.com", font=ImageFont.truetype(REG, 28), fill=INK)
-d.text((112, 445), "Code        github.com/aaron202010/chairside-claim", font=ImageFont.truetype(REG, 28), fill=INK)
+d.text((112, 445), "Code        github.com/aaron202010/clearbite", font=ImageFont.truetype(REG, 28), fill=INK)
 d.text((112, 520), "Built on Meta's Muse Voice and Muse Spark.", font=ImageFont.truetype(REG, 26), fill=MUTED)
 im.paste(q.convert("RGB"), (930, 240)); im.save(f"{B}/c9.png")
 
