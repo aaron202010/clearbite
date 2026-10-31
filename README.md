@@ -30,7 +30,7 @@ pip install -r requirements.txt
 python3 -m playwright install chromium
 CLAIM_REPLAY=1 python3 -m uvicorn app.main:app --port 8096    # replay: no network, recorded takes and a recorded live filing
 MODEL_API_KEY=... python3 -m uvicorn app.main:app --port 8096  # live: real Meta calls
-python3 -m pytest -q                                           # 171 tests
+python3 -m pytest -q                                           # 173 tests
 ```
 
 ## How it was checked

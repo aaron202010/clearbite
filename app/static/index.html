@@ -86,13 +86,14 @@ svg.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColo
 .try li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink-2, inherit); }
 .try b { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; background: var(--accent-tint, #e6f2f3); color: var(--accent-hover, #0e6a75); }
 #band { grid-area: band; }
+.col.a > section[aria-labelledby="cap-title"] { order: -1; }   /* the record card first at every width: on a 1366 x 768 laptop it sat below the fold */
+section[aria-labelledby="hd-title"] { scroll-margin-top: 12px; }
 @media (min-width: 1000px) { .app.filing { padding-bottom: max(48px, calc(100vh - 380px)); } }
 @media (max-width: 1239px) {
   .app { grid-template-columns: 320px minmax(0, 1fr); grid-template-areas: "a b" "a c" "band band"; }
 }
 @media (max-width: 800px) {
   .app { grid-template-columns: minmax(0, 1fr); grid-template-areas: "a" "b" "c" "band"; padding: 12px 16px 40px; }
-  .col.a > section[aria-labelledby="cap-title"] { order: -1; }   /* phones: the record card first, so a visitor sees the action before the patient */
   .top { padding: 0 16px; } .top .sub, .demo-note { display: none; }
   .flow-wrap { position: static; }
   .flow { padding: 0 16px; grid-auto-columns: 236px; }
@@ -979,6 +980,7 @@ async function sendVisit(req, which) {
   flow(1);
   const heard = $("#heard"); heard.classList.add("empty"); heard.textContent = req.audio ? "Listening to the recording" : "Reading the visit";
   if (req.audio) $("#rec-hint").textContent = "Checking your recording.";   // on a phone the result cards are a screen below this button
+  if (matchMedia("(max-width: 800px)").matches) $("#hd-title").closest("section").scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" });   // one column: bring the transcript into view
   try {
     const r = await send("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...req.json, payer: state.payerId, patient_id: state.patientId }) });
     const body = await r.json().catch(() => ({}));

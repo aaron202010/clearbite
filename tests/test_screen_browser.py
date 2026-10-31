@@ -111,3 +111,18 @@ def test_escape_and_a_keyboard_pick_keep_focus_on_the_tooth(browser, base):
     page.keyboard.press("Enter"); page.keyboard.press("Tab"); page.keyboard.press("Enter")   # the second item: Class V
     page.wait_for_function("() => /21/.test(document.querySelector('#tlist').innerText) && !document.querySelector('.vbtn').disabled")
     assert page.evaluate(focused) == "21"
+
+
+def test_the_record_button_is_on_the_first_screen_of_a_laptop(browser, base):
+    """At 1366 x 768 the record card sat under the patient card, below the fold: a first-time visitor saw no way to start."""
+    page = open_page(browser, base, LAPTOP)
+    assert page.evaluate(IN_VIEW, "#rec") and page.evaluate(IN_VIEW, "#sample")
+
+
+def test_a_visit_on_a_phone_brings_what_was_heard_into_view(browser, base):
+    """On a phone the result cards sit a screen below the buttons; a visit now scrolls the transcript into view."""
+    page = open_page(browser, base, PHONE)
+    page.click("#sample")
+    page.wait_for_function("() => !document.querySelector('.vbtn').disabled && document.querySelector('#ck-body .pill')")
+    time.sleep(0.8)   # the smooth scroll settles
+    assert page.evaluate(IN_VIEW, "#hd-title")
