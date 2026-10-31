@@ -12,7 +12,7 @@ Built for the Meta model API hackathon (Startup track) on three Meta capabilitie
 | Text to chart | Muse Spark (`muse-spark-1.3`), structured output | Fills a fixed JSON chart: services done, FDI tooth numbers, emergency flag |
 | Filing | Muse Spark computer use (the API's `computer` tool) | Fills the claim on a sample portal from screenshots, then every field is read back |
 
-The decision is not made by a model. A rules engine (`app/rules.py`) reads one payer's rules from a file and returns the benefit code, each rule as pass or fail with its plain reason and its source, and what is left this year. No payer logic lives in the code: a second payer is a second rules file.
+The decision is not made by a model. A rules engine (`app/rules.py`) reads one payer's rules from a file and returns the benefit code, each rule as pass or fail with its plain reason and its source, and what is left this year. No payer's rules live in the code: the engine reads rule kinds (required services, yearly tooth caps, visit codes, age limits, eligible teeth, frequency by age, filing deadline) and each payer is a rules file. Adding Washington took its rules file plus five new rule kinds in the engine; a payer whose rules fit these kinds needs only a file.
 
 ## Payers
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 python3 -m playwright install chromium
 CLAIM_REPLAY=1 python3 -m uvicorn app.main:app --port 8096    # replay: no network, recorded takes and a recorded live filing
 MODEL_API_KEY=... python3 -m uvicorn app.main:app --port 8096  # live: real Meta calls
-python3 -m pytest -q                                           # 155 tests
+python3 -m pytest -q                                           # 171 tests
 ```
 
 ## How it was checked
