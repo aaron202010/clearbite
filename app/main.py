@@ -73,9 +73,21 @@ def bad(detail, status=400):
 
 def valid_date(v):
     try:
-        return date.fromisoformat(v).isoformat()
+        d = date.fromisoformat(v)
     except (TypeError, ValueError):
         bad("Dates must look like 2026-10-29.")
+    if not 1900 <= d.year <= 2100:   # a year-1 date crashed the year-window rules (500, then 502s through the proxy)
+        bad("Dates must fall between 1900 and 2100.")
+    return d.isoformat()
+
+
+def visit_dates(body):
+    """Trust boundary: the service and filing dates may come from the browser. -> (service day, filing day)"""
+    day = valid_date(body.get("service_date") or service_date())
+    filing_day = valid_date(body.get("filing_date") or day)
+    if filing_day < day:
+        bad("The filing date cannot be before the service date.")
+    return day, filing_day
 
 
 # ---------- chart: Meta's shape (service flags) <-> the checker's shape (service list) ----------
@@ -164,12 +176,15 @@ def visit_payload(heard, chart, source, day, filing_day, choice):
 
 # ---------- routes ----------
 
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)   # HEAD: link checkers and uptime monitors
 def screen():
     """The screen. In replay mode the page is served with the replay tag already showing."""
     html = open(os.path.join(HERE, "static", "index.html"), encoding="utf-8").read()
     if replay.on():
         html = html.replace('<body data-replay="0">', '<body data-replay="1">').replace('id="replay-tag" class="tag" hidden', 'id="replay-tag" class="tag"')
+        if replay.live_voice():   # the tag's tooltip must not say "no network" when a visitor's recording goes to the live models
+            html = html.replace("Every model call is answered from saved outputs. No network is used.",
+                                "The saved visits and the filing replay recorded runs. Your own recording runs live on Meta's models.")
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
@@ -273,7 +288,7 @@ async def post_visit(request: Request):
                 kind, value = "text", body["text"].strip()
             else:
                 bad("Send text, a visit_id or a recording.")
-        day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
+        day, filing_day = visit_dates(body)
         choice = choose(body)
         heard, chart, source = await run_in_threadpool(run_visit, kind, value)
         chart = normalize_chart(chart)
@@ -297,7 +312,7 @@ async def post_check(request: Request):
         bad("Send JSON with chart, payer and patient_id.")
     if not isinstance(body, dict):
         bad("Send JSON with chart, payer and patient_id.")
-    day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
+    day, filing_day = visit_dates(body)
     return check_payload(normalize_chart(body.get("chart")), day, filing_day, choose(body))
 
 
@@ -305,9 +320,9 @@ def sse(event, data):
     return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 
-def stream_filing(claim):
+def stream_filing(claim, lock=None):
     """Run the filing in its own thread (Playwright must stay on one thread) and return a generator that relays its events.
-    The thread starts here, not on the first read, so the lock is always released even if the browser leaves at once."""
+    The thread starts here, not on the first read, so the lock (live filing only) is always released even if the browser leaves at once."""
     q, stop = queue.Queue(), threading.Event()
 
     def work():
@@ -321,7 +336,9 @@ def stream_filing(claim):
             why = str(e) if isinstance(e, filer.ModelError) else "The filing agent stopped before it finished."
             q.put(("error", {"message": why + " Nothing was sent anywhere. Try again."}))
         finally:
-            q.put(None); FILING.release()
+            q.put(None)
+            if lock:
+                lock.release()
 
     def events():
         try:
@@ -350,13 +367,14 @@ async def post_file(request: Request):
         bad("Send JSON with approved and chart.")
     if not isinstance(body, dict) or body.get("approved") is not True:
         bad("The dentist must approve the claim before it is filed.")
-    day = valid_date(body.get("service_date") or service_date()); filing_day = valid_date(body.get("filing_date") or day)
+    day, filing_day = visit_dates(body)
     p, _, rl = choose(body)
     _, _, _, claim = evaluate(normalize_chart(body.get("chart")), day, filing_day, p, rl)
     blocked = file_blocked(claim, rl)
     if blocked:
         bad(blocked, 409 if claim else 400)
-    if not FILING.acquire(blocking=False):
+    lock = None if replay.on() else FILING   # a replay plays saved screenshots and drives no browser: visitors never wait on each other
+    if lock and not lock.acquire(blocking=False):
         bad("A filing is already running.", 409)
-    return StreamingResponse(stream_filing(claim), media_type="text/event-stream",
+    return StreamingResponse(stream_filing(claim, lock), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})

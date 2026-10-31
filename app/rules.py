@@ -179,17 +179,15 @@ def check(chart, history, rules, filing_date):
         used = sum(len(h.get("teeth", {}).get(s, [])) for h in same_year for s in cap["services"])
         left = max(cap["max_teeth_per_year"] - used, 0)
         asked_caps = [(s, n) for s in cap["services"] for n in covered.get(s, [])]
-        if len(asked_caps) > left:
-            dropped = asked_caps[left:]
-            problems.append(f"{cap['reason']} {used} already used this year, {left} left. "
-                            f"Not covered: tooth {', '.join(str(n) for _, n in dropped)}.")
-            for s, n in dropped:
+        off = sorted(n for _, n in asked_caps[left:])   # "teeth 26, 36", never "tooth 26, 36"
+        if off:
+            problems.append(f"{cap['reason']} {used} already used this year, {left} left. Not covered: {_teeth(off)}.")
+            for s, n in asked_caps[left:]:
                 covered[s].remove(n)
         teeth_left = left - min(len(asked_caps), left)
         line("cap:" + "+".join(cap["services"]), cap.get("title", cap["reason"]), n0,
              f"{used} of {cap['max_teeth_per_year']} used before this visit, {left} left.",
-             fail_detail=f"{used} already used this year, {left} left. Not covered: tooth "
-                         + ", ".join(str(n) for _, n in asked_caps[left:]) + "." if len(asked_caps) > left else None, src=cap.get("source"))
+             fail_detail=f"{used} already used this year, {left} left. Not covered: {_teeth(off)}." if off else None, src=cap.get("source"))
     for rule in rules.get("conditional_services", []):
         n0, s = len(problems), rule["service"]
         used = s in services or bool(teeth.get(s))   # teeth alone count as asking for the service
