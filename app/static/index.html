@@ -633,6 +633,9 @@ const ico = (n) => `<svg class="ico" aria-hidden="true"><use href="#i-${n}"/></s
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const niceDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const list = (a) => a.join(", ");
+/* a fetch that fails before any answer (a dropped phone connection) says so in plain words, never the browser's "Failed to fetch" */
+const DROPPED = "The connection dropped before the server answered. Check the network and try again.";
+const send = (url, opts) => fetch(url, opts).catch(() => { throw new Error(DROPPED); });
 
 /* ---------- workflow strip ---------- */
 /* stage: the step now running (1 to 5), 6 = all done, 0 = none; bad: a step that stopped the flow */
@@ -865,7 +868,7 @@ async function recheck() {
   const d = state.data, token = ++state.token, which = document.querySelector('.vbtn[aria-pressed="true"]')?.dataset.id;
   state.filed = false; showErr(""); setBusy(true, which); checkLoading(); flow(2);
   try {
-    const r = await fetch("/check", { method: "POST", headers: { "Content-Type": "application/json" },
+    const r = await send("/check", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chart: d.chart, service_date: d.service_date, filing_date: d.filing_date, payer: state.payerId, patient_id: state.patientId }) });
     const body = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(body.detail || "The chart could not be checked. Try again.");
@@ -878,7 +881,10 @@ async function recheck() {
     $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>'; flow(0);
     showErr(e.message || "Something went wrong. Try again.");
   } finally {
-    if (token === state.token) setBusy(false, which);
+    if (token === state.token) {
+      setBusy(false, which);
+      if (state.refocus) { focusTooth(state.refocus); state.refocus = null; }   // the chart was redrawn: keyboard focus goes back to the tooth
+    }
   }
 }
 function choose(kind, id) {
@@ -918,17 +924,18 @@ document.querySelectorAll("#flow li[data-jump]").forEach((li) => {
 /* ---------- tap a tooth: set its work, then the rules check re-runs (POST /check, no model call) ---------- */
 const TOOTH_WORK = [["sealant", "Sealant"], ["class_v", "Class V"], ["extraction", "Extraction"], [null, "None"]];
 function closeToothMenu() { const m = $("#tmenu"); if (m) m.remove(); }
+function focusTooth(n) { const g = document.querySelector(`#chart .tooth[data-n="${n}"]`); if (g) g.focus({ preventScroll: true }); }
 function openToothMenu(g, x, y) {
-  if (state.busy || state.filing) return;
+  if (state.busy || state.filing || state.recorder) return;   // while recording, only Stop works
   closeToothMenu();
   const n = Number(g.dataset.n), m = document.createElement("div");
-  m.id = "tmenu"; m.setAttribute("role", "menu"); m.setAttribute("aria-label", `Work on tooth ${n}`);
+  m.id = "tmenu"; m.dataset.n = n; m.setAttribute("role", "menu"); m.setAttribute("aria-label", `Work on tooth ${n}`);
   m.innerHTML = `<p class="tm-h">Tooth ${n}</p>` + TOOTH_WORK.map(([k, label]) => `<button type="button" role="menuitem" data-k="${k || ""}">${label}</button>`).join("");
   document.body.appendChild(m);
   const r = m.getBoundingClientRect();
   m.style.left = Math.max(8, Math.min(x, innerWidth - r.width - 8)) + "px";
   m.style.top = Math.max(8, Math.min(y, innerHeight - r.height - 8)) + "px";
-  m.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { closeToothMenu(); setToothWork(n, b.dataset.k || null); g.focus && g.focus(); }));
+  m.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { closeToothMenu(); focusTooth(n); setToothWork(n, b.dataset.k || null); }));
   m.querySelector("button").focus();
 }
 function setToothWork(n, kind) {
@@ -943,7 +950,7 @@ function setToothWork(n, kind) {
   ["sealant", "class_v", "extraction"].forEach((k) => { c.teeth[k] = (c.teeth[k] || []).filter((t) => t !== n); });
   if (kind) c.teeth[kind] = [...c.teeth[kind], n].sort((a, b) => a - b);
   ["sealant", "class_v", "extraction"].forEach((k) => { c.services[k] = (c.teeth[k] || []).length > 0; });
-  state.data = { ...state.data, chart: c };
+  state.data = { ...state.data, chart: c }; state.refocus = n;
   recheck();
 }
 document.addEventListener("click", (e) => {
@@ -952,7 +959,7 @@ document.addEventListener("click", (e) => {
   if (!e.target.closest || !e.target.closest("#tmenu")) closeToothMenu();
 });
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") { closeToothMenu(); return; }
+  if (e.key === "Escape") { const m = $("#tmenu"); if (m) { closeToothMenu(); focusTooth(m.dataset.n); } return; }   // focus back where the menu opened
   const g = e.target.closest && e.target.closest("#chart .tooth[data-n]");
   if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); const r = g.getBoundingClientRect(); openToothMenu(g, r.left, r.bottom + 4); }
 });
@@ -971,8 +978,9 @@ async function sendVisit(req, which) {
   $("#band").hidden = true; $("#app").classList.remove("filing"); showErr(""); setBusy(true, which); checkLoading(); resetChart(); renderPatient();
   flow(1);
   const heard = $("#heard"); heard.classList.add("empty"); heard.textContent = req.audio ? "Listening to the recording" : "Reading the visit";
+  if (req.audio) $("#rec-hint").textContent = "Checking your recording.";   // on a phone the result cards are a screen below this button
   try {
-    const r = await fetch("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...req.json, payer: state.payerId, patient_id: state.patientId }) });
+    const r = await send("/visit", req.audio ? { method: "POST", body: req.audio } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...req.json, payer: state.payerId, patient_id: state.patientId }) });
     const body = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(body.detail || "The visit could not be read. Try again.");
     if (token !== state.token) return;
@@ -989,7 +997,9 @@ async function sendVisit(req, which) {
     if (token !== state.token) return;
     heard.classList.add("empty"); heard.textContent = "Record a visit or play a saved one. The words appear here.";
     $("#ck-body").innerHTML = '<p class="placeholder">No check yet.</p>'; flow(0);
-    showErr((e.message || "Something went wrong. Try again.") + (req.audio && state.replay ? " The saved visits still work: tap Play a sample visit." : ""));
+    const msg = e.message || "Something went wrong. Try again.";
+    showErr(msg + (req.audio && state.replay ? " The saved visits still work: tap Play a sample visit." : ""));
+    if (req.audio) $("#rec-hint").textContent = msg;   // said again next to the Record button: on a phone the error box is a screen away
   } finally {
     if (token === state.token) setBusy(false, which);
   }
@@ -1006,7 +1016,7 @@ async function toggleRecord() {
   catch (e) { $("#rec-hint").textContent = "The microphone is blocked. Allow it for this page, or open the page in Chrome or Safari if you are inside another app. You can also play a saved visit."; return; }
   finally { state.recStarting = false; }
   const chunks = []; const rec = new MediaRecorder(stream); state.recorder = rec;
-  document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = true)); $("#sample").disabled = true;   // while recording, only Stop works; sendVisit unlocks them
+  document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = true)); $("#sample").disabled = true; $("#approve").disabled = true;   // while recording, only Stop works; sendVisit unlocks them
   rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
   rec.onstop = () => {
     stream.getTracks().forEach((t) => t.stop()); state.recorder = null;
@@ -1084,13 +1094,13 @@ async function approve() {
   const btn = $("#approve"); btn.disabled = true; btn.textContent = "Filing"; flow(5);
   const d = state.data;
   try {
-    const r = await fetch("/file", { method: "POST", headers: { "Content-Type": "application/json" },
+    const r = await send("/file", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ approved: true, chart: d.chart, service_date: d.service_date, filing_date: d.filing_date, payer: state.payerId, patient_id: state.patientId }) });
     if (!r.ok) { const b = await r.json().catch(() => ({})); throw new Error(b.detail || "The claim could not be filed."); }
     bandReset(d.claim);
     const reader = r.body.getReader(), dec = new TextDecoder(); let buf = "";
     for (;;) {
-      const { value, done } = await reader.read(); if (done) break;
+      const { value, done } = await reader.read().catch(() => { throw new Error(DROPPED); }); if (done) break;
       buf += dec.decode(value, { stream: true });
       let i;
       while ((i = buf.indexOf("\n\n")) >= 0) {
@@ -1102,7 +1112,10 @@ async function approve() {
     if (state.outcome === "ok") { state.filed = true; btn.textContent = "Filed and read back"; }
     else { btn.textContent = "Approve and file again"; btn.disabled = false; }
   } catch (e) {
-    if ($("#band").hidden) { showErr(e.message); flow(4); } else handleEvent("error", { message: e.message });
+    if ($("#band").hidden) {   // the filing never started: say why right under the button, where the visitor is looking
+      showErr(e.message); flow(4);
+      const h = $("#approve-hint"); h.textContent = e.message; h.classList.add("bad");
+    } else handleEvent("error", { message: e.message });
     btn.textContent = "Approve and file"; btn.disabled = false;
   } finally {
     state.filing = false;
