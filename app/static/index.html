@@ -932,7 +932,7 @@ function openToothMenu(g, x, y) {
   m.querySelector("button").focus();
 }
 function setToothWork(n, kind) {
-  if (state.busy || state.filing) return;
+  if (state.busy || state.filing || state.recorder) return;
   if (!state.data) {   // nothing on screen yet: start an empty visit for the sample patient
     const svc = {}; Object.keys(SVC).forEach((k) => (svc[k] = false));
     ["oral_exam", "prophylaxis", "fluoride_varnish"].forEach((k) => (svc[k] = false));
@@ -999,10 +999,14 @@ async function sendVisit(req, which) {
 async function toggleRecord() {
   const btn = $("#rec");
   if (state.recorder) { state.recorder.stop(); return; }
+  if (state.recStarting) return;   // a second tap while the microphone prompt is open would start a second recorder that never stops
+  state.recStarting = true;
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
   catch (e) { $("#rec-hint").textContent = "The microphone is blocked. Allow it for this page, or open the page in Chrome or Safari if you are inside another app. You can also play a saved visit."; return; }
+  finally { state.recStarting = false; }
   const chunks = []; const rec = new MediaRecorder(stream); state.recorder = rec;
+  document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = true)); $("#sample").disabled = true;   // while recording, only Stop works; sendVisit unlocks them
   rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
   rec.onstop = () => {
     stream.getTracks().forEach((t) => t.stop()); state.recorder = null;
@@ -1074,7 +1078,7 @@ function handleEvent(ev, data) {
 }
 
 async function approve() {
-  if (!state.data || state.filing || state.data.file_blocked) return;
+  if (!state.data || state.filing || state.recorder || state.data.file_blocked) return;
   state.filing = true; state.filed = false; state.outcome = ""; setBusy(false, document.querySelector('.vbtn[aria-pressed="true"]')?.dataset.id);
   document.querySelectorAll(".vbtn, .segb").forEach((b) => (b.disabled = true));
   const btn = $("#approve"); btn.disabled = true; btn.textContent = "Filing"; flow(5);

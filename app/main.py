@@ -1,7 +1,7 @@
 """The dentist screen's server. GET / is the screen, POST /visit turns a visit (audio, text or a saved visit) into a chart and a
 rule check, POST /check re-checks a chart on the screen for another payer or patient (no model call), POST /file fills the approved claim on the sample portal and streams progress as Server-Sent Events.
 Run: uvicorn app.main:app --port 8096    Replay (no network): CLAIM_REPLAY=1 uvicorn app.main:app --port 8096"""
-import json, os, queue, tempfile, threading, time
+import json, os, queue, subprocess, tempfile, threading, time
 from collections import deque
 from datetime import date
 from fastapi import FastAPI, HTTPException, Request
@@ -230,6 +230,9 @@ def run_visit(kind, value):
         return heard, meta.chart_from_text(heard), kind
     except HTTPException:
         raise
+    except subprocess.CalledProcessError:   # ffmpeg could not decode it: a broken or cut-off recording, not a service failure
+        print("live visit: recording could not be decoded", flush=True)
+        bad("That recording could not be read. Record it again.", 422)
     except Exception as e:
         _meta_failed(e)
 

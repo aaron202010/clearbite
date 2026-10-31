@@ -84,6 +84,13 @@ def test_a_failed_live_call_is_a_502_with_no_key_in_it(demo, monkeypatch):
     assert r.status_code == 502 and "secret" not in r.text
 
 
+def test_an_unreadable_recording_says_so_instead_of_blaming_the_service(demo, monkeypatch):
+    monkeypatch.setattr(main.meta, "transcribe", lambda path: main.meta.to_wav(path))   # the real decode step, on bytes that are not audio
+    r = record(demo)
+    assert r.status_code == 422 and "could not be read" in r.json()["detail"]
+    assert "did not answer" not in r.text
+
+
 def test_filing_stays_the_recorded_replay_in_live_voice_mode(demo, monkeypatch):
     used = []
     monkeypatch.setattr(main.filer, "file_claim", lambda *a, **k: used.append("live") or (_ for _ in ()).throw(AssertionError("live filing")))
